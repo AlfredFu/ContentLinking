@@ -51,8 +51,7 @@ class KeywordDAO(DAO):
             		self.cursor.executemany("insert into keyword_en(keyword,status,type) values(%s,'NOR',%s)",keywordsEn)
             		self.conn.commit()
         	except Exception,e:
-            		print "Exception occured:",e        
-
+			self.log.error(e)
 	def assembleKeyword(self,row):
 		keyword=Keyword()
 		keyword.id=row[0]
