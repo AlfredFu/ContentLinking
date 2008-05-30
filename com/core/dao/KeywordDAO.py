@@ -8,7 +8,7 @@ class KeywordDAO(DAO):
 	def __init__(self):
 		#super(KeywordDAO,self).__init__()
 		DAO.__init__(self)
-        	self.cursor.execute('use lnc')
+        	self.cursor.execute('use lnc;')
 
 
     	def getAll(self):
