@@ -1,0 +1,41 @@
+info
+error
+critical
+abc2012-05-29 15:20:41,364INFOinfo
+abc2012-05-29 15:20:41,364ERRORerror
+abc2012-05-29 15:20:41,364CRITICALcritical
+abc 2012-05-29 15:22:01,061 INFO info
+abc 2012-05-29 15:22:01,061 ERROR error
+abc 2012-05-29 15:22:01,061 CRITICAL critical
+Database 2012-05-29 15:55:38,603 INFO info to let you track
+Database 2012-05-29 15:55:38,603 ERROR error please notice
+Database 2012-05-29 15:55:38,603 CRITICAL critical serious problem occured
+Database 2012-05-29 15:55:50,662 INFO info to let you track
+Database 2012-05-29 15:55:50,662 ERROR error please notice
+Database 2012-05-29 15:55:50,662 CRITICAL critical serious problem occured
+Database 2012-05-29 15:55:53,974 INFO info to let you track
+Database 2012-05-29 15:55:53,974 ERROR error please notice
+Database 2012-05-29 15:55:53,974 CRITICAL critical serious problem occured
+Database 2012-05-29 15:55:55,330 INFO info to let you track
+Database 2012-05-29 15:55:55,330 ERROR error please notice
+Database 2012-05-29 15:55:55,330 CRITICAL critical serious problem occured
+Database 2012-05-29 15:55:56,130 INFO info to let you track
+Database 2012-05-29 15:55:56,130 ERROR error please notice
+Database 2012-05-29 15:55:56,131 CRITICAL critical serious problem occured
+Database 2012-05-29 15:55:56,675 INFO info to let you track
+Database 2012-05-29 15:55:56,675 ERROR error please notice
+Database 2012-05-29 15:55:56,675 CRITICAL critical serious problem occured
+Database 2012-05-29 15:55:57,206 INFO info to let you track
+Database 2012-05-29 15:55:57,207 ERROR error please notice
+Database 2012-05-29 15:55:57,207 CRITICAL critical serious problem occured
+Database 2012-05-29 15:55:57,708 INFO info to let you track
+Database 2012-05-29 15:55:57,708 ERROR error please notice
+Database 2012-05-29 15:55:57,708 CRITICAL critical serious problem occured
+Database 2012-05-29 16:06:51,140 ERROR Failed to connect to database
+Database 2012-05-29 16:07:05,255 ERROR Failed to connect to database
+Database 2012-05-29 16:13:47,782 ERROR (1049, "Unknown database 'newlalssdfw'")
+Database 2012-05-29 16:14:18,077 ERROR (1049, "Unknown database 'newlalssdfw'")
+Database 2012-05-29 16:16:59,644 ERROR (1049, "Unknown database 'newlalssdfw'")
+Database 2012-05-29 16:18:26,829 ERROR (1049, "Unknown database 'newlalssdfw'")
+Database 2012-05-29 16:18:35,186 ERROR (1049, "Unknown database 'newlalssdfw'")
+Database 2012-05-29 16:18:40,744 ERROR (1049, "Unknown database 'newlalssdfw'")
