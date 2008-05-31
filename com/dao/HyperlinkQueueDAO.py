@@ -1,5 +1,5 @@
-from com.core.entity.QueueItem import *
-from com.core.dao import *
+from com.entity.QueueItem import *
+from com.dao import *
 
 class HyperlinkQueueDAO(DAO):
 	table='opr_load_status'
@@ -7,7 +7,7 @@ class HyperlinkQueueDAO(DAO):
 	def __init__(self):
 		DAO.__init__(self)
 		self.conn_stg=DBConnUtil.getConnection('db_stg')
-		sele.cursor_stg=self.conn_stg.cursor()
+		self.cursor_stg=self.conn_stg.cursor()
 	
 	def getAll(self):
 		self.cursor_stg.execute("SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s" % HyperlinkQueueDAO.table)	

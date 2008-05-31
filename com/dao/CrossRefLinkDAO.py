@@ -1,4 +1,4 @@
-from com.core.dao import *
+from com.dao import *
 
 class CrossRefLinkDAO(DAO):
 	table='cross_ref_link'

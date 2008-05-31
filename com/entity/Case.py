@@ -1,4 +1,4 @@
-from com.core.entity.Article import * 
+from com.entity.Article import * 
 
 class Case(Article):
 	def __init__(self):

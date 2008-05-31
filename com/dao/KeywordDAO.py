@@ -1,5 +1,5 @@
-from com.core.entity.Keyword import *
-from com.core.dao import *
+from com.entity.Keyword import *
+from com.dao import *
 
 class KeywordDAO(DAO):
 	table='keyword_en'
