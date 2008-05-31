@@ -1,2 +1,0 @@
-class CrossRefLink:
-	pass
