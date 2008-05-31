@@ -16,14 +16,15 @@ class DBConnUtil:
     def getConnection(datasource='db'):
 	if datasource not in DBConnUtil.instance or DBConnUtil.instance[datasource] is None:
 		dbOption=getConfigSection(datasource)
+		DBConnUtil.instance[datasource]=None 
         	try:
-            		if DBConnUtil.instance[datasource] is  None:
-                		DBConnUtil.mutex.acquire()
-                		if DBConnUtil.instance[datasource] is None:
-                    			DBConnUtil.instance[datasource]=DBConnUtil.connect(dbOption['host'],dbOption['username'],dbOption['password'],dbOption['dbname'])
-                		DBConnUtil.mutex.release()
+                	DBConnUtil.mutex.acquire()
+                	if DBConnUtil.instance[datasource] is None:
+                    		DBConnUtil.instance[datasource]=DBConnUtil.connect(dbOption['host'],dbOption['username'],dbOption['password'],dbOption['dbname'])
+                	DBConnUtil.mutex.release()
         	except Exception,e:
             		DBConnUtil.log.error(e) 
+		
         return DBConnUtil.instance[datasource]
 
 
@@ -36,7 +37,9 @@ if __name__=='__main__':
         cursor.execute('delete from keyword_en')
         conn.commit()
         conn.close()
-        conn2=DBConnUtil.getConnection()
+        conn2=DBConnUtil.getConnection('db')
         if conn is conn2:
             print 'conn is conn2'
+	else:
+		print 'conn is not conn2'
         
