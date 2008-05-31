@@ -4,28 +4,27 @@ from com.util.ConfigOptionUtil import *
 from com.util.LogUtil import *
 
 class DBConnUtil:
-    instance=None
+    instance={}
     mutex=threading.Lock()
     log=getLog()    
 
     @staticmethod
     def connect(host,username,password='',db='newlaw'):
-        DBConnUtil.instance=MySQLdb.connect(host,username,password,db)
-        if DBConnUtil.instance is None:
-            raise Exception('Connect to '+db+' on '+host+' with username:'+username+',password:'+password+' failed')
+        return MySQLdb.connect(host,username,password,db)
 
     @staticmethod
-    def getConnection():
-        dbOption=getConfigSection('db')
-        try:
-            if DBConnUtil.instance is  None:
-                DBConnUtil.mutex.acquire()
-                if DBConnUtil.instance is None:
-                    DBConnUtil.connect(dbOption['host'],dbOption['username'],dbOption['password'],dbOption['dbname'])
-                DBConnUtil.mutex.release()
-        except Exception,e:
-            DBConnUtil.log.error(e) 
-        return DBConnUtil.instance
+    def getConnection(datasource='db'):
+	if datasource not in DBConnUtil.instance or DBConnUtil.instance[datasource] is None:
+		dbOption=getConfigSection(datasource)
+        	try:
+            		if DBConnUtil.instance[datasource] is  None:
+                		DBConnUtil.mutex.acquire()
+                		if DBConnUtil.instance[datasource] is None:
+                    			DBConnUtil.instance[datasource]=DBConnUtil.connect(dbOption['host'],dbOption['username'],dbOption['password'],dbOption['dbname'])
+                		DBConnUtil.mutex.release()
+        	except Exception,e:
+            		DBConnUtil.log.error(e) 
+        return DBConnUtil.instance[datasource]
 
 
 if __name__=='__main__':
