@@ -21,7 +21,7 @@ class DBConnUtil:
                 	DBConnUtil.mutex.acquire()
                 	if DBConnUtil.instance[datasource] is None:
                     		DBConnUtil.instance[datasource]=DBConnUtil.connect(dbOption['host'],dbOption['username'],dbOption['password'],dbOption['dbname'])
-				DBConnUtil.instance[datasource].row_factory=MySQLdb.Row
+				#DBConnUtil.instance[datasource].row_factory=MySQLdb.Row
                 	DBConnUtil.mutex.release()
         	except Exception,e:
             		DBConnUtil.log.error(e) 
