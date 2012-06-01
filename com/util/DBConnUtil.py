@@ -40,7 +40,7 @@ if __name__=='__main__':
         conn.close()
         conn2=DBConnUtil.getConnection('db')
         if conn is conn2:
-            print 'conn is conn2'
+        	print 'conn is conn2'
 	else:
 		print 'conn is not conn2'
         
