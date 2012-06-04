@@ -12,7 +12,7 @@ class KeywordDAO(DAO):
 
 
     	def getAll(self):
-		self.cursor.execute("select keyword_id,keyword,status,type,full_title_keyword_id from %s " % KeywordDAO.table )
+		self.cursor.execute("select keyword_id,keyword,status,type,full_title_keyword_id from %s ORDER BY LENGTH(keyword) DESC" % KeywordDAO.table )
         	for row in self.cursor.fetchall():
             		yield self.assembleKeyword(row)
 

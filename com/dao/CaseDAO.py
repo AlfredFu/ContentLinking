@@ -7,7 +7,7 @@ class CaseDAO(DAO):
 		DAO.__init__(self)
 	
 	def getAll(self):
-		self.cursor_stg.execute("SELECT case_id,title,origin_id,provider_id,isEnglish FROM cases WHERE isEnglish='Y' AND display=1 limit 0,1;")
+		self.cursor_stg.execute("SELECT case_id,title,origin_id,provider_id,isEnglish FROM cases WHERE isEnglish='Y' AND display=1  limit 0,1;")
 		for row in self.cursor_stg.fetchall():
 			case=Case()
 			case.id=row[0]

@@ -20,7 +20,10 @@ class LawDAO(DAO):
 	def updateTimeByPrimary(self,id):
 		self.cursor_stg.execute("UPDATE tax SET indbtime=NOW() WHERE taxid=%s;" % id) 
 		
-
+	def getLawByKeywordId(self,keywordId):
+		self.cursor_hyperlink.execute("SELECT origin_id,provider_id,isEnglish,target_id,action_type FROM article WHERE keyword_id=%s AND content_type='T';" % keywordId)
+		return self.cursor_hyperlink.fetchall()	
+			
 if __name__ =="__main__":
 	lawDAO=LawDAO()
 	print lawDAO.getLawByKeywordId(2505)
