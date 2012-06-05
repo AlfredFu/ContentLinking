@@ -2,6 +2,7 @@ from com.dao.LawDAO import *
 from com.dao.CaseDAO import *
 from com.dao.KeywordDAO import *
 from com.dao.HyperlinkQueueDAO import *
+import re
 
 
 keywordDao=KeywordDAO.KeywordDAO()
@@ -25,7 +26,43 @@ def processKeywordHyperlink(keywordList,article):
 			caseDao.update(article)
 			#TODO cross_ref_link
 
+def deleteCrossRefLinkById(id):
+	"根据文章id删除hyperlink记录"
+	crossRefLinkDao=CrossRefLinkDAO()
+	crossRefLinkDao.deleteBySrcId(id)
+	crossRefLinkDao.deleteByDesId(id)
+
+def updateTime(article):
+	"更新文章时间戳，autonomy fetch有用，tax表为indbtime,case为in_time,请参考fetch配置"
+	pass
+	
+def getArticle(id):
+	"根据primary key获取文章"
+	pass
+
+def addRelatedArticleToQueue(taxid):
+	"将相关文章加入到hyperlink队列"	
+	pass
+def update(article):
+	"更新文章"
+	pass
+for queueItem in queue:
+	if queueItem.status !='N':
+		if queueItem.contentType=='T':
+			addRelatedArticleToQueue(queueItem.targetId)		
+		deleteCrossRefLinkById(queueItem.targetId)#删除hyperlink关系记录
+		
+	article=getArticle(queueItem.targetId)
+	article.content=eraseHyperlink(article.content)
+	for keyword in keywordList:
+		posTupleList=findKeywordPosInArticle(keyword,article)	
+	article.content=patternContent(posTupleList,article.content)	
+		
+	update(article)	
+	updateTime(article)
+
 def findKeywordPosInArticle(keyword,article,start=0,posTupleList=[]):
+	"类似中文hyperlink的search,将文章中出现关键词的位置记录下来，并返回"
 	def checkNested():
 		for item in posTupleList:
 			if item[0]<=posTuple[0] and item[1]>=posTuple[1]:
@@ -45,6 +82,7 @@ def findKeywordPosInArticle(keyword,article,start=0,posTupleList=[]):
 	return posTupleList
 
 def patternContent(posTupleList,content,contentType='T'):
+	"从后向前"
 	lawDao=LawDAO.LawDAO()
 	for posTuple in posTupleList:
 		if not  posTuple[4]:
@@ -59,23 +97,45 @@ def patternContent(posTupleList,content,contentType='T'):
 		content=content[0:posTuple[0]]+rep+content[posTuple[1]+1:]
 	return content
 
-def selectLinkedVersion(article,versionCandidate):
-	
+def eraseHyperlink(content):
+	"清除hyperlink所加的超链接"
+	"hyperlink sample:<a href='' class='link_2' re='T' cate='en_href' >Criminal Law</a>"	
+#	hyperlinkPattern=re.complie()
+	content=re.sub(r'<a\s+href=\'[/\w\d\-\.]*\'\s+class=\'link_2\'\s+re=\'T\'\s+cate=\'en_href\'\s*>(.*)</a>',r'\1',content)
+	return content
+
+def getProDate(targetId):
+	"获取文章发文日期"
 	pass
-		
+
+def selectLinkedVersion(article,versionCandidate):
+	"对于多个版本的法规，需要根据发文日期和生效日期的信息选择一个"
+	proDate=getProDate(article.id)
+	
+	for version in versionCandidate:
+		if target:
+			pass
+		else:target=version
+
+	return target		
+
+
+def testEraseHyperlink():
+	print eraseHyperlink("Welcome to <a href='#' class='link_2' re='T' cate='en_href_manual'>China</a> Hello <a href='/law/law-english-1-1245345.html' class='link_2' re='T' cate='en_href'>Fred's House</a> <a href='#'>hhhhhh<a>")
 
 if __name__=="__main__":
+	testEraseHyperlink()
 	#for keyword in keywordList:
 		#print keyword.content	
-	for queueItem in queue:
+	#for queueItem in queue:
 		#print queueItem.originId,queueItem.providerId,queueItem.isEnglish
-		article=caseDao.getFullCaseByPrimaryKey(queueItem.originId,queueItem.providerId,queueItem.isEnglish)
-		for keyword in keywordList:
-			posTupleList=findKeywordPosInArticle(keyword,article)
+		#article=caseDao.getFullCaseByPrimaryKey(queueItem.originId,queueItem.providerId,queueItem.isEnglish)
+		#for keyword in keywordList:
+			#posTupleList=findKeywordPosInArticle(keyword,article)
 			#print keyword.content,":",len(posTupleList)
 			#print posTupleList
-		article.content=patternContent(posTupleList,article.content)
-		print article.content
-		caseDao.update(article)
+		#article.content=patternContent(posTupleList,article.content)
+		#print article.content
+		#contencaseDao.update(article)
 		#print article
 		#processKeywordHyperlink(keywordList,article)
