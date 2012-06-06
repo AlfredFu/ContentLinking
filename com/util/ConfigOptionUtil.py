@@ -1,7 +1,8 @@
 import ConfigParser
-CONFIG_FILE='hyperlink.conf'
+CONFIG_FILE='/home/fred/workspace/EnglishHyperlink/com/config/hyperlink.conf'
 
 def getConfigOption(section,option=''):
+    "get single config option from config file hyperlink.conf"
     cf=ConfigParser.ConfigParser()
     cf.read(CONFIG_FILE) 
     try:                         
@@ -17,13 +18,16 @@ def getConfigOption(section,option=''):
         print "No option you wanted",e
 
 def getConfigSection(section):
+    '''
+        get config section from config file hyperlink.conf
+    '''
     cf=ConfigParser.ConfigParser()
     cf.read(CONFIG_FILE)
     configMap={}
     try:
         optionList=cf.items(section)
         for item in optionList:
-            config[item[0]]=item[1]
+            configMap[item[0]]=item[1]
     except Exception,e:
         #log
         print e
@@ -32,8 +36,9 @@ def getConfigSection(section):
 
 def setConfigOption(section,option,value):
     cf=ConfigParser.ConfigParser()
-    cf.read('hyperlink.conf')
+    cf.read(CONFIG_FILE)
 
 if __name__=='__main__':
-    pring getConfigOption('db','host')
+    print getConfigOption('db','host')
     print getConfigSection('db')
+    print getConfigSection('log')
