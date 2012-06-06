@@ -105,12 +105,11 @@ def patternContent(posTupleList,content,contentType='T'):
 def eraseHyperlink(content):
 	"清除hyperlink所加的超链接"
 	"hyperlink sample:<a href='' class='link_2' re='T' cate='en_href' >Criminal Law</a>"	
-#	hyperlinkPattern=re.complie()
 	content=re.sub(r'<a\s+href=\'[/\w\d\-\.]*\'\s+class=\'link_2\'\s+re=\'T\'\s+cate=\'en_href\'\s*>(.*)</a>',r'\1',content)
 	return content
 
 def checkHyperlinkedKeyword(content,startPos,endPos):
-	"判断关键是是否被加上了超链接"
+	"判断关键是是否被加上了超链接,是返回True,否则返回False"
 	if content:
 		startMatch=re.search(r'<a.+?>\s*$',content[:startPos])
 		endMatch=re.search(r'^</a\s*>',content[endPos:])
