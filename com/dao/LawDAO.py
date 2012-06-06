@@ -22,7 +22,7 @@ class LawDAO(DAO):
 		self.cursor_hyperlink.execute("SELECT origin_id,provider_id,isEnglish,target_id,action_type FROM article WHERE keyword_id=%s AND content_type='T';" % keywordId)
 		return self.cursor_hyperlink.fetchall()	
 	def getLawById(self,id):
-		self.cusor_stg.execute("
+		self.cusor_stg.execute("")
 			
 if __name__ =="__main__":
 	lawDAO=LawDAO()

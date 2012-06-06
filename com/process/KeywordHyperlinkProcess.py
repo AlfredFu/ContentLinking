@@ -1,3 +1,4 @@
+# coding=utf-8
 from com.dao.LawDAO import *
 from com.dao.CaseDAO import *
 from com.dao.KeywordDAO import *
@@ -46,20 +47,22 @@ def addRelatedArticleToQueue(taxid):
 def update(article):
 	"更新文章"
 	pass
-for queueItem in queue:
-	if queueItem.status !='N':
-		if queueItem.contentType=='T':
-			addRelatedArticleToQueue(queueItem.targetId)		
-		deleteCrossRefLinkById(queueItem.targetId)#删除hyperlink关系记录
+
+def main():
+	for queueItem in queue:
+		if queueItem.status !='N':
+			if queueItem.contentType=='T':
+				addRelatedArticleToQueue(queueItem.targetId)		
+			deleteCrossRefLinkById(queueItem.targetId)#删除hyperlink关系记录
 		
-	article=getArticle(queueItem.targetId)
-	article.content=eraseHyperlink(article.content)
-	for keyword in keywordList:
-		posTupleList=findKeywordPosInArticle(keyword,article)	
-	article.content=patternContent(posTupleList,article.content)	
+		article=getArticle(queueItem.targetId)
+		article.content=eraseHyperlink(article.content)
+		for keyword in keywordList:
+			posTupleList=findKeywordPosInArticle(keyword,article)	
+		article.content=patternContent(posTupleList,article.content)	
 		
-	update(article)	
-	updateTime(article)
+		update(article)	
+		updateTime(article)
 
 def findKeywordPosInArticle(keyword,article,start=0,posTupleList=[]):
 	"类似中文hyperlink的search,将文章中出现关键词的位置记录下来，并返回"
@@ -85,6 +88,8 @@ def patternContent(posTupleList,content,contentType='T'):
 	"从后向前"
 	lawDao=LawDAO.LawDAO()
 	for posTuple in posTupleList:
+		if checkHyperlinkedKeyword(content,posTuple[0],posTuple[1]):#对加上超链接的关键字不做处理
+			continue
 		if not  posTuple[4]:
 			targetArticle=lawDao.getLawByKeywordId(posTuple[2])
 		else:
@@ -103,6 +108,15 @@ def eraseHyperlink(content):
 #	hyperlinkPattern=re.complie()
 	content=re.sub(r'<a\s+href=\'[/\w\d\-\.]*\'\s+class=\'link_2\'\s+re=\'T\'\s+cate=\'en_href\'\s*>(.*)</a>',r'\1',content)
 	return content
+
+def checkHyperlinkedKeyword(content,startPos,endPos):
+	"判断关键是是否被加上了超链接"
+	if content:
+		startMatch=re.search(r'<a.+?>\s*$',content[:startPos])
+		endMatch=re.search(r'^</a\s*>',content[endPos:])
+		if startMatch and endMatch:
+			return True
+	return False
 
 def getProDate(targetId):
 	"获取文章发文日期"
@@ -123,8 +137,17 @@ def selectLinkedVersion(article,versionCandidate):
 def testEraseHyperlink():
 	print eraseHyperlink("Welcome to <a href='#' class='link_2' re='T' cate='en_href_manual'>China</a> Hello <a href='/law/law-english-1-1245345.html' class='link_2' re='T' cate='en_href'>Fred's House</a> <a href='#'>hhhhhh<a>")
 
+def testCheckHyperlinked():
+	content="Welcome to <a href='#' class='link_2' re='T' cate='en_href_manual'>China</a>Hello<a href='/law/law-english-1-1245345.html' class='link_2' re='T' cate='en_href'>Fred's House</a> <a href='#'>hhhhhh<a>"
+	startPos=re.search('China',content).start()
+	endPos=re.search('China',content).end()
+	startPos1=re.search('Hello',content).start()
+	endPos1=re.search('Hello',content).end()
+	print checkHyperlinkedKeyword(content,startPos,endPos)
+	print checkHyperlinkedKeyword(content,startPos1,endPos1)
 if __name__=="__main__":
 	testEraseHyperlink()
+	testCheckHyperlinked()
 	#for keyword in keywordList:
 		#print keyword.content	
 	#for queueItem in queue:

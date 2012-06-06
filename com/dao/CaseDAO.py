@@ -1,3 +1,4 @@
+#coding=utf-8
 from com.entity.Case import *
 from com.dao import *
 class CaseDAO(DAO):
