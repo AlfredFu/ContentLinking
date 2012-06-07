@@ -84,28 +84,30 @@ def findKeywordPosInArticle(keyword,article,start=0,posTupleList=[]):
 	posTupleList.reverse()
 	return posTupleList
 
-def patternContent(posTupleList,content,contentType='T'):
+def patternContent(posTupleList,article):
 	"从后向前"
 	lawDao=LawDAO.LawDAO()
 	for posTuple in posTupleList:
-		if checkHyperlinkedKeyword(content,posTuple[0],posTuple[1]):#对加上超链接的关键字不做处理
+		if checkHyperlinkedKeyword(article.content,posTuple[0],posTuple[1]):#对加上超链接的关键字不做处理
 			continue
 		if not  posTuple[4]:
-			targetArticle=lawDao.getLawByKeywordId(posTuple[2])
+			lawCandidate=lawDao.getLawByKeywordId(posTuple[2])
 		else:
-			targetArticle=lawDao.getLawByKeywordId(posTuple[4])
-		if len(targetArticle) >1:
-			#multiple version
-			pass
+			lawCandidate=lawDao.getLawByKeywordId(posTuple[4])
+		if len(lawCandidate) >1:
+			targetLaw=selectTargetLaw(article,lawCandidate)
 		else:	
-			rep="<a href='#' class='link_3' >"+content[posTuple[0]:posTuple[1]]+"<a>"
+			targetLaw=lawCandidate[0]
+		
+		targetLawUrl="/law/content.php?content_type=T&origin_id="+targetLaw.originId+"&provider_id=1&isEnglish=N"
+		rep="<a href='#' class='link_3' >"+content[posTuple[0]:posTuple[1]]+"<a>"
 		content=content[0:posTuple[0]]+rep+content[posTuple[1]+1:]
 	return content
 
 def eraseHyperlink(content):
 	"清除hyperlink所加的超链接"
 	"hyperlink sample:<a href='' class='link_2' re='T' cate='en_href' >Criminal Law</a>"	
-	content=re.sub(r'<a\s+href=\'[/\w\d\-\.]*\'\s+class=\'link_2\'\s+re=\'T\'\s+cate=\'en_href\'\s*>(.*)</a>',r'\1',content)
+	content=re.sub(r'<a\s+href=\'[/\w\d\-\.]*?\'\s+class=\'link_2\'\s+re=\'T\'\s+cate=\'en_href\'\s*>(.*?)</a>',r'\1',content)
 	return content
 
 def checkHyperlinkedKeyword(content,startPos,endPos):
@@ -117,20 +119,23 @@ def checkHyperlinkedKeyword(content,startPos,endPos):
 			return True
 	return False
 
-def getProDate(targetId):
-	"获取文章发文日期"
-	pass
-
-def selectLinkedVersion(article,versionCandidate):
+def selectTargetLaw(article,lawCandidate):
 	"对于多个版本的法规，需要根据发文日期和生效日期的信息选择一个"
-	proDate=getProDate(article.id)
-	
-	for version in versionCandidate:
-		if target:
-			pass
-		else:target=version
-
-	return target		
+	"param article hyperlink文章，lawCandidate多版本法规列表"
+	"return 返回法规对象"
+	latestDate=''
+	latestLaw=None
+	for law in lawCandidate:
+		if article.contentType='T':#法规以发文日期作为比较日期
+			compDate=law.prodate
+		else:
+			compDate=max([law.proDate,law.effectDate])#其他内容类型以发文日期和生效日期最近的一个作为比较日期
+				
+		if article.proDate<compDate:continue#发文日期在法规生效日期或法文日期之后，法规不能被引用
+		elif latestDate <compDate:
+			latestDate=compDate
+			latestLaw=law
+	return law
 
 
 def testEraseHyperlink():
