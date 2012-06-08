@@ -3,16 +3,18 @@ from com.dao.LawDAO import *
 from com.dao.CaseDAO import *
 from com.dao.KeywordDAO import *
 from com.dao.HyperlinkQueueDAO import *
+from com.dao.CrossRefLinkDAO import *
+from com.entity.HyperlinkQueue import *
 import re
 
 class HyperlinkProcess(object):
 	def __init__(self):
 		self.crossRefLinkDao=CrossRefLinkDAO()
-		self.lawDao=LawDAO()
-		self.caseDao=CaseDAO()
-		self.keywordDao=KeywordDAO()
-		self.queueDao=HyperlinkQueueDAO()
-		pass
+		self.lawDao=LawDAO.LawDAO()
+		self.caseDao=CaseDAO.CaseDAO()
+		self.keywordDao=KeywordDAO.KeywordDAO()
+		self.queueDao=HyperlinkQueueDAO.HyperlinkQueueDAO()
+
 	def eraseHyperlink(self,content):
 		"""
 		清除hyperlink所加的超链接
@@ -21,6 +23,12 @@ class HyperlinkProcess(object):
 		content=re.sub(r'<a\s+href=\'[/\w\d\-\.]*?\'\s+class=\'link_2\'\s+re=\'T\'\s+cate=\'en_href\'\s*>(.*?)</a>',r'\1',content)
 		return content
 	
+	def getArticle(self,queueItem):
+		if queueItem.contentType == Article.CONTENT_TYPE_LAW:
+			article=self.lawDao.getById(queueItem.targetId)
+		elif queueItem.contentType == Article.CONTENT_TYPE_CASE:
+			article=self.caseDao.getById(queueItem.targetId)
+			
 	def checkHyperlinkedKeyword(self,content,startPos,endPos):
 		"""
 		判断关键词是否被加上了超链接,是返回True,否则返回False
@@ -45,10 +53,10 @@ class HyperlinkProcess(object):
 		latestDate=''
 		latestArticle=None
 		for targetArticle in articleCandidate:
-			if article.contentType=='T':#法规以发文日期作为比较日期
-				compDate=targetArticle.prodate
-			else:
+			if article.contentType=='C':#法规以发文日期作为比较日期
 				compDate=max([targetArticle.proDate,targetArticle.effectDate])#其他内容类型以发文日期和生效日期最近的一个作为比较日期
+			else:
+				compDate=targetArticle.prodate
 					
 			if article.proDate<compDate:continue#发文日期在法规生效日期或法文日期之后，法规不能被引用
 			elif latestDate <compDate:
@@ -72,41 +80,26 @@ class HyperlinkProcess(object):
 		self.crossRefLinkDao.deleteBySrcId(id)
 		self.crossRefLinkDao.deleteByDesId(id)
 
-	def getRelatedArticleId(self,id):
-		pass
-		
+	def updateRelatedArticleActionType(self,queueItem):
+		"""
+		将相关文章的相关文章action_type属性改为U
+		"""
+		for item in self.crossRefLinkDao.getRelatedArticleId(queueItem.targetId):
+			self.queueDao.updateActionType('U',item[0])
 
-	def updateRelatedArticleActionType(self,article):
-		"""
-		将相关文章的action_type属性改为U
-		"""
-		for item in crossRefLinkDao.getRelatedArticleId(article.id):
-			
 	def updateOprLoadStatus(self,queueItem):
 		"""
 		更新队列中文章的状态
 		"""
 		if queueItem.contentType =='T':
-			if article.actionType == 'D':
-				#TODO找出相关文章，更新相关文章的在hyperlink队列中的状态为U
-				self.deleteCrossRefLinkByArticleId(queueItem.targetId)#删除cross_ref_link表中的记录
-				#TODO hyperlink处理
-				pass
+			if queueItem.actionType in ['D','U']:
+				self.updateRelatedArticleActionType(queueItem)#找出相关文章，更新相关文章的在hyperlink队列中的状态为U
 			elif article.actionType=='N':
-				#TODO更新队列中状态为空的数据状态为U
-				#TODO hyperlink处理
-				pass
-			elif article.actionType=='U':
-				#TODO找出相关文章，更新相关文章的在hyperlink队列中的状态为U
-				self.deleteCrossRefLinkByArticleId(queueItem.targetId)		
-				#hyperlink处理
-				pass
-		else:
-			if queueItem.actionType == 'D':
-				self.deleteCrossRefLinkByArticleId(queueItem.targetId)		
-			elif queueItem.actionType =='N':
-				#TODO hyperlink处理
-				pass
-			elif queueItem.actionType =='U':
-				self.deleteCrossRefLinkByArticleId(queueItem.targetId)		
-							
+				self.queueDao.addAllToQueue()#更新队列中状态为空的数据状态为U
+		if queueItem.actionType in ['D','U']:
+			self.deleteCrossRefLinkByArticleId(queueItem.targetId)#删除cross_ref_link表中的记录
+			#TODO处理被引用的文章
+		self.queueDao.updateStatus(queueItem.targetId,HyperlinkQueue.STATUS_PROCESSING,queueItem.contentType)
+
+	def process(self,article):
+		pass	

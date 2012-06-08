@@ -27,6 +27,7 @@ class CrossRefLinkDAO(DAO):
 			self.cursor.execute("INSERT INTO cross_ref_link(src_article_id,keyword_id,des_article_id,des_item_id,des_attachment_id) VALUES(%s,%s,%s,%s,%s)" % (crossRefLink.srcId,crossRefLink.kId,crossRefLink.desId,crossRefLink.desItemId,crossAttachId))
 			self.conn.commit()
 		except Exception,e:
+			print e
 			self.log.error(e) 
 
 
@@ -43,5 +44,4 @@ class CrossRefLinkDAO(DAO):
 		self.cursor_hyperlink.execute("SELECT des_article_id AS articleId FROM cross_ref_link WHERE src_article_id=%s UNION SELECT src_article_id AS articleId FROM cross_ref_link WHERE des_article_id=%s; " %(id,id))
 		return self.cursor_hyperlink.fetchall()
 
-	def updateActionType(self,id,type):
-		self.cursor_stg.execute("UPDATE opr_load_status SET action_type='%s' WHERE target_id=%s AND action_type")
+

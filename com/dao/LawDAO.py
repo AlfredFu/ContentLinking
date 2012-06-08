@@ -4,9 +4,6 @@ class LawDAO(DAO):
 	def __init__(self):
 		DAO.__init__(self)
 	
-	def getLawByKeywordId(self,keywordId):
-		self.cursor_hyperlink.execute("SELECT origin_id,provider_id,isEnglish,target_id,action_type,status,keyword_id FROM article WHERE keyword_id='%s'" % keywordId)
-		return self.cursor_hyperlink.fetchall()
 
 	def update(self,article):
 		self.cursor_stg.execute("UPDATE tax_content SET content='%s' WHERE origin_id=%s AND provider_id=%s AND isEnglish='%s'" % (article.content,article.originId,article.providerId,article.isEnglish))
@@ -21,9 +18,21 @@ class LawDAO(DAO):
 	def getLawByKeywordId(self,keywordId):
 		self.cursor_hyperlink.execute("SELECT origin_id,provider_id,isEnglish,target_id,action_type FROM article WHERE keyword_id=%s AND content_type='T';" % keywordId)
 		return self.cursor_hyperlink.fetchall()	
-	def getLawById(self,id):
-		self.cusor_stg.execute("")
-			
+	
+	def getById(self,id):
+		article=Law()	
+		try:
+			self.cusor_stg.execute("SELECT tax.taxid as id,tax.title,tax_content.content FROM tax LEFT JOIN tax_content ON tax.taxid=tax_content.taxid WHERE tax.taxid=%s;" % id)
+			row=self.cursor_stg.fetchone()
+			if row:
+				article.id=row[0]
+				article.title=row[1]
+				article.content=row[2]
+			else:
+				raise Exception("No law with id %s found!" %id)
+		except Exception,e:
+			self.log.error(e)	
+		return article
 if __name__ =="__main__":
 	lawDAO=LawDAO()
 	print lawDAO.getLawByKeywordId(2505)

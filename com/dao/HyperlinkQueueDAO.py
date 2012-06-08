@@ -31,7 +31,25 @@ class HyperlinkQueueDAO(DAO):
 		self.cursor_stg.executemany("INSERT INTO "+HyperlinkQueueDAO.table+" (content_type,origin_id,provider_id,is_english,target_id,action_type,status,upd_time,infiledate ) values(%s,%s,%s,%s,%s,%s,%s,NOW(),CURDATE())" ,queueTupleList)
 		self.conn_stg.commit()
 
-
+	def updateActionType(self,id,type):
+		try:
+			self.cursor_stg.execute("UPDATE opr_load_status SET action_type='%s' WHERE target_id=%s AND action_type=''" % (type,id))
+			self.conn_stg.commit()
+		except Exception,e:
+			print e
+			self.log.error(e)
+	def addAllToQueue(self):
+		try:
+			self.cursor_stg.execute("UPDATE opr_load_status SET action_type='U' WHERE action_type=''")
+		except Exception,e:
+			print e
+			self.log.error(e)
+	def updateStatus(self,targetId,status,contentType):
+		try:
+			self.cursor_stg.execute("update opr_load_status set status=%s where target_id=%s and content_type=%s" %(status,targetId,contentType))
+		except Exception,e:
+			print e
+			self.log.error(e)
 			
 if __name__ =="__main__":
 	dao=HyperlinkQueueDAO()

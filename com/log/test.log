@@ -39,3 +39,15 @@ Database 2012-05-29 16:16:59,644 ERROR (1049, "Unknown database 'newlalssdfw'")
 Database 2012-05-29 16:18:26,829 ERROR (1049, "Unknown database 'newlalssdfw'")
 Database 2012-05-29 16:18:35,186 ERROR (1049, "Unknown database 'newlalssdfw'")
 Database 2012-05-29 16:18:40,744 ERROR (1049, "Unknown database 'newlalssdfw'")
+HyperlinkProcess 2012-06-08 17:19:49,336 ERROR (1054, "Unknown column 'C' in 'where clause'")
+HyperlinkProcess 2012-06-08 17:19:49,336 ERROR (1054, "Unknown column 'C' in 'where clause'")
+HyperlinkProcess 2012-06-08 17:19:49,336 ERROR (1054, "Unknown column 'C' in 'where clause'")
+HyperlinkProcess 2012-06-08 17:19:49,336 ERROR (1054, "Unknown column 'C' in 'where clause'")
+HyperlinkProcess 2012-06-08 17:19:49,336 ERROR (1054, "Unknown column 'C' in 'where clause'")
+HyperlinkProcess 2012-06-08 17:19:49,336 ERROR (1054, "Unknown column 'C' in 'where clause'")
+HyperlinkProcess 2012-06-08 17:19:49,345 ERROR CaseDAO instance has no attribute 'cusor_stg'
+HyperlinkProcess 2012-06-08 17:19:49,345 ERROR CaseDAO instance has no attribute 'cusor_stg'
+HyperlinkProcess 2012-06-08 17:19:49,345 ERROR CaseDAO instance has no attribute 'cusor_stg'
+HyperlinkProcess 2012-06-08 17:19:49,345 ERROR CaseDAO instance has no attribute 'cusor_stg'
+HyperlinkProcess 2012-06-08 17:19:49,345 ERROR CaseDAO instance has no attribute 'cusor_stg'
+HyperlinkProcess 2012-06-08 17:19:49,345 ERROR CaseDAO instance has no attribute 'cusor_stg'

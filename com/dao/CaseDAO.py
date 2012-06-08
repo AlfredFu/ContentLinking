@@ -20,8 +20,19 @@ class CaseDAO(DAO):
 			yield case	
 	def getById(self,id):
 		"根据主键信息获取案例"
-		case=Case()
-		return case
+		article=Case()	
+		try:
+			self.cusor_stg.execute("SELECT cases.case_id as id,cases.title,case_content.content FROM cases LEFT JOIN case_content ON cases.case_id=case_content.case_id WHERE cases.case_id=%s;" % id)
+			row=self.cursor_stg.fetchone()
+			if row:
+				article.id=row[0]
+				article.title=row[1]
+				article.content=row[2]
+			else:
+				raise Exception("No case with id %s found!" %id)
+		except Exception,e:
+			self.log.error(e)	
+		return article
 
 	def getByKey(self,originId,providerId,isEnglish):
 		"根据origin_id,provider_id,isEnglish获取案例"
@@ -35,6 +46,7 @@ class CaseDAO(DAO):
 		case.providerId=providerId
 		case.isEnglish=isEnglish
 		return case	
+
 
 	def updateContent(self,article):
 		"update content and in_time"
