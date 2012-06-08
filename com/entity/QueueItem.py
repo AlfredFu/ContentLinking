@@ -8,7 +8,7 @@ class QueueItem:
 		#is_english
 		#target_id
 		#action_type
-		#status
+		#status hyperlink处理状态，1，待处理；2，处理中；3，处理完毕；
 		#dc_status_code
 		#dc_error_desc
 		#upd_time

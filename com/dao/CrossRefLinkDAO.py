@@ -38,3 +38,10 @@ class CrossRefLinkDAO(DAO):
 
 	def getByDesSrcId(self,desId,srcId):
 		pass
+	
+	def getRelatedArticleId(self,id):
+		self.cursor_hyperlink.execute("SELECT des_article_id AS articleId FROM cross_ref_link WHERE src_article_id=%s UNION SELECT src_article_id AS articleId FROM cross_ref_link WHERE des_article_id=%s; " %(id,id))
+		return self.cursor_hyperlink.fetchall()
+
+	def updateActionType(self,id,type):
+		self.cursor_stg.execute("UPDATE opr_load_status SET action_type='%s' WHERE target_id=%s AND action_type")
