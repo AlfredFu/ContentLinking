@@ -22,7 +22,7 @@ class CaseDAO(DAO):
 		"根据主键信息获取案例"
 		article=Case()	
 		try:
-			self.cusor_stg.execute("SELECT cases.case_id as id,cases.title,case_content.content FROM cases LEFT JOIN case_content ON cases.case_id=case_content.case_id WHERE cases.case_id=%s;" % id)
+			self.cursor_stg.execute("SELECT cases.case_id as id,cases.title,case_content.content FROM cases LEFT JOIN case_content ON cases.case_id=case_content.case_id WHERE cases.case_id=%s;" % id)
 			row=self.cursor_stg.fetchone()
 			if row:
 				article.id=row[0]
@@ -58,6 +58,8 @@ class CaseDAO(DAO):
 	def updateTime(self,article):
 		self.cursor_stg.execute("UPDATE cases SET case.in_time=NOW() WHERE case_id=%s" % article.id)
 
+	def update(self,article):
+		pass
 if __name__=='__main__':
 	caseDao=CaseDAO()
 	for case in caseDao.getCase():

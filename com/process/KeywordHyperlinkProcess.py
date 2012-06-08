@@ -47,12 +47,11 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 				lawCandidate=self.lawDao.getLawByKeywordId(posTuple[2])
 			else:
 				lawCandidate=self.lawDao.getLawByKeywordId(posTuple[4])
-			if len(lawCandidate) >1:
-				targetArticle=self.selectTargetLaw(article,lawCandidate)
-			else:	
-				targetArticle=lawCandidate[0]
+			if not lawCandidate:#如果没找到可加上hyperlink的法规
+				continue
+			targetArticle=self.selectTargetArticle(article,lawCandidate)
 			#targetLawUrl="/law/content.php?content_type=T&origin_id="+targetLaw.originId+"&provider_id="+targetLaw.providerId+"&isEnglish="+targetLaw.isEnglish
-			targetArticleUrl="/law/content.php?content_type=%s&origin_id=%s&provider_id=%s&isEnglish=%s" % (targetArticle.contentType,targetArticle.originId,targetArticle.isEnglish)
+			targetArticleUrl="/law/content.php?content_type=%s&origin_id=%s&provider_id=%s&isEnglish=%s" % (targetArticle.contentType,targetArticle.originId,targetArticle.providerId,targetArticle.isEnglish)
 			rep="<a href='"+targetArticleUrl+"' class='link_3' >"+article.content[posTuple[0]:posTuple[1]]+"<a>"
 			article.content=article.content[:posTuple[0]]+rep+article.content[posTuple[1]+1:]
 		return article 
@@ -66,6 +65,7 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 				
 			article=self.patternContent(posTupleList,article)
 			self.updateArticle(article)
+			print article.content
 
 
 if __name__=="__main__":

@@ -1,4 +1,5 @@
 from com.dao import *
+from com.entity.Law import *
 
 class LawDAO(DAO):
 	def __init__(self):
@@ -17,7 +18,17 @@ class LawDAO(DAO):
 		
 	def getLawByKeywordId(self,keywordId):
 		self.cursor_hyperlink.execute("SELECT origin_id,provider_id,isEnglish,target_id,action_type FROM article WHERE keyword_id=%s AND content_type='T';" % keywordId)
-		return self.cursor_hyperlink.fetchall()	
+		articleList=[]
+		for row in self.cursor_hyperlink.fetchall():
+			article=Law()
+			article.originId=row[0]
+			article.providerId=row[1]
+			article.isEnglish=row[2]
+			article.targetId=row[3]
+			article.actionType=row[4]
+			articleList.append(article)
+		#return self.cursor_hyperlink.fetchall()	
+		return articleList
 	
 	def getById(self,id):
 		article=Law()	

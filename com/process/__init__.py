@@ -28,6 +28,7 @@ class HyperlinkProcess(object):
 			article=self.lawDao.getById(queueItem.targetId)
 		elif queueItem.contentType == Article.CONTENT_TYPE_CASE:
 			article=self.caseDao.getById(queueItem.targetId)
+		return article
 			
 	def checkHyperlinkedKeyword(self,content,startPos,endPos):
 		"""
@@ -50,6 +51,7 @@ class HyperlinkProcess(object):
 		param lawCandidate多版本文章(法规)列表
 		return 返回文章(文章)对象
 		"""
+		if len(articleCandidate) ==1:return articleCandidate[0]
 		latestDate=''
 		latestArticle=None
 		for targetArticle in articleCandidate:
