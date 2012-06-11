@@ -22,12 +22,15 @@ class CaseDAO(DAO):
 		"根据主键信息获取案例"
 		article=Case()	
 		try:
-			self.cursor_stg.execute("SELECT cases.case_id as id,cases.title,case_content.content FROM cases LEFT JOIN case_content ON cases.case_id=case_content.case_id WHERE cases.case_id=%s;" % id)
+			self.cursor_stg.execute("SELECT cases.case_id as id,cases.title,case_content.content,cases.origin_id,cases.provider_id,cases.isEnglish FROM cases LEFT JOIN case_content ON cases.case_id=case_content.case_id WHERE cases.case_id=%s;" % id)
 			row=self.cursor_stg.fetchone()
 			if row:
 				article.id=row[0]
 				article.title=row[1]
 				article.content=row[2]
+				article.originId=row[3]
+				article.providerId=row[4]
+				article.isEnglish=row[5]
 			else:
 				raise Exception("No case with id %s found!" %id)
 		except Exception,e:

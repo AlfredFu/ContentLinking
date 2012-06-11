@@ -41,7 +41,7 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 		@param article 当前处理的文章
 		"""
 		for posTuple in posTupleList:
-			if self.checkHyperlinkedKeyword(article.content,posTuple[0],posTuple[1]):#对加上超链接的关键字不做处理
+			if self.checkHyperlinkedKeyword(article.content,posTuple[0],posTuple[1]):#对已加上超链接的关键字不做处理
 				continue
 			if not  posTuple[4]:
 				lawCandidate=self.lawDao.getLawByKeywordId(posTuple[2])

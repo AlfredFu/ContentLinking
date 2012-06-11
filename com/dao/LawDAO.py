@@ -25,6 +25,7 @@ class LawDAO(DAO):
 			article.providerId=row[1]
 			article.isEnglish=row[2]
 			article.targetId=row[3]
+			article.id=row[3]
 			article.actionType=row[4]
 			articleList.append(article)
 		#return self.cursor_hyperlink.fetchall()	

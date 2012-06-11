@@ -5,6 +5,7 @@ from com.dao.KeywordDAO import *
 from com.dao.HyperlinkQueueDAO import *
 from com.dao.CrossRefLinkDAO import *
 from com.entity.HyperlinkQueue import *
+from com.entity.CrossRefLink import *
 import re
 
 class HyperlinkProcess(object):

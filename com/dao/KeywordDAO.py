@@ -1,3 +1,4 @@
+#coding=utf-8
 from com.entity.Keyword import *
 from com.dao import *
 
@@ -6,10 +7,7 @@ class KeywordDAO(DAO):
         rep="of the People's Republic of China"
 	
 	def __init__(self):
-		#super(KeywordDAO,self).__init__()
-		DAO.__init__(self)
-        	self.cursor.execute('use lnc;')
-
+		super(KeywordDAO,self).__init__()
 
     	def getAll(self):
 		self.cursor.execute("select keyword_id,keyword,status,type,full_title_keyword_id from %s ORDER BY LENGTH(keyword) DESC" % KeywordDAO.table )
@@ -52,6 +50,20 @@ class KeywordDAO(DAO):
             		self.conn.commit()
         	except Exception,e:
 			self.log.error(e)
+
+	def findByContent(self,content):
+		"""
+		根据关键词内容找到关键词
+		"""
+		try:
+			self.cursor_hyperlink.execute("select keyword_id,keyword,status,type,full_title_keyword_id,removed_record_id,isenabling from keyword_en where keyword='%s'" % content)
+			row=self.cursor_hyperlink.fetchone()
+			if row:
+				keyword=self.assembleKeyword(row)
+				return keyword
+		except Exception,e:
+			self.log.error(e)
+
 	def assembleKeyword(self,row):
 		keyword=Keyword()
 		keyword.id=row[0]
@@ -61,10 +73,7 @@ class KeywordDAO(DAO):
             	keyword.fullTitleKeywordId=row[4]
 		return keyword
 		
-
-
 if __name__=='__main__':
-#def testGetAll():
     keywordDAO=KeywordDAO()
     for keyword in keywordDAO.getAll():
         print keyword.content
