@@ -54,6 +54,7 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 			targetArticleUrl="/law/content.php?content_type=%s&origin_id=%s&provider_id=%s&isEnglish=%s" % (targetArticle.contentType,targetArticle.originId,targetArticle.providerId,targetArticle.isEnglish)
 			rep="<a href='"+targetArticleUrl+"' class='link_3' >"+article.content[posTuple[0]:posTuple[1]]+"<a>"
 			article.content=article.content[:posTuple[0]]+rep+article.content[posTuple[1]+1:]
+			self.addCrossRefLink(article,targetArticle,posTuple[2])#添加hyperlink记录
 		return article 
 
 	def process(self,article=None):

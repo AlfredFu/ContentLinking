@@ -30,9 +30,17 @@ class CrossRefLinkDAO(DAO):
 			print e
 			self.log.error(e) 
 
+	def add(self,crossRefLink):
+		try:
+			self.cursor.execute("insert into cross_ref_link(src_article_id,keyword_id,des_article_id,des_item_id,des_attachment_id,src_content_type,src_origin_id,src_provider_id,src_isenglish,des_content_type,des_origin_id,des_provider_id,des_isenglish) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" % crossRefLink.toTuple())
+		except Exception,e:
+			print e
+			self.log.error(e)
+	
 
 	def getBySrcId(self,srcId):
 		"get link between article of src Id"
+		pass
 
 	def getByDesId(self,desId):
 		pass

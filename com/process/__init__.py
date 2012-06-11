@@ -102,6 +102,28 @@ class HyperlinkProcess(object):
 			self.deleteCrossRefLinkByArticleId(queueItem.targetId)#删除cross_ref_link表中的记录
 			#TODO处理被引用的文章
 		self.queueDao.updateStatus(queueItem.targetId,HyperlinkQueue.STATUS_PROCESSING,queueItem.contentType)
+	
+	def addCrossRefLink(self,article,targetArticle,keywordId='',itemId='',attachmentId=''):
+		"""
+		add record to cross_ref_link
+		"""
+		crossRefLink=CrossRefLink()
+		crossRefLink.srcArticleId=article.id
+		crossRefLink.srcContentType=article.contentType
+		crossRefLink.srcOriginId=article.originId
+		crossRefLink.srcProviderId=article.providerId
+		crossRefLink.srcIsEnglish=article.isEnglish
+		crossRefLink.desArticleId=targetArticle.id
+		crossRefLink.desContentType=targetArticle.contentType
+		crossRefLink.desOriginId=targetArticle.originId
+		crossRefLink.desProviderId=targetArticle.providerId
+		crossRefLink.desIsEnglish=targetArticle.isEnglish		
+		crossRefLink.desAttachmentId=attachmentId
+
+		crossRefLink.keywordId=keywordId
+		crossRefLink.itemId=itemId
+		
+		self.crossRefLinkDao.add(crossRefLink)
 
 	def process(self,article):
 		pass	
