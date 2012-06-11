@@ -25,6 +25,15 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 				return True
 		return False
 
+	def tripVersionInfo(self,title):
+		"""
+		文章标题中关于法规版本信息去掉
+		return 去掉版本信息字符串后的标题
+		"""
+		if title:
+			title=re.sub(pattern=r'\(revised in [0-9]{4}\)$',repl='',string=title,count=0,flags=re.I)
+		return title
+		
 	def addVersionRelation(self,article):
 		"""
 		添加文章多版本参考信息
@@ -67,4 +76,5 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 				
 if __name__=='__main__':
 	process=VersionHyperlinkProcess()
-	process.process()
+	#process.process()
+	print process.tripVersionInfo("Company Law of the People's Republic of China (Revised in 1999)")
