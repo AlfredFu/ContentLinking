@@ -17,7 +17,7 @@ class ArticleDAO(DAO):
 		查询所有与指定关键词Id相关的文章
 		"""
 		try:
-			self.curosr_hyperlink.execute("select article_id,content_type,origin_id,provider_id,isEnglish,target_id,action_type,status,keyword_id from article where keyword_id='%s'" % keywordId)
+			self.cursor_hyperlink.execute("select article_id,content_type,origin_id,provider_id,isEnglish,target_id,action_type,status,keyword_id from article where keyword_id='%s'" % keywordId)
 			articleList=[]
 			for row in self.cursor_hyperlink.fetchall():
 				article=Article()

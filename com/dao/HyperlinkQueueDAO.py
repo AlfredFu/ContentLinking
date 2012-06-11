@@ -8,20 +8,44 @@ class HyperlinkQueueDAO(DAO):
 		DAO.__init__(self)
 	
 	def getAll(self):
-		self.cursor_stg.execute("SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s" % HyperlinkQueueDAO.table)	
-		for row in self.cursor_stg.fetchall():
-			queueItem=QueueItem()
-			queueItem.id=row[0]
-			queueItem.contentType=row[1]
-			queueItem.originId=row[2]
-			queueItem.providerId=row[3]
-			queueItem.isEnglish=row[4]
-			queueItem.targetId=row[5]
-			queueItem.actionType=row[6]
-			queueItem.status=row[7]
-			queueItem.updTime=row[10]
-			queueItem.infiledate=row[11]
-			yield queueItem
+		try:
+			self.cursor_stg.execute("SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s where status=1" % HyperlinkQueueDAO.table)	
+			for row in self.cursor_stg.fetchall():
+				queueItem=QueueItem()
+				queueItem.id=row[0]
+				queueItem.contentType=row[1]
+				queueItem.originId=row[2]
+				queueItem.providerId=row[3]
+				queueItem.isEnglish=row[4]
+				queueItem.targetId=row[5]
+				queueItem.actionType=row[6]
+				queueItem.status=row[7]
+				queueItem.updTime=row[10]
+				queueItem.infiledate=row[11]
+				yield queueItem
+		except Exception,e:
+			print e
+			self.log.error(e)
+			
+	def getByContentType(self,contentType=''):
+		try:
+			self.cursor_stg.execute("SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s where status=1 and content_type='%s'" % (HyperlinkQueueDAO.table,contentType))	
+			for row in self.cursor_stg.fetchall():
+				queueItem=QueueItem()
+				queueItem.id=row[0]
+				queueItem.contentType=row[1]
+				queueItem.originId=row[2]
+				queueItem.providerId=row[3]
+				queueItem.isEnglish=row[4]
+				queueItem.targetId=row[5]
+				queueItem.actionType=row[6]
+				queueItem.status=row[7]
+				queueItem.updTime=row[10]
+				queueItem.infiledate=row[11]
+				yield queueItem
+		except Exception,e:
+			print e
+			self.log.error(e)
 			
 	def add(self,queueItem):
 		self.cursor_stg.execute("INSERT INTO %s (content_type,origin_id,provider_id,is_english,target_id,action_type,status,upd_time,infiledate ) values(%s,%s,%s,%s,%s,%s,%s)" % HyperlinkQueueDAO.table,queueItem.attrToTuple())

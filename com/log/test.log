@@ -1,54 +1,112 @@
-HyperlinkProcess 2012-06-08 17:29:24,340 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:29:24,340 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:29:24,340 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:29:24,340 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:29:24,340 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:29:24,340 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:29:24,341 ERROR CaseDAO instance has no attribute 'cusror_stg'
-HyperlinkProcess 2012-06-08 17:29:24,341 ERROR CaseDAO instance has no attribute 'cusror_stg'
-HyperlinkProcess 2012-06-08 17:29:24,341 ERROR CaseDAO instance has no attribute 'cusror_stg'
-HyperlinkProcess 2012-06-08 17:29:24,341 ERROR CaseDAO instance has no attribute 'cusror_stg'
-HyperlinkProcess 2012-06-08 17:29:24,341 ERROR CaseDAO instance has no attribute 'cusror_stg'
-HyperlinkProcess 2012-06-08 17:29:24,341 ERROR CaseDAO instance has no attribute 'cusror_stg'
-HyperlinkProcess 2012-06-08 17:30:20,282 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:30:20,282 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:30:20,282 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:30:20,282 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:30:20,282 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:30:20,282 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:31:58,027 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:31:58,027 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:31:58,027 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:31:58,027 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:31:58,027 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:31:58,027 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:33:53,349 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:33:53,349 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:33:53,349 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:33:53,349 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:33:53,349 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:33:53,349 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:34:02,553 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:34:02,553 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:34:02,553 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:34:02,553 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:34:02,553 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-08 17:34:02,553 ERROR (1054, "Unknown column 'C' in 'where clause'")
-HyperlinkProcess 2012-06-11 14:40:33,378 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,378 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,378 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,378 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,378 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,378 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,421 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,421 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,421 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,421 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,421 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,421 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,426 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,426 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,426 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,426 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,426 ERROR 'CrossRefLink' object has no attribute 'desItemId'
-HyperlinkProcess 2012-06-11 14:40:33,426 ERROR 'CrossRefLink' object has no attribute 'desItemId'
+HyperlinkProcess 2012-06-11 16:46:35,107 ERROR 'ArticleDAO' object has no attribute 'curosr_hyperlink'
+HyperlinkProcess 2012-06-11 16:46:35,107 ERROR 'ArticleDAO' object has no attribute 'curosr_hyperlink'
+HyperlinkProcess 2012-06-11 16:46:35,107 ERROR 'ArticleDAO' object has no attribute 'curosr_hyperlink'
+HyperlinkProcess 2012-06-11 16:46:35,107 ERROR 'ArticleDAO' object has no attribute 'curosr_hyperlink'
+HyperlinkProcess 2012-06-11 16:46:35,107 ERROR 'ArticleDAO' object has no attribute 'curosr_hyperlink'
+HyperlinkProcess 2012-06-11 16:46:35,107 ERROR 'ArticleDAO' object has no attribute 'curosr_hyperlink'
+HyperlinkProcess 2012-06-11 16:46:35,107 ERROR 'ArticleDAO' object has no attribute 'curosr_hyperlink'
+HyperlinkProcess 2012-06-11 16:46:35,107 ERROR 'ArticleDAO' object has no attribute 'curosr_hyperlink'
+HyperlinkProcess 2012-06-11 16:52:56,817 ERROR executemany() takes exactly 3 arguments (2 given)
+HyperlinkProcess 2012-06-11 16:52:56,817 ERROR executemany() takes exactly 3 arguments (2 given)
+HyperlinkProcess 2012-06-11 16:52:56,817 ERROR executemany() takes exactly 3 arguments (2 given)
+HyperlinkProcess 2012-06-11 16:52:56,817 ERROR executemany() takes exactly 3 arguments (2 given)
+HyperlinkProcess 2012-06-11 16:52:56,817 ERROR executemany() takes exactly 3 arguments (2 given)
+HyperlinkProcess 2012-06-11 16:52:56,817 ERROR executemany() takes exactly 3 arguments (2 given)
+HyperlinkProcess 2012-06-11 16:52:56,817 ERROR executemany() takes exactly 3 arguments (2 given)
+HyperlinkProcess 2012-06-11 16:52:56,817 ERROR executemany() takes exactly 3 arguments (2 given)
+HyperlinkProcess 2012-06-11 16:54:43,926 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:54:43,926 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:54:43,926 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:54:43,926 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:54:43,926 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:54:43,926 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:54:43,926 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:54:43,926 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:56:05,300 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:56:05,300 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:56:05,300 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:56:05,300 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:56:05,300 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:56:05,300 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:56:05,300 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:56:05,300 ERROR not enough arguments for format string
+HyperlinkProcess 2012-06-11 16:56:27,363 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:56:27,363 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:56:27,363 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:56:27,363 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:56:27,363 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:56:27,363 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:56:27,363 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:56:27,363 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:58:19,306 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:58:19,306 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:58:19,306 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:58:19,306 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:58:19,306 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:58:19,306 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:58:19,306 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:58:19,306 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 16:58:58,658 ERROR (1146, "Table 'lnc.versions' doesn't exist")
+HyperlinkProcess 2012-06-11 16:58:58,658 ERROR (1146, "Table 'lnc.versions' doesn't exist")
+HyperlinkProcess 2012-06-11 16:58:58,658 ERROR (1146, "Table 'lnc.versions' doesn't exist")
+HyperlinkProcess 2012-06-11 16:58:58,658 ERROR (1146, "Table 'lnc.versions' doesn't exist")
+HyperlinkProcess 2012-06-11 16:58:58,658 ERROR (1146, "Table 'lnc.versions' doesn't exist")
+HyperlinkProcess 2012-06-11 16:58:58,658 ERROR (1146, "Table 'lnc.versions' doesn't exist")
+HyperlinkProcess 2012-06-11 16:58:58,658 ERROR (1146, "Table 'lnc.versions' doesn't exist")
+HyperlinkProcess 2012-06-11 16:58:58,658 ERROR (1146, "Table 'lnc.versions' doesn't exist")
+HyperlinkProcess 2012-06-11 17:14:01,121 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:14:01,121 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:14:01,121 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:14:01,121 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:14:01,121 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:14:01,121 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:14:01,121 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:14:01,121 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:14:20,949 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:14:20,949 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:14:20,949 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:14:20,949 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:14:20,949 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:14:20,949 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:14:20,949 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:14:20,949 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'','1','',''Y''),\n(''2258' at line 2")
+HyperlinkProcess 2012-06-11 17:15:31,179 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")
+HyperlinkProcess 2012-06-11 17:15:31,179 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")
+HyperlinkProcess 2012-06-11 17:15:31,179 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")
+HyperlinkProcess 2012-06-11 17:15:31,179 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")
+HyperlinkProcess 2012-06-11 17:15:31,179 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")
+HyperlinkProcess 2012-06-11 17:15:31,179 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")
+HyperlinkProcess 2012-06-11 17:15:31,179 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")
+HyperlinkProcess 2012-06-11 17:15:31,179 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")
+HyperlinkProcess 2012-06-11 17:20:14,738 ERROR not all arguments converted during string formatting
+HyperlinkProcess 2012-06-11 17:20:14,738 ERROR not all arguments converted during string formatting
+HyperlinkProcess 2012-06-11 17:20:14,738 ERROR not all arguments converted during string formatting
+HyperlinkProcess 2012-06-11 17:20:14,738 ERROR not all arguments converted during string formatting
+HyperlinkProcess 2012-06-11 17:20:14,738 ERROR not all arguments converted during string formatting
+HyperlinkProcess 2012-06-11 17:20:14,738 ERROR not all arguments converted during string formatting
+HyperlinkProcess 2012-06-11 17:20:14,738 ERROR not all arguments converted during string formatting
+HyperlinkProcess 2012-06-11 17:20:14,738 ERROR not all arguments converted during string formatting
+HyperlinkProcess 2012-06-11 17:25:04,067 ERROR (1062, "Duplicate entry '225870-1-Y-225166-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:25:04,067 ERROR (1062, "Duplicate entry '225870-1-Y-225166-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:25:04,067 ERROR (1062, "Duplicate entry '225870-1-Y-225166-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:25:04,067 ERROR (1062, "Duplicate entry '225870-1-Y-225166-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:25:04,067 ERROR (1062, "Duplicate entry '225870-1-Y-225166-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:25:04,067 ERROR (1062, "Duplicate entry '225870-1-Y-225166-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:25:04,067 ERROR (1062, "Duplicate entry '225870-1-Y-225166-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:25:04,067 ERROR (1062, "Duplicate entry '225870-1-Y-225166-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:25:59,191 ERROR (1062, "Duplicate entry '225870-1-Y-225870-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:25:59,191 ERROR (1062, "Duplicate entry '225870-1-Y-225870-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:25:59,191 ERROR (1062, "Duplicate entry '225870-1-Y-225870-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:25:59,191 ERROR (1062, "Duplicate entry '225870-1-Y-225870-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:25:59,191 ERROR (1062, "Duplicate entry '225870-1-Y-225870-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:25:59,191 ERROR (1062, "Duplicate entry '225870-1-Y-225870-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:25:59,191 ERROR (1062, "Duplicate entry '225870-1-Y-225870-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:25:59,191 ERROR (1062, "Duplicate entry '225870-1-Y-225870-1-Y' for key 'u_idx'")
+HyperlinkProcess 2012-06-11 17:35:51,846 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")
+HyperlinkProcess 2012-06-11 17:35:51,846 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")
+HyperlinkProcess 2012-06-11 17:35:51,846 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")
+HyperlinkProcess 2012-06-11 17:35:51,846 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")
+HyperlinkProcess 2012-06-11 17:35:51,846 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")
+HyperlinkProcess 2012-06-11 17:35:51,846 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")
+HyperlinkProcess 2012-06-11 17:35:51,846 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")
+HyperlinkProcess 2012-06-11 17:35:51,846 ERROR (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '225870'',1,''Y'',''225166'',1,''Y''),\n(''225166'',1,''Y'',''225870'',1,''Y''),\n(' at line 2")

@@ -1,6 +1,8 @@
 #coding=utf-8
 from com.process import *
 from com.dao.VersionDAO import *
+from com.dao.ArticleDAO import *
+from com.entity.Article import *
 import re
 
 class VersionHyperlinkProcess(HyperlinkProcess):
@@ -9,7 +11,8 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 	"""
 	def __init__(self):
 		super(VersionHyperlinkProcess,self).__init__()
-		self.versionDao=VersionDAO()
+		self.versionDao=VersionDAO.VersionDAO()
+		self.articleDao=ArticleDAO()
 	
 	def checkMultipleVersion(self,article):
 		"""
@@ -31,16 +34,17 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 			refVersionArticleList=self.articleDao.findByKeywordId(keyword.id)
 			versionList=[]
 			for reVersionArticle in refVersionArticleList:
-				versionSrc=Version()
-				versionDes=Version()
-				versionDes.desOriginId=versionSrc.srcOriginId=article.originId
-				versionDes.desOriginId=versionSrc.srcProviderId=article.providerId
-				versionDes.desIsEnglish=versionSrc.srcIsEnglish=article.isEnglish
-				versionDes.srcOriginId=versionSrc.desOriginId=reVersionArticle.originId
-				versionDes.srcProviderId=versionSrc.desProviderId=reVersionArticle.providerId
-				versionDes.srcIsEnglish=versionSrc.desIsEnglish=reVersionArticle.isEnglish
-				versionList.append(versionSrc)
-				versionList.append(versionDes)
+				if (article.originId,article.providerId,article.isEnglish) != (reVersionArticle.originId,reVersionArticle.providerId,reVersionArticle.isEnglish):
+					versionSrc=Version()
+					versionDes=Version()
+					versionDes.desOriginId=versionSrc.srcOriginId=article.originId
+					versionDes.desProviderId=versionSrc.srcProviderId=article.providerId
+					versionDes.desIsEnglish=versionSrc.srcIsEnglish=article.isEnglish
+					versionDes.srcOriginId=versionSrc.desOriginId=reVersionArticle.originId
+					versionDes.srcProviderId=versionSrc.desProviderId=reVersionArticle.providerId
+					versionDes.srcIsEnglish=versionSrc.desIsEnglish=reVersionArticle.isEnglish
+					versionList.append(versionSrc)
+					versionList.append(versionDes)
 			self.versionDao.addMany(versionList)
 	
 	def deleteVersionRelation(self,article):
@@ -50,9 +54,9 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 		self.versionDao.deleteByOrigin(originId,providerId,isEnglish)
 		
 	def process(self):
-		for queueItem in self.queueDao.getByType(Article.CONTENT_TYPE_TAX):
+		for queueItem in self.queueDao.getByContentType(Article.CONTENT_TYPE_LAW):
 			article=self.getArticle(queueItem)
-			if not self.checkMultipleVersion(article):continue
+			#if not self.checkMultipleVersion(article):continue
 			if queueItem.actionType=='N':
 				self.addVersionRelation(article)
 			elif queueItem.actionType=='D':
@@ -62,4 +66,5 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 				self.addVersionRelation(article)
 				
 if __name__=='__main__':
-	print "test"
+	process=VersionHyperlinkProcess()
+	process.process()

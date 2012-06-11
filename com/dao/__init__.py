@@ -5,6 +5,7 @@ class DAO(object):
 	def __init__(self):
 		self.conn=DBConnUtil.getConnection()
         	self.cursor=self.conn.cursor()
+		self.cursor.execute("USE newlaw;")
 
 		self.conn_stg=DBConnUtil.getConnection('db_stg')
 		self.cursor_stg=self.conn_stg.cursor()

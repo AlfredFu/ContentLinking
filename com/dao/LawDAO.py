@@ -1,5 +1,6 @@
 from com.dao import *
 from com.entity.Law import *
+import sys
 
 class LawDAO(DAO):
 	def __init__(self):
@@ -34,12 +35,16 @@ class LawDAO(DAO):
 	def getById(self,id):
 		article=Law()	
 		try:
-			self.cusor_stg.execute("SELECT tax.taxid as id,tax.title,tax_content.content FROM tax LEFT JOIN tax_content ON tax.taxid=tax_content.taxid WHERE tax.taxid=%s;" % id)
+			self.cursor_stg.execute("SELECT tax.taxid as id,tax.title,tax_content.content,tax.origin_id,tax.provider_id,tax.isEnglish FROM tax LEFT JOIN tax_content ON tax.taxid=tax_content.taxid WHERE tax.taxid=%s;" % id)
+			#print "SELECT tax.taxid as id,tax.title,tax_content.content FROM tax LEFT JOIN tax_content ON tax.taxid=tax_content.taxid WHERE tax.taxid=%s;" % id
 			row=self.cursor_stg.fetchone()
 			if row:
 				article.id=row[0]
 				article.title=row[1]
 				article.content=row[2]
+				article.originId=row[3]
+				article.providerId=row[4]
+				article.isEnglish=row[5]
 			else:
 				raise Exception("No law with id %s found!" %id)
 		except Exception,e:
