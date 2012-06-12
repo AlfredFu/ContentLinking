@@ -50,6 +50,15 @@ class KeywordDAO(DAO):
             		self.conn_hyperlink.commit()
         	except Exception,e:
 			self.log.error(e)
+	
+	def add(self,keyword):
+		try:
+			keyword.content=keyword.content.replace("'","\\'")
+			self.cursor_hyperlink.execute("replace into keyword_en(keyword,status,type) values('%s','NOR','%s')" % (keyword.content,keyword.type))
+			return self.cursor_hyperlink.lastrowid
+		except Exception,e:
+			print e
+			self.log.error(e)
 
 	def findByContent(self,content):
 		"""

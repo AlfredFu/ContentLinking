@@ -6,7 +6,19 @@ class LawDAO(DAO):
 	def __init__(self):
 		DAO.__init__(self)
 	
-
+	def getAll(self):
+		try:
+			self.cursor_stg.execute("select taxid,title,origin_id,provider_id,isEnglish from tax where isEnglish='Y' and display=1 and duplicate_flag=0")
+			for row in self.cursor_stg.fetchall():
+				article=Law()
+				law.id=row[0]
+				law.title=row[1]
+				law.originId=row[2]
+				law.providerId=row[3]
+				law.isEnglish=row[4]
+				yield law
+		except Exception,e:
+			self.log.error(e)
 	def update(self,article):
 		try:
 			if article.content:
