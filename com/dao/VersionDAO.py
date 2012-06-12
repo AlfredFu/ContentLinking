@@ -21,7 +21,7 @@ class VersionDAO(DAO):
 			#TODO optimize
 			#self.cursor.executemany("replace into versions(src_origin_id,src_provider_id,src_isenglish,des_origin_id,des_provider_id,des_isenglish) values('%s',%s,'%s','%s',%s,'%s')",tupleList)
 			for tuple in tupleList:
-				self.cursor.execute("insert into versions(src_origin_id,src_provider_id,src_isenglish,des_origin_id,des_provider_id,des_isenglish) values('%s',%s,'%s','%s',%s,'%s')" % tuple)
+				self.cursor.execute("replace into versions(src_origin_id,src_provider_id,src_isenglish,des_origin_id,des_provider_id,des_isenglish) values('%s',%s,'%s','%s',%s,'%s')" % tuple)
 			#print "insert into versions(src_origin_id,src_provider_id,src_isenglish,des_origin_id,des_provider_id,des_isenglish) values('%s',%s,'%s','%s',%s,'%s')"
 		except Exception,e:
 			print e

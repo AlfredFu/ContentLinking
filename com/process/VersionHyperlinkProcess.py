@@ -31,14 +31,15 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 		return 去掉版本信息字符串后的标题
 		"""
 		if title:
-			title=re.sub(pattern=r'\(revised in [0-9]{4}\)$',repl='',string=title,count=0,flags=re.I)
+			p=re.compile(r'\(revised in [0-9]{4}\)$',re.I)
+			title=p.sub('',title)
 		return title
 		
 	def addVersionRelation(self,article):
 		"""
 		添加文章多版本参考信息
 		"""
-		keyword=self.keywordDao.findByContent(article.title)
+		keyword=self.keywordDao.findByContent(self.tripVersionInfo(article.title))
 		if keyword.id:
 			refVersionArticleList=self.articleDao.findByKeywordId(keyword.id)
 			versionList=[]
@@ -66,9 +67,9 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 		for queueItem in self.queueDao.getByContentType(Article.CONTENT_TYPE_LAW):
 			article=self.getArticle(queueItem)
 			#if not self.checkMultipleVersion(article):continue
-			if queueItem.actionType=='N':
+			if queueItem.actionType==QueueItem.ACTION_TYPE_NEW:
 				self.addVersionRelation(article)
-			elif queueItem.actionType=='D':
+			elif queueItem.actionType==QueueItem.ACTION_TYPE_UPDATE:
 				self.deleteVersionRelation(article)
 			else:
 				self.deleteVersionRelation(article)
@@ -76,5 +77,5 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 				
 if __name__=='__main__':
 	process=VersionHyperlinkProcess()
-	#process.process()
-	print process.tripVersionInfo("Company Law of the People's Republic of China (Revised in 1999)")
+	process.process()
+	#print process.tripVersionInfo("Company Law of the People's Republic of China (Revised in 1999)")
