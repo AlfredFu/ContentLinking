@@ -9,15 +9,19 @@ class CaseDAO(DAO):
 	
 	def getAll(self):
 		"获取所有有效案例"
-		self.cursor_stg.execute("SELECT case_id,title,origin_id,provider_id,isEnglish FROM cases WHERE isEnglish='Y' AND display=1;")
-		for row in self.cursor_stg.fetchall():
-			case=Case()
-			case.id=row[0]
-			case.title=row[1]
-			case.originId=row[2]
-			case.providerId=row[3]
-			case.isEnglish=row[4]
-			yield case	
+		try:
+			self.cursor_stg.execute("SELECT case_id,title,origin_id,provider_id,isEnglish FROM cases WHERE isEnglish='Y' AND display=1;")
+			for row in self.cursor_stg.fetchall():
+				case=Case()
+				case.id=row[0]
+				case.title=row[1]
+				case.originId=row[2]
+				case.providerId=row[3]
+				case.isEnglish=row[4]
+				yield case	
+		except Exception,e:
+			self.log.error(e)
+
 	def getById(self,id):
 		"根据主键信息获取案例"
 		article=Case()	
@@ -50,7 +54,6 @@ class CaseDAO(DAO):
 		case.isEnglish=isEnglish
 		return case	
 
-
 	def updateContent(self,article):
 		"update content and in_time"
 		#TODO optimize merge following two sql statement
@@ -63,7 +66,8 @@ class CaseDAO(DAO):
 
 	def update(self,article):
 		pass
+
 if __name__=='__main__':
 	caseDao=CaseDAO()
-	for case in caseDao.getCase():
+	for case in caseDao.getAll():
 		print case.title

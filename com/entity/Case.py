@@ -5,4 +5,4 @@ class Case(Article):
 	"案例类"
 	def __init__(self):
 		Article.__init__(self)
-		self.contentType='C'
+		self.contentType=Article.CONTENT_TYPE_CASE

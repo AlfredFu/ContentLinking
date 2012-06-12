@@ -31,23 +31,23 @@ class KeywordDAO(DAO):
 			self.log.error(e)
         
     	def initialKeyword(self):
-        	self.cursor.execute('set names GBK;')
-        	self.cursor.execute('use newlaw;')
+        	self.cursor_stg.execute('set names GBK;')
+        	self.cursor_stg.execute('use newlaw;')
         	keywordInitialSql="select title from tax where isEnglish='Y' and display=1 and duplicate_flag=0;"
-        	self.cursor.execute(keywordInitialSql)
+        	self.cursor_stg.execute(keywordInitialSql)
         	keywordsEn=[]
         	try:
-			row=self.cursor.fetchone()
+			row=self.cursor_stg.fetchone()
             		while row:
                 		keywordsEn.append((row[0],'F'))
                 		if rep in row[0]:
                     			keywordsEn.append((row[0].replace(rep,''),'A'))
-                	row=self.cursor.fetchone()
-            		self.cursor.execute('use lnc;')
-            		self.cursor.execute('delete from %s' % table)
-            		self.conn.commit()
-            		self.cursor.executemany("insert into keyword_en(keyword,status,type) values(%s,'NOR',%s)",keywordsEn)
-            		self.conn.commit()
+                		row=self.cursor.fetchone()
+            		self.cursor_hyperlink.execute('use lnc;')
+            		self.cursor_hyperlink.execute('delete from %s' % table)
+            		self.conn_hyperlink.commit()
+            		self.cursor_hyperlink.executemany("insert into keyword_en(keyword,status,type) values(%s,'NOR',%s)",keywordsEn)
+            		self.conn_hyperlink.commit()
         	except Exception,e:
 			self.log.error(e)
 

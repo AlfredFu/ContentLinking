@@ -8,8 +8,14 @@ class LawDAO(DAO):
 	
 
 	def update(self,article):
-		self.cursor_stg.execute("UPDATE tax_content SET content='%s' WHERE origin_id=%s AND provider_id=%s AND isEnglish='%s'" % (article.content,article.originId,article.providerId,article.isEnglish))
-		self.updateTime(article)	
+		try:
+			if article.content:
+				article.content=article.content.replace("'","\\'")
+			self.cursor_stg.execute("UPDATE tax_content SET content='%s' WHERE origin_id=%s AND provider_id=%s AND isEnglish='%s'" % (article.content,article.originId,article.providerId,article.isEnglish))
+			self.updateTime(article)	
+		except Exception,e:
+			print e
+			self.log.error(e)
 
 	def updateTime(self,article):
 		self.cursor_stg.execute("UPDATE tax SET indbtime=NOW() WHERE origin_id=%s AND provider_id=%s AND isEnglish='%s';" % (article.origin_id,article.provider_id,article.isEnglish));
