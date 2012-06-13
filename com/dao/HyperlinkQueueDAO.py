@@ -1,3 +1,4 @@
+#coding=utf-8
 from com.entity.QueueItem import *
 from com.dao import *
 
@@ -9,7 +10,7 @@ class HyperlinkQueueDAO(DAO):
 	
 	def getAll(self):
 		try:
-			self.cursor_stg.execute("SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s where status=1" % HyperlinkQueueDAO.table)	
+			self.cursor_stg.execute("SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s where action_type in ('N','U','D') and status=1" % HyperlinkQueueDAO.table)	
 			for row in self.cursor_stg.fetchall():
 				queueItem=QueueItem()
 				queueItem.id=row[0]
@@ -62,18 +63,34 @@ class HyperlinkQueueDAO(DAO):
 		except Exception,e:
 			print e
 			self.log.error(e)
+
 	def addAllToQueue(self):
 		try:
 			self.cursor_stg.execute("UPDATE opr_load_status SET action_type='U' WHERE action_type=''")
 		except Exception,e:
 			print e
 			self.log.error(e)
+
 	def updateStatus(self,targetId,status,contentType):
+		"""
+		更新hyperlink队列中谋篇文章的hyperlink状态
+		"""
 		try:
-			self.cursor_stg.execute("update opr_load_status set status=%s where target_id='%s' and content_type='%s'" %(status,targetId,contentType))
+			self.cursor_stg.execute("update opr_load_status_en set status=%s where target_id='%s' and content_type='%s'" %(status,targetId,contentType))
 		except Exception,e:
 			print e
 			self.log.error(e)
+
+	def updateActionType(self,targetId,actionType,contentType):
+		"""
+		更新队列中某篇文章的状态
+		"""
+		try:
+			self.cursor_stg.execute("update opr_load_status_en set action_type='%s' where target_id='%s' and content_type='%s'" % (actionType,targetId,contentType))
+			self.conn_stg.commit()
+		except Exception,e:
+			self.log.error(e)
+			self.log.error("Error occured in updateActionType of HyperlinkQueueDAO")
 			
 if __name__ =="__main__":
 	dao=HyperlinkQueueDAO()

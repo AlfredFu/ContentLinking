@@ -23,6 +23,8 @@ class HyperlinkProcess(object):
 		hyperlink sample:<a href='' class='link_2' re='T' cate='en_href' >Criminal Law</a>
 		"""	
 		content=re.sub(r'<a\s+href=\'[/\w\d\-\.]*?\'\s+class=\'link_2\'\s+re=\'T\'\s+cate=\'en_href\'\s*>(.*?)</a>',r'\1',content)
+		#content=re.sub(r'<a.*?>','',content)
+		#content=re.sub(r'<?/?a>','',content)
 		return content
 	
 	def getArticle(self,queueItem):
