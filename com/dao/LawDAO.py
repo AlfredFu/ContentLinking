@@ -10,7 +10,7 @@ class LawDAO(DAO):
 		try:
 			self.cursor_stg.execute("select taxid,title,origin_id,provider_id,isEnglish from tax where isEnglish='Y' and display=1 and duplicate_flag=0")
 			for row in self.cursor_stg.fetchall():
-				article=Law()
+				law=Law()
 				law.id=row[0]
 				law.title=row[1]
 				law.originId=row[2]
@@ -19,10 +19,12 @@ class LawDAO(DAO):
 				yield law
 		except Exception,e:
 			self.log.error(e)
+			self.log.error("Error occured in method getAll() of LawDAO.py")
 	def update(self,article):
 		try:
 			if article.content:
 				article.content=article.content.replace("'","\\'")
+				article.content=article.content.replace('"','\\"')
 			self.cursor_stg.execute("UPDATE tax_content SET content='%s' WHERE origin_id=%s AND provider_id=%s AND isEnglish='%s'" % (article.content,article.originId,article.providerId,article.isEnglish))
 			self.updateTime(article)	
 		except Exception,e:

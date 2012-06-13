@@ -15,6 +15,7 @@ class HyperlinkProcess(object):
 		self.caseDao=CaseDAO.CaseDAO()
 		self.keywordDao=KeywordDAO.KeywordDAO()
 		self.queueDao=HyperlinkQueueDAO.HyperlinkQueueDAO()
+		self.log=getLog()    
 
 	def eraseHyperlink(self,content):
 		"""

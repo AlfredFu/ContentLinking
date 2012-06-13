@@ -9,8 +9,8 @@ def initialQueue():
 	初始化Hyperlink队列
 	newlaw_stg.opr_load_status_en表
 	"""
-	caseDao=CaseDAO()
-	lawDao=LawDAO()
+	caseDao=CaseDAO.CaseDAO()
+	lawDao=LawDAO.LawDAO()
 	exNewsDao=ExNewsDAO()
 	hyperlinkQueueDao=HyperlinkQueueDAO.HyperlinkQueueDAO()
 
@@ -28,3 +28,6 @@ def initialQueue():
 		queueItemList.append((news.contentType,news.originId,news.providerId,news.isEnglish,news.id,actionType,status))
 
 	hyperlinkQueueDao.addMany(queueItemList)
+
+if __name__=="__main__":
+	initialQueue()

@@ -41,9 +41,14 @@ class ArticleDAO(DAO):
 		批量添加article
 		"""
 		try:
-			self.cursor_hyperlink.executemany("replace into "+ArticleDAO.tableName+"(content_type,origin_id,provider_id,isEnglish,target_id,action_type,status,keyword_id) values('%s','%s',%s,'Y',%s,'%s','%s',%s)",articleTupleList)
+			for articleTuple in articleTupleList:
+				#print "replace into "+ArticleDAO.tableName+"(content_type,origin_id,provider_id,isEnglish,target_id,action_type,status,keyword_id) values('%s','%s',%s,'%s',%s,'%s','%s',%s)" % articleTuple
+				self.cursor_hyperlink.execute("replace into "+ArticleDAO.tableName+"(content_type,origin_id,provider_id,isEnglish,target_id,action_type,status,keyword_id) values('%s','%s',%s,'%s',%s,'%s','%s','%s')" % articleTuple)
+				
+			self.conn_hyperlink.commit()
 		except Exception,e:
 			print e
+			self.log.error("Error occured in addMany() of ArticleDAO.py")
 			self.log.error(e)	
 
 	def add(self,article):

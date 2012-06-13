@@ -8,10 +8,11 @@ class KeywordDAO(DAO):
 	
 	def __init__(self):
 		super(KeywordDAO,self).__init__()
+		self.cursor_hyperlink.execute("use lnc;")
 
     	def getAll(self):
-		self.cursor.execute("select keyword_id,keyword,status,type,full_title_keyword_id from %s ORDER BY LENGTH(keyword) DESC" % KeywordDAO.table )
-        	for row in self.cursor.fetchall():
+		self.cursor_hyperlink.execute("select keyword_id,keyword,status,type,full_title_keyword_id from %s ORDER BY LENGTH(keyword) DESC" % KeywordDAO.table )
+        	for row in self.cursor_hyperlink.fetchall():
             		yield self.assembleKeyword(row)
 
     	def getById(self,id):
@@ -21,6 +22,7 @@ class KeywordDAO(DAO):
 			return self.assembleKeyword(row)
 		except Exception,e:
 	     		self.log.error(e)
+			self.log.error("Error occured in method getById() in KeywordDAO.py")
 
 	def getFullTitleKeyword(self,id):
 		try:
@@ -29,6 +31,7 @@ class KeywordDAO(DAO):
 			return keyword
 		except Exception,e:
 			self.log.error(e)
+			self.log.error("Error occured in method getFullTitleKeyword() in KeywordDAO.py")
         
     	def initialKeyword(self):
         	self.cursor_stg.execute('set names GBK;')
@@ -50,15 +53,22 @@ class KeywordDAO(DAO):
             		self.conn_hyperlink.commit()
         	except Exception,e:
 			self.log.error(e)
+			self.log.error("Error occured in method initialKeyword() in KeywordDAO.py")
 	
 	def add(self,keyword):
 		try:
 			keyword.content=keyword.content.replace("'","\\'")
-			self.cursor_hyperlink.execute("replace into keyword_en(keyword,status,type) values('%s','NOR','%s')" % (keyword.content,keyword.type))
+			keyword.content=keyword.content.replace('"','\\"')
+			if not keyword.fullTitleKeywordId:
+				self.cursor_hyperlink.execute("insert into keyword_en(keyword,status,type) values('%s','NOR','%s')" % (keyword.content,keyword.type))
+			else:
+				self.cursor_hyperlink.execute("insert into keyword_en(keyword,status,type,full_title_keyword_id) values('%s','NOR','%s',%s)" % (keyword.content,keyword.type,keyword.fullTitleKeywordId))
+            		self.conn_hyperlink.commit()
 			return self.cursor_hyperlink.lastrowid
 		except Exception,e:
 			print e
 			self.log.error(e)
+			self.log.error("Error occured in method add() in KeywordDAO.py")
 
 	def findByContent(self,content):
 		"""
@@ -71,6 +81,7 @@ class KeywordDAO(DAO):
 				keyword=self.assembleKeyword(row)
 				return keyword
 		except Exception,e:
+			self.log.error("Error occured in method findByContent() in KeywordDAO.py")
 			self.log.error(e)
 
 	def assembleKeyword(self,row):

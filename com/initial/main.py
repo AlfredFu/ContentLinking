@@ -1,6 +1,6 @@
-import com.initial.InitialArticle
-import com.initial.InitialHyperlinkQueue
+from com.initial.InitialArticle import *
+from com.initial.InitialHyperlinkQueue import *
 
 if __name__=='__main__':
-	InitialArticle.initialArticle()
-	InitialHyperlinkQueue.initialQueue()
+	initialArticle()
+	initialQueue()
