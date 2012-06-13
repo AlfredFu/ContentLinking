@@ -123,7 +123,7 @@ class HyperlinkProcess(object):
 		crossRefLink.desAttachmentId=attachmentId
 
 		crossRefLink.keywordId=keywordId
-		crossRefLink.itemId=itemId
+		crossRefLink.desItemId=itemId
 		
 		self.crossRefLinkDao.add(crossRefLink)
 

@@ -38,7 +38,8 @@ class LawDAO(DAO):
 		self.cursor_stg.execute("UPDATE tax SET indbtime=NOW() WHERE taxid=%s;" % id) 
 		
 	def getLawByKeywordId(self,keywordId):
-		self.cursor_hyperlink.execute("SELECT origin_id,provider_id,isEnglish,target_id,action_type FROM article WHERE keyword_id=%s AND content_type='T';" % keywordId)
+		self.cursor_hyperlink.execute("SELECT origin_id,provider_id,isEnglish,target_id,action_type FROM article_en WHERE keyword_id=%s AND content_type='T';" % keywordId)
+		#print "SELECT origin_id,provider_id,isEnglish,target_id,action_type FROM article WHERE keyword_id=%s AND content_type='T';" % keywordId
 		articleList=[]
 		for row in self.cursor_hyperlink.fetchall():
 			article=Law()

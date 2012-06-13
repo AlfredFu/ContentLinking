@@ -57,18 +57,19 @@ class CaseDAO(DAO):
 	def updateContent(self,article):
 		"update content and in_time"
 		#TODO optimize merge following two sql statement
-		#print "UPDATE case_content SET content='%s'" % article.content
 		article.content=article.content.replace("'","\\'")
 		article.content=article.content.replace('"','\\"')
+		#print "CaseDAO updateContent()UPDATE case_content SET content='%s'" % article.content
 		self.cursor_stg.execute("UPDATE case_content SET content='%s' WHERE case_id=%s" % (article.content,article.id))
-		self.updateTime(article)
 
 
 	def updateTime(self,article):
-		self.cursor_stg.execute("UPDATE cases SET case.in_time=NOW() WHERE case_id=%s" % article.id)
+		self.cursor_stg.execute("UPDATE cases SET cases.in_time=NOW() WHERE case_id=%s" % article.id)
 
 	def update(self,article):
-		pass
+		self.updateContent(article)
+		self.updateTime(article)
+		
 
 if __name__=='__main__':
 	caseDao=CaseDAO()

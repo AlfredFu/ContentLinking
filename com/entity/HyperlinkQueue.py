@@ -1,3 +1,4 @@
+#coding=utf-8
 class HyperlinkQueue:
 	STATUS_AWAIT=1
 	STATUS_PROCESSING=3
@@ -5,4 +6,6 @@ class HyperlinkQueue:
 	ACTION_TYPE_NEW='N'
 	ACTION_TYPE_UPDATE='U'
 	ACTION_TYPE_DEL='D'
-	pass
+
+	def __init__(self):
+		pass
