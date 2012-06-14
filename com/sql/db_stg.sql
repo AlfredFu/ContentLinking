@@ -17,3 +17,5 @@ CREATE TABLE `opr_load_status_en` (
   KEY `target_id` (`target_id`),
   KEY `origin_id` (`origin_id`,`provider_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=gbk AUTO_INCREMENT=1 ;
+
+ALTER TABLE cross_ref_link CHANGE src_isenglish src_isenglish enum('N','Y') DEFAULT 'N', CHANGE des_isenglish des_isenglish enum('N','Y') DEFAULT 'N';
