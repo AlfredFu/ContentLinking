@@ -4,6 +4,7 @@ from com.dao.CaseDAO import *
 from com.dao.KeywordDAO import *
 from com.dao.HyperlinkQueueDAO import *
 from com.dao.CrossRefLinkDAO import *
+from com.dao.ExNewsDAO import *
 from com.entity.HyperlinkQueue import *
 from com.entity.CrossRefLink import *
 import re
@@ -15,12 +16,15 @@ class HyperlinkProcess(object):
 		self.caseDao=CaseDAO.CaseDAO()
 		self.keywordDao=KeywordDAO.KeywordDAO()
 		self.queueDao=HyperlinkQueueDAO.HyperlinkQueueDAO()
+		self.exNewsDao=ExNewsDAO.ExNewsDAO()
 		self.log=getLog()    
 
 	def eraseHyperlink(self,content):
 		"""
 		清除hyperlink所加的超链接
 		hyperlink sample:<a href='' class='link_2' re='T' cate='en_href' >Criminal Law</a>
+		@param content 文章内容
+		return 清除hyperlink链接后的文章内容
 		"""	
 		content=re.sub(r'<a\s+href=\'[/\w\d\-\.]*?\'\s+class=\'link_2\'\s+re=\'T\'\s+cate=\'en_href\'\s*>(.*?)</a>',r'\1',content)
 		#content=re.sub(r'<a.*?>','',content)
@@ -28,11 +32,32 @@ class HyperlinkProcess(object):
 		return content
 	
 	def getArticle(self,queueItem):
+		"""
+		根据Hyperlink队列中的元素获取文章
+		@param queueItem hyperlink队列中的一个元素
+		return 返回文章
+		"""
 		if queueItem.contentType == Article.CONTENT_TYPE_LAW:
 			article=self.lawDao.getById(queueItem.targetId)
 		elif queueItem.contentType == Article.CONTENT_TYPE_CASE:
 			article=self.caseDao.getById(queueItem.targetId)
+		elfi queueItem.contentType ==Article.CONTENT_TYPE_NEWS:
+			article=self.exNewsDao.getById(queueItem.targetId)
+		article.actionType=queueItem.actionType
+		article.status=queueItem.status	
 		return article
+
+	def updateArticle(self,article):
+		"""
+		做完hyperlink后更新相关文章的时间
+		"""
+		if article.contentType=='T':
+			self.lawDao.update(article)
+		elif article.contentType=='C':
+			self.caseDao.update(article)
+		else:
+			self.exNewsDao.update(article)
+
 			
 	def checkHyperlinkedKeyword(self,content,startPos,endPos):
 		"""
@@ -51,8 +76,8 @@ class HyperlinkProcess(object):
 	def selectTargetArticle(self,article,articleCandidate):
 		"""
 		对于多个版本的文章(法规)，需要根据发文日期和生效日期的信息选择一个
-		param article hyperlink文章，
-		param lawCandidate多版本文章(法规)列表
+		@param article hyperlink文章，
+		@param lawCandidate多版本文章(法规)列表
 		return 返回文章(文章)对象
 		"""
 		if len(articleCandidate) ==1:return articleCandidate[0]
@@ -70,16 +95,6 @@ class HyperlinkProcess(object):
 				latestArticle=targetArticle
 		return latestArticle
 
-	def updateArticle(self,article):
-		"""
-		做完hyperlink后更新相关文章的时间
-		"""
-		if article.contentType=='T':
-			self.lawDao.update(article)
-		elif article.contentType=='C':
-			self.caseDao.update(article)
-		else:
-			self.exNewsDao.update(article)
 
 	def deleteCrossRefLinkByArticleId(self,id):
 		"根据文章id删除hyperlink记录"

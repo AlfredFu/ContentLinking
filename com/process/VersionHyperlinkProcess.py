@@ -63,6 +63,7 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 		"""
 		self.versionDao.deleteByOrigin(originId,providerId,isEnglish)
 		
+	"""
 	def process(self):
 		for queueItem in self.queueDao.getByContentType(Article.CONTENT_TYPE_LAW):
 			article=self.getArticle(queueItem)
@@ -74,7 +75,16 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 			else:
 				self.deleteVersionRelation(article)
 				self.addVersionRelation(article)
-				
+	"""
+
+	def process(self,article):
+		if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:
+			self.deleteVersionRelation(article)
+		if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_NEW]: 
+			self.addVersionRelation(article)
+		#self.updateArticle(article)	
+		return article
+
 if __name__=='__main__':
 	process=VersionHyperlinkProcess()
 	process.process()

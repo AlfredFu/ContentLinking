@@ -1,5 +1,6 @@
 #coding=utf-8
 from com.process import *
+from com.entity.Article import *
 import re
 
 class AbbreviationHyperlinkProcess(HyperlinkProcess):
@@ -8,7 +9,7 @@ class AbbreviationHyperlinkProcess(HyperlinkProcess):
 	"""	
 	def __init__(self):
 		super(AbbreviationHyperlinkProcess,self).__init__()
-		self.abbrTagPatternStr=r'\(here(in)?after referred to as (the)? [\'\"]?(?P<abbrStr>[\w\s]+)[\'\"]?\)'#匹配出现以下简称****的字符串
+		self.abbrTagPatternStr=r'\(here(in)?after referred to as (the )?[\'\"]?(?P<abbrStr>[\w\s]+)[\'\"]?\)'#匹配出现以下简称****的字符串
 		self.abbrHyperlinkPatternStr=r'(<a[^<]+?>)([^<]+?)</a>[\'\"]*\s*$'#匹配紧挨着的加上超链接的法规
 		self.abbrTagPattern=re.compile(self.abbrTagPatternStr,re.I)
 		self.abbrHyperlinkPattern=re.compile(self.abbrHyperlinkPatternStr)
@@ -39,6 +40,9 @@ class AbbreviationHyperlinkProcess(HyperlinkProcess):
 		"""
 		判断简称是否在关键词列表中，如果在返回True,否则返回False
 		"""
+		for keyword in self.keywordDao.getAll():
+			if keyword.content == abbr:
+				return True	
 		return False
 	
 	def getAbbrHyperlinkTag(self,content,start=0,end=None):
@@ -56,6 +60,10 @@ class AbbreviationHyperlinkProcess(HyperlinkProcess):
 	def patternContent(self,content,abbrPosTuple,start=0,end=None):
 		"""
 		为文章中的简称加上相应的超链接
+		@param content 文章内容
+		@param abbrPosTuple 文章中某简称第一次出现的位置
+		@param start 开始匹配简称的位置，用于控制递归
+		@param end 用于控制递归
 		"""
 		#TODO 简称出现在文章最后，不能被加上超链接
 		if start<abbrPosTuple[1]:
@@ -70,6 +78,15 @@ class AbbreviationHyperlinkProcess(HyperlinkProcess):
 				content=content[:abbrPos]+abbrPosTuple[3]+abbrPosTuple[2]+"</a>"+content[abbrPos+len(abbrPosTuple[2]):]
 			content=self.patternContent(content,abbrPosTuple,start,abbrPos)
 		return content
+
+	def process(self,article):
+		abbrPosTupleList=self.findAbbrTagPatternStr(content)
+		for abbrPosTuple in abbrPosTupleList:
+			article.content=self.patternContent(self,content,abbrPosTuple)	
+
+		#self.updateArticle(article)
+		return article
+		
 						
 def testFindAbbrTagPatternStr():
 	content="use this card to apply for overdraft in the bank. Zhang's act had violated Paragraph 3, <a href='#' class='link_3'>Article 280</a> (HereinAfter referred to as the Article 280) of <a href='#'>what,tell me why</a> the <a href='/law/content.php?content_type=T&origin_id=470853&provider_id=1&isEnglish=Y' class='link_3' >Criminal Law of the People Republic of China</a> (hereinafter referred to as the ' CriminalL aw ')"

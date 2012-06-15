@@ -11,9 +11,13 @@ class KeywordDAO(DAO):
 		self.cursor_hyperlink.execute("use lnc;")
 
     	def getAll(self):
-		self.cursor_hyperlink.execute("select keyword_id,keyword,status,type,full_title_keyword_id from %s ORDER BY LENGTH(keyword) DESC" % KeywordDAO.table )
-        	for row in self.cursor_hyperlink.fetchall():
-            		yield self.assembleKeyword(row)
+		try:
+			self.cursor_hyperlink.execute("select keyword_id,keyword,status,type,full_title_keyword_id from %s ORDER BY LENGTH(keyword) DESC" % KeywordDAO.table )
+        		for row in self.cursor_hyperlink.fetchall():
+            			yield self.assembleKeyword(row)
+		except Exception,e:
+			self.log.error(e)
+			self.log.error("Error occured in method getAll() of KeywordDAO.py")
 
     	def getById(self,id):
         	try:
