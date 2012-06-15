@@ -11,12 +11,12 @@ import re
 
 class HyperlinkProcess(object):
 	def __init__(self):
-		self.crossRefLinkDao=CrossRefLinkDAO()
+		self.crossRefLinkDao=CrossRefLinkDAO.CrossRefLinkDAO()
 		self.lawDao=LawDAO.LawDAO()
 		self.caseDao=CaseDAO.CaseDAO()
 		self.keywordDao=KeywordDAO.KeywordDAO()
 		self.queueDao=HyperlinkQueueDAO.HyperlinkQueueDAO()
-		self.exNewsDao=ExNewsDAO.ExNewsDAO()
+		self.exNewsDao=ExNewsDAO()
 		self.log=getLog()    
 
 	def eraseHyperlink(self,content):
@@ -41,7 +41,7 @@ class HyperlinkProcess(object):
 			article=self.lawDao.getById(queueItem.targetId)
 		elif queueItem.contentType == Article.CONTENT_TYPE_CASE:
 			article=self.caseDao.getById(queueItem.targetId)
-		elfi queueItem.contentType ==Article.CONTENT_TYPE_NEWS:
+		elif queueItem.contentType ==Article.CONTENT_TYPE_NEWS:
 			article=self.exNewsDao.getById(queueItem.targetId)
 		article.actionType=queueItem.actionType
 		article.status=queueItem.status	
