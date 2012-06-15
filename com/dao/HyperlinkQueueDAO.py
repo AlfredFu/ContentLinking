@@ -77,6 +77,7 @@ class HyperlinkQueueDAO(DAO):
 		"""
 		try:
 			self.cursor_stg.execute("update opr_load_status_en set status=%s where target_id='%s' and content_type='%s'" %(status,targetId,contentType))
+			self.conn_stg.commit()
 		except Exception,e:
 			print e
 			self.log.error(e)

@@ -21,6 +21,7 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 				if item[0]<=posTuple[0] and item[1]>=posTuple[1]:
 					return True 
 			return False
+		article.content=article.content.replace('’','\'')
 		lowerCaseContent=article.content.lower()#case inseneistive
 		lowerKeywordContent=keyword.content.lower()
 		while lowerCaseContent.find(lowerKeywordContent,start) != -1:
@@ -30,7 +31,6 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 			if not checkNested():
 				posTupleList.append(posTuple)
 			start=endPos
-	
 		posTupleList.reverse()
 		return posTupleList
 

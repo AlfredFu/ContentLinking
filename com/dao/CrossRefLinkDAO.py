@@ -2,11 +2,10 @@
 from com.dao import *
 
 class CrossRefLinkDAO(DAO):
-	table='cross_ref_link'
+	table='cross_ref_link_en'
 
 	def __init__(self):
 		DAO.__init__(self)
-		self.cursor.execute('use lnc')
 
 	def deleteBySrcId(self,srcId):
 		try:
@@ -25,7 +24,7 @@ class CrossRefLinkDAO(DAO):
 			
 	def insert(self,crossRefLink):
 		try:
-			self.cursor.execute("INSERT INTO cross_ref_link(src_article_id,keyword_id,des_article_id,des_item_id,des_attachment_id) VALUES(%s,%s,%s,%s,%s)" % (crossRefLink.srcId,crossRefLink.keywordId,crossRefLink.desId,crossRefLink.desItemId,crossAttachId))
+			self.cursor_stg.execute("INSERT INTO "+CrossRefLinkDAO.table+"(src_article_id,keyword_id,des_article_id,des_item_id,des_attachment_id) VALUES(%s,%s,%s,%s,%s)" % (crossRefLink.srcId,crossRefLink.keywordId,crossRefLink.desId,crossRefLink.desItemId,crossAttachId))
 			self.conn.commit()
 		except Exception,e:
 			self.log.error(e) 
@@ -33,7 +32,7 @@ class CrossRefLinkDAO(DAO):
 
 	def add(self,crossRefLink):
 		try:
-			self.cursor.execute("insert into cross_ref_link(src_article_id,keyword_id,des_article_id,des_item_id,des_attachment_id,src_content_type,src_origin_id,src_provider_id,src_isenglish,des_content_type,des_origin_id,des_provider_id,des_isenglish) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" % crossRefLink.toTuple())
+			self.cursor_stg.execute("insert into "+CrossRefLinkDAO.table+"(src_article_id,keyword_id,des_article_id,des_item_id,des_attachment_id,src_content_type,src_origin_id,src_provider_id,src_isenglish,des_content_type,des_origin_id,des_provider_id,des_isenglish) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" % crossRefLink.toTuple())
 		except Exception,e:
 			self.log.error(e)
 			self.log.error("Error occured in add() of CrossRefLinkDAO")
@@ -50,7 +49,7 @@ class CrossRefLinkDAO(DAO):
 		pass
 	
 	def getRelatedArticleId(self,id):
-		self.cursor_hyperlink.execute("SELECT des_article_id AS articleId FROM cross_ref_link WHERE src_article_id=%s UNION SELECT src_article_id AS articleId FROM cross_ref_link WHERE des_article_id=%s; " %(id,id))
+		self.cursor_hyperlink.execute("SELECT des_article_id AS articleId FROM "+CrossRefLinkDAO.table+" WHERE src_article_id=%s UNION SELECT src_article_id AS articleId FROM cross_ref_link WHERE des_article_id=%s; " %(id,id))
 		return self.cursor_hyperlink.fetchall()
 
 
