@@ -20,7 +20,6 @@ class AbbreviationHyperlinkProcess(HyperlinkProcess):
 		返回位置信息列表
 		列表中元素描述(开始位置startPos,结束位置endPos,简称字符串abbr,全称的超链接开始标签)
 		"""
-		#print self.abbrTagPattern.findall(content)
 		tmpContent=content[start:]
 		if tmpContent:
 			matches=self.abbrTagPattern.search(tmpContent)
@@ -83,11 +82,9 @@ class AbbreviationHyperlinkProcess(HyperlinkProcess):
 		abbrPosTupleList=self.findAbbrTagPatternStr(content)
 		for abbrPosTuple in abbrPosTupleList:
 			article.content=self.patternContent(self,content,abbrPosTuple)	
-
 		#self.updateArticle(article)
 		return article
 		
-						
 def testFindAbbrTagPatternStr():
 	content="use this card to apply for overdraft in the bank. Zhang's act had violated Paragraph 3, <a href='#' class='link_3'>Article 280</a> (HereinAfter referred to as the Article 280) of <a href='#'>what,tell me why</a> the <a href='/law/content.php?content_type=T&origin_id=470853&provider_id=1&isEnglish=Y' class='link_3' >Criminal Law of the People Republic of China</a> (hereinafter referred to as the ' CriminalL aw ')"
 	abbHypePro=AbbreviationHyperlinkProcess()
@@ -100,9 +97,9 @@ def testFindAbbrTagPatternStr():
 	
 def testPatternContent():
 	abbHypePro=AbbreviationHyperlinkProcess()
-	content="use this card to apply for overdraft in the bank. Zhang's act had violated Paragraph 3, <a href='#' class='link_3'>Article 280</a> (HereinAfter referred to as the Article 280) of <a href='#'>what,tell me why</a> the <a href='/law/content.php?content_type=T&origin_id=470853&provider_id=1&isEnglish=Y' class='link_3' >Criminal Law of the People Republic of China</a> (hereinafter referred to as the ' Criminal Law '),destiny Criminal Law "
+	content="use this card to apply for overdraft in the bank. Zhang's act had violated Paragraph 3, <a href='#' class='link_3'>Article 280</a> (HereinAfter referred to as the Article 280) of <a href='#'>what,tell me why</a> the <a href='/law/content.php?content_type=T&origin_id=470853&provider_id=1&isEnglish=Y' class='link_3' >Criminal Law of the People Republic of China</a> (hereinafter referred to as the ' Criminal Law '),destiny Criminal Law Article 280 "
 	matches=abbHypePro.findAbbrTagPatternStr(content)
-	print matches
+	#print matches
 	print content
 	for match in matches:
 		content=abbHypePro.patternContent(content,match)	
@@ -111,5 +108,3 @@ def testPatternContent():
 if __name__=="__main__":
 	#testFindAbbrTagPatternStr()		
 	testPatternContent()
-
-				

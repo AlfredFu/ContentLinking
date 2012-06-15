@@ -60,6 +60,7 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 			self.addCrossRefLink(article,targetArticle,posTuple[2])#添加hyperlink记录
 		#print article.content
 		return article 
+
 	"""
 	def process(self,article=None):
 		for queueItem in self.queueDao.getAll():
@@ -72,6 +73,7 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 			self.updateArticle(article)
 			print article.content
 	"""
+
 	def process(self,article):
 		for keyword in self.keywordDao.getAll():
 			posTupleList=self.findKeywordPosInArticle(keyword,article)

@@ -7,6 +7,7 @@ from com.dao.CrossRefLinkDAO import *
 from com.dao.ExNewsDAO import *
 from com.entity.HyperlinkQueue import *
 from com.entity.CrossRefLink import *
+from com.entity.QueueItem import *
 import re
 
 class HyperlinkProcess(object):
@@ -51,9 +52,9 @@ class HyperlinkProcess(object):
 		"""
 		做完hyperlink后更新相关文章的时间
 		"""
-		if article.contentType=='T':
+		if article.contentType==Article.CONTENT_TYPE_LAW:
 			self.lawDao.update(article)
-		elif article.contentType=='C':
+		elif article.contentType==Article.CONTENT_TYPE_CASE:
 			self.caseDao.update(article)
 		else:
 			self.exNewsDao.update(article)
@@ -120,7 +121,7 @@ class HyperlinkProcess(object):
 		if queueItem.actionType in ['D','U']:
 			self.deleteCrossRefLinkByArticleId(queueItem.targetId)#删除cross_ref_link表中的记录
 			#TODO处理被引用的文章
-		self.queueDao.updateStatus(queueItem.targetId,HyperlinkQueue.STATUS_PROCESSING,queueItem.contentType)
+		self.queueDao.updateStatus(queueItem.targetId,QueueItem.STATUS_PROCESSING,queueItem.contentType)
 	
 	def addCrossRefLink(self,article,targetArticle,keywordId='',itemId='',attachmentId=''):
 		"""
