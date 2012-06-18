@@ -27,8 +27,8 @@ class HyperlinkProcess(object):
 		@param content 文章内容
 		return 清除hyperlink链接后的文章内容
 		"""	
-		content=re.sub(r'<a\s+href=\'[/\w\d\-\.]*?\'\s+class=\'link_2\'\s+re=\'T\'\s+cate=\'en_href\'\s*>(.*?)</a>',r'\1',content)
-		#content=re.sub(r'<a\s+href=[\'"][/\w\d\-\.]*?[\'"]\s+class=[\'"]link_2[\'"]\s+re=[\'"]T[\'"]\s+cate=[\'"]en_href[\'"]\s*>(.*?)</a>',r'\1',content)
+		#content=re.sub(r'<a\s+href=\'[/\w\d\-\.]*?\'\s+class=\'link_2\'\s+re=\'T\'\s+cate=\'en_href\'\s*>(.*?)</a>',r'\1',content)
+		content=re.sub(r'<a\s+href=[\'"][/\w\d\-\.]*?[\'"]\s+class=[\'"]link_2[\'"]\s+re=[\'"]T[\'"]\s+cate=[\'"]en_href[\'"]\s*>(.*?)</a>',r'\1',content)
 		#content=re.sub(r'<a.*?>','',content)
 		#content=re.sub(r'<?/?a>','',content)
 		return content

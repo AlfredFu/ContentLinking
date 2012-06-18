@@ -5,7 +5,7 @@ if __name__=='__main__':
 	#keywordProcess.process()
 	i=1
 	for queueItem in keywordProcess.queueDao.getAll():
-		if i>10:break
+		if i>1:break
 		i+=1
 		article=keywordProcess.getArticle(queueItem)	
 		#print article.content

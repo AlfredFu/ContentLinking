@@ -7,9 +7,10 @@ class Article(object):
 	ACTION_TYPE_NEW='N'
 	ACTION_TYPE_UPDATE='U'
 	ACTION_TYPE_DEL='D'
-	STATUS_AWAIT=1
-	STATUS_PROCESSING=3
-	STATUS_FINISHED=11
+	STATUS_AWAIT=1#await to be processed
+	STATUS_PROCESSING=3#article being processed
+	STATUS_WAIT_UPLOAD=9#ready to be uploaded to prd
+	STATUS_FINISHED=11#process finished
 	
 	
     	def __init__(self):
