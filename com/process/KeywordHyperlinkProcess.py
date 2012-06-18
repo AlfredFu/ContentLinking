@@ -32,7 +32,7 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 			if not checkNested():
 				posTupleList.append(posTuple)
 			start=endPos
-		posTupleList.sort(lambda posTuple1,posTuple2: - cmp(posTuple1[0],posTuple2[0]))#根据关键词出现的起始位置排序
+		posTupleList.sort(lambda posTuple1,posTuple2: - cmp(posTuple1[0],posTuple2[0]))#根据关键词出现的起始位置按降序排序
 		return posTupleList
 
 	def patternContent(self,posTupleList,article):
