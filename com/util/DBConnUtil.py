@@ -25,7 +25,10 @@ class DBConnUtil:
                 	DBConnUtil.mutex.release()
         	except Exception,e:
             		DBConnUtil.log.error(e) 
-		
+	cursor=DBConnUtil.instance[datasource].cursor()
+	cursor.execute("set character_set_client = utf8;")	
+	cursor.execute("set character_set_connection = gbk;")	
+	cursor.execute("set character_set_results = utf8;")	
         return DBConnUtil.instance[datasource]
 
 

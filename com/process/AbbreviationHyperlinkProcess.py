@@ -32,7 +32,7 @@ class AbbreviationHyperlinkProcess(HyperlinkProcess):
 						abbrPosTupleList.append(abbrPosTuple)
 				start=matches.end(1)+start
 				self.findAbbrTagPatternStr(content,start,abbrPosTupleList)
-		abbrPosTupleList.reverse()
+		abbrPosTupleList.sort(lambda posTuple1,posTuple2: - cmp(posTuple1[0],posTuple2[0]))#根据出现的起始位置排序
 		return abbrPosTupleList
 
 	def checkAbbrInKeywordList(self,abbr):

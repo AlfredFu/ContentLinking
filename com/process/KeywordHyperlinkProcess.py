@@ -21,7 +21,8 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 				if item[0]<=posTuple[0] and item[1]>=posTuple[1]:
 					return True 
 			return False
-		article.content=article.content.replace('’','\'')
+		#article.content=article.content.replace('’','\'')
+		#article.content=article.content.replace('＇','\'')
 		lowerCaseContent=article.content.lower()#case inseneistive
 		lowerKeywordContent=keyword.content.lower()
 		while lowerCaseContent.find(lowerKeywordContent,start) != -1:
@@ -31,7 +32,7 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 			if not checkNested():
 				posTupleList.append(posTuple)
 			start=endPos
-		posTupleList.reverse()
+		posTupleList.sort(lambda posTuple1,posTuple2: - cmp(posTuple1[0],posTuple2[0]))#根据关键词出现的起始位置排序
 		return posTupleList
 
 	def patternContent(self,posTupleList,article):
@@ -56,6 +57,7 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 			targetArticleUrl="/law/content.php?content_type=%s&origin_id=%s&provider_id=%s&isEnglish=%s" % (targetArticle.contentType,targetArticle.originId,targetArticle.providerId,targetArticle.isEnglish)
 			#rep="<a href='"+targetArticleUrl+"' class='link_3' >"+article.content[posTuple[0]:posTuple[1]]+"</a>"
 			rep="<a href='%s' class='link_2' re='T' cate='en_href' >%s</a>" % (targetArticleUrl,article.content[posTuple[0]:posTuple[1]])
+			#rep="<a href=\"%s\" class=\"link_2\" re=\"T\" cate=\"en_href\" >%s</a>" % (targetArticleUrl,article.content[posTuple[0]:posTuple[1]])
 			article.content=article.content[:posTuple[0]]+rep+article.content[posTuple[1]:]
 			self.addCrossRefLink(article,targetArticle,posTuple[2])#添加hyperlink记录
 		#print article.content
