@@ -7,11 +7,10 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 	def __init__(self):
 		super(KeywordHyperlinkProcess,self).__init__()	
 
-	def findKeywordPosInArticle(self,keyword,article,start=0,posTupleList=[]):
+	def search(self,content,start=0,posTupleList=[]):
 		"""
 		类似中文hyperlink的search,将文章中出现关键词的位置记录下来，并返回
-		@param keyword 关键词对象
-		@param article 文章对象
+		@param content 文章内容
 		@start
 		@posTupleList
 		return 
@@ -21,21 +20,20 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 				if item[0]<=posTuple[0] and item[1]>=posTuple[1]:
 					return True 
 			return False
-		#article.content=article.content.replace('’','\'')
-		#article.content=article.content.replace('＇','\'')
-		lowerCaseContent=article.content.lower()#case inseneistive
-		lowerKeywordContent=keyword.content.lower()
-		while lowerCaseContent.find(lowerKeywordContent,start) != -1:
-			startPos=lowerCaseContent.find(lowerKeywordContent,start)
-			endPos=startPos+len(lowerKeywordContent)				
-			posTuple=(startPos,endPos,keyword.id,keyword.content,keyword.fullTitleKeywordId)
-			if not checkNested():
-				posTupleList.append(posTuple)
-			start=endPos
+		lowerCaseContent=content.lower()#case inseneistive
+		for keyword in self.keywordDao.getAll():
+			lowerKeywordContent=keyword.content.lower()
+			while lowerCaseContent.find(lowerKeywordContent,start) != -1:
+				startPos=lowerCaseContent.find(lowerKeywordContent,start)
+				endPos=startPos+len(lowerKeywordContent)				
+				posTuple=(startPos,endPos,keyword.id,keyword.content,keyword.fullTitleKeywordId)
+				if not checkNested():
+					posTupleList.append(posTuple)
+				start=endPos
 		posTupleList.sort(lambda posTuple1,posTuple2: - cmp(posTuple1[0],posTuple2[0]))#根据关键词出现的起始位置按降序排序
 		return posTupleList
 
-	def patternContent(self,posTupleList,article):
+	def pattern(self,article,posTupleList=[]):
 		"""
 		从后向前,将出现关键字的地方加上超链接
 		@param posTupleList 文章中出现关键字的信息列表
@@ -69,20 +67,20 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 			self.updateOprLoadStatus(queueItem)
 			article=self.getArticle(queueItem)	
 			for keyword in self.keywordDao.getAll():
-				posTupleList=self.findKeywordPosInArticle(keyword,article)
+				posTupleList=self.search(keyword,article)
 				
-			article=self.patternContent(posTupleList,article)
+			article=self.pattern(posTupleList,article)
 			self.updateArticle(article)
 			print article.content
-	"""
 
 	def process(self,article):
 		for keyword in self.keywordDao.getAll():
-			posTupleList=self.findKeywordPosInArticle(keyword,article)
-		article=self.patternContent(posTupleList,article)
+			posTupleList=self.search(keyword,article)
+		article=self.pattern(posTupleList,article)
 		#self.updateArticle(article)
 		return article
 		
+	"""
 
 
 if __name__=="__main__":

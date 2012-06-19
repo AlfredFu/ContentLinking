@@ -27,10 +27,10 @@ class HyperlinkProcess(object):
 		@param content 文章内容
 		return 清除hyperlink链接后的文章内容
 		"""	
-		#content=re.sub(r'<a\s+href=\'[/\w\d\-\.]*?\'\s+class=\'link_2\'\s+re=\'T\'\s+cate=\'en_href\'\s*>(.*?)</a>',r'\1',content)
-		content=re.sub(r'<a\s+href=[\'"][/\w\d\-\.]*?[\'"]\s+class=[\'"]link_2[\'"]\s+re=[\'"]T[\'"]\s+cate=[\'"]en_href[\'"]\s*>(.*?)</a>',r'\1',content)
-		#content=re.sub(r'<a.*?>','',content)
-		#content=re.sub(r'<?/?a>','',content)
+		content=re.sub(r'<a\s+?[^>]*?cate=["\']en_href["\']\s*>([^<]*?)</a>',r'\1',content)
+		#content=re.sub(r'<a\s+href=[\'"][/\w\d\-\.]*?[\'"]\s+class=[\'"]link_2[\'"]\s+re=[\'"]T[\'"]\s+cate=[\'"]en_href[\'"]\s*>(.*?)</a>',r'\1',content)
+		#content=re.sub(r'<a[^>]+?>([^<]*?)</a>','\\1',content)
+		#contentcontent=re.sub(r'<?/?a>','',content)
 		return content
 	
 	def getArticle(self,queueItem):
@@ -49,6 +49,9 @@ class HyperlinkProcess(object):
 		article.status=queueItem.status	
 		if article.content:
 			article.content=article.content.replace('’','\'')
+			article.content=article.content.replace('‘','"')
+			article.content=article.content.replace('”','"')
+			article.content=article.content.replace('“','"')
 		return article
 
 	def updateArticle(self,article):
@@ -71,7 +74,8 @@ class HyperlinkProcess(object):
 		@param endPos 关键词结尾位置
 		"""
 		if content:
-			startMatch=re.search(r'<a.+?>\s*$',content[:startPos])#在关键字出现位置前找锚标记a开始标签
+			#startMatch=re.search(r'<a.+?>\s*$',content[:startPos])#在关键字出现位置前找锚标记a开始标签
+			startMatch=re.search(r'<a[^>]+?>\s*$',content[:startPos])#在关键字出现位置前找锚标记a开始标签
 			endMatch=re.search(r'^</a\s*>',content[endPos:])#在关键字出现位置后找锚标记结束符
 			if startMatch and endMatch:
 				return True
@@ -148,5 +152,14 @@ class HyperlinkProcess(object):
 		
 		self.crossRefLinkDao.add(crossRefLink)
 
+	def search(self,article,start=0,posTupleList=[]):
+		pass
+
+	def pattern(self,article,posTupleList=[]):
+		pass
+
 	def process(self,article):
-		pass	
+		posTupleList=self.search(article.content)
+		for posTupleLis in posTupleList:
+			article=self.pattern(self,article,posTupleList)	
+		return article
