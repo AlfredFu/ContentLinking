@@ -77,6 +77,7 @@ class AbbreviationHyperlinkProcess(HyperlinkProcess):
 				content=content[:abbrPos]+abbrPosTuple[3]+abbrPosTuple[2]+"</a>"+content[abbrPos+len(abbrPosTuple[2]):]
 			content=self.patternContent(content,abbrPosTuple,start,abbrPos)
 		return content
+
 	def pattern(self.article,posTupleList=[]):
 		for posTuple in posTupleList:
 			article.content=self.patternContent(self,article.content,posTuple)	

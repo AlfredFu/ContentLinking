@@ -49,7 +49,7 @@ class HyperlinkProcess(object):
 		article.status=queueItem.status	
 		if article.content:
 			article.content=article.content.replace('’','\'')
-			article.content=article.content.replace('‘','"')
+			article.content=article.content.replace('‘','\'')
 			article.content=article.content.replace('”','"')
 			article.content=article.content.replace('“','"')
 		return article
@@ -153,9 +153,15 @@ class HyperlinkProcess(object):
 		self.crossRefLinkDao.add(crossRefLink)
 
 	def search(self,article,start=0,posTupleList=[]):
+		"""
+		implements in subclass	
+		"""
 		pass
 
 	def pattern(self,article,posTupleList=[]):
+		"""
+		implements in subclass	
+		"""
 		pass
 
 	def process(self,article):
