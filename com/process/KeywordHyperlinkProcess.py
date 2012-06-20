@@ -23,6 +23,7 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 		lowerCaseContent=content.lower()#case inseneistive
 		for keyword in self.keywordDao.getAll():
 			lowerKeywordContent=keyword.content.lower()
+			start=0
 			while lowerCaseContent.find(lowerKeywordContent,start) != -1:
 				startPos=lowerCaseContent.find(lowerKeywordContent,start)
 				endPos=startPos+len(lowerKeywordContent)				
@@ -55,33 +56,10 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 			targetArticleUrl="/law/content.php?content_type=%s&origin_id=%s&provider_id=%s&isEnglish=%s" % (targetArticle.contentType,targetArticle.originId,targetArticle.providerId,targetArticle.isEnglish)
 			#rep="<a href='"+targetArticleUrl+"' class='link_3' >"+article.content[posTuple[0]:posTuple[1]]+"</a>"
 			#rep="<a href='%s' class='link_2' re='T' cate='en_href' >%s</a>" % (targetArticleUrl,article.content[posTuple[0]:posTuple[1]])
-			rep="<a href=\"%s\" class=\"link_2\" re=\"T\" cate=\"en_href\" >%s</a>" % (targetArticleUrl,article.content[posTuple[0]:posTuple[1]])
+			rep='<a href="%s" class="link_2" re="T" cate="en_href" >%s</a>' % (targetArticleUrl,article.content[posTuple[0]:posTuple[1]])
 			article.content=article.content[:posTuple[0]]+rep+article.content[posTuple[1]:]
 			self.addCrossRefLink(article,targetArticle,posTuple[2])#添加hyperlink记录
-		#print article.content
 		return article 
-
-	"""
-	def process(self,article=None):
-		for queueItem in self.queueDao.getAll():
-			self.updateOprLoadStatus(queueItem)
-			article=self.getArticle(queueItem)	
-			for keyword in self.keywordDao.getAll():
-				posTupleList=self.search(keyword,article)
-				
-			article=self.pattern(posTupleList,article)
-			self.updateArticle(article)
-			print article.content
-
-	def process(self,article):
-		for keyword in self.keywordDao.getAll():
-			posTupleList=self.search(keyword,article)
-		article=self.pattern(posTupleList,article)
-		#self.updateArticle(article)
-		return article
-		
-	"""
-
 
 if __name__=="__main__":
     process=KeywordHyperlinkProcess()

@@ -64,9 +64,9 @@ class KeywordDAO(DAO):
 			keyword.content=keyword.content.replace("'","\\'")
 			keyword.content=keyword.content.replace('"','\\"')
 			if not keyword.fullTitleKeywordId:
-				self.cursor_hyperlink.execute("insert into keyword_en(keyword,status,type) values('%s','NOR','%s')" % (keyword.content,keyword.type))
+				self.cursor_hyperlink.execute("replace into keyword_en(keyword,status,type) values('%s','NOR','%s')" % (keyword.content,keyword.type))
 			else:
-				self.cursor_hyperlink.execute("insert into keyword_en(keyword,status,type,full_title_keyword_id) values('%s','NOR','%s',%s)" % (keyword.content,keyword.type,keyword.fullTitleKeywordId))
+				self.cursor_hyperlink.execute("replace into keyword_en(keyword,status,type,full_title_keyword_id) values('%s','NOR','%s',%s)" % (keyword.content,keyword.type,keyword.fullTitleKeywordId))
             		self.conn_hyperlink.commit()
 			return self.cursor_hyperlink.lastrowid
 		except Exception,e:

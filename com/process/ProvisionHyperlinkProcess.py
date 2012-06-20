@@ -9,7 +9,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 	def __init__(self):
 		super(ProvisionHyperlinkProcess,self).__init__()
 		#self.provisionPatternStr=r"(?P<astr>article\s+(?P<articleNum>\d+\.?\d+))\s+of\s+the\s+(<a href=\"(?P<href>[^\"^>]*?)\" class=\"link_2\" re=\"T\" cate=\"en_href\"\s*>).+?</a>"
-		self.provisionPatternStr=r'(?P<astr>article\s+(?P<articleNum>[\d+\.]+?))\s+of\s+the [\s"]*?(<a href="(?P<href>[^\"^>]*?)" class="link_2" re="T" cate="en_href"\s*>).+?</a>'
+		self.provisionPatternStr=r'(?P<astr>article\s+(?P<articleNum>[\d+\.]+?))\s+of\s+the [\s"]*?(<a href="(?P<href>[^\"^>]*?)" class="link_2" re="T" cate="en_href"\s*>)(?P<keyword>.+?)</a>'
 		self.provisionPattern=re.compile(self.provisionPatternStr,re.I)
 
 	def addProvisionPosTag(self,content):
@@ -30,13 +30,15 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		"""
 		return re.sub(r'<a name="(end_)?i[\d\.]+" re="T"></a>','',content)
 
-	def checkProvisionExist(self,content,itemId):
+	def checkProvisionExist(self,originId,providerId,isEnglish='Y',contentType='T',itemId):
 		"""
 		判断法条在文章中是否存在(只在已加法条位置标记后有效)
 		存在返回True,否则返回false(如果在找到多个也返回false,避免hyperlink错误)
 		"""
-		if content.count('<a name="i%s" re="T"></a>' % itemId)==1:
-			return True
+		article=self.getArticleByOrigin(originId,providerId,isEnglish,contentType)
+		if article:
+			if article.content.count('<a name="i%s" re="T"></a>' % itemId)==1:
+				return True
 		return False
 	
 	def search(self,content,start=0,posTupleList=[]):
@@ -48,10 +50,21 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 				endPos=start+matches.end(1)
 				href= matches.group('href')
 				articleNum = matches.group('articleNum')
-				#TODO check provision exist in target article
-				hreflinkTag="<a href=\"%s\" class=\"link_2\" re=\"T\" cate=\"en_href\" >" % (href+"#i"+articleNum,) 
-				posTuple=(startPos,endPos,matches.group('astr'),hreflinkTag)	
-				posTupleList.append(posTuple)
+				hrefArgs=href[href.find("?")+1:].split("&")
+				hrefArgsMap={}
+				for hrefArg in hrefArgs:
+					tmpL=hrefArg.split("=")
+					hrefArgsMap[tmpL[0]]=tmpL[1]				
+				if self.checkProvisionExist(hrefArgsMap['origin_id'],hrefArgsMap['provider_id'],hrefArgsMap['isEnglish'],hrefArgsMap['content_type']):# check provision exist in target article
+					hreflinkTag='<a href="%s" class="link_2" re="T" cate="en_href" >' % (href+"#i"+articleNum,) 
+					#get keyword id
+					keyword=self.keywordDao.findByContent(matches.group('keyword'))
+					keywordId=''
+					if keyword:
+						keywordId=keyword.id	
+					#posTuple=(startPos,endPos,matches.group('astr'),hreflinkTag)	
+					posTuple=(startPos,endPos,keywordId,hreflinkTag)	
+					posTupleList.append(posTuple)
 				self.search(content,endPos,posTupleList)
 		posTupleList.sort(lambda posTuple1,posTuple2:-cmp(posTuple1[0],posTuple2[0]))
 		return posTupleList 
@@ -67,13 +80,13 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 
 	def process(self,article):
 		"""
-		重写父类中的process方法
+		override method process(self,article) in parent class
+		@param article
 		"""	
 		if article.contentType == Article.CONTENT_TYPE_LAW:
 			article.content=self.addProvisionPosTag(content)
 		posTupleList=self.search(article.content)
-		for posTupleLis in posTupleList:
-			article=self.pattern(self,article,posTupleList)	
+		article=self.pattern(article,posTupleList)	
 		return article
 
 if __name__=="__main__":

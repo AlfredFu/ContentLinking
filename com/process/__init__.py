@@ -54,6 +54,11 @@ class HyperlinkProcess(object):
 			article.content=article.content.replace('“','"')
 		return article
 
+	def getArticleByOrigin(self,originId,providerId,isEnglish='Y',contentType='T'):
+		if contentType==Article.CONTENT_TYPE_LAW:
+			article=self.lawDao.getByOrigin(originId,providerId,isEnglish)	
+			return article
+
 	def updateArticle(self,article):
 		"""
 		做完hyperlink后更新相关文章的时间
@@ -83,10 +88,11 @@ class HyperlinkProcess(object):
 
 	def selectTargetArticle(self,article,articleCandidate):
 		"""
-		对于多个版本的文章(法规)，需要根据发文日期和生效日期的信息选择一个
-		@param article hyperlink文章，
-		@param lawCandidate多版本文章(法规)列表
-		return 返回文章(文章)对象
+		If target article has multiple version,
+		Select one version article accroding to promulgation date and effect date,
+		@param article hyperlink article
+		@param lawCandidate candidate version 
+		return one article in article candidate  
 		"""
 		if len(articleCandidate) ==1:return articleCandidate[0]
 		latestDate=''
@@ -103,9 +109,11 @@ class HyperlinkProcess(object):
 				latestArticle=targetArticle
 		return latestArticle
 
-
 	def deleteCrossRefLinkByArticleId(self,id):
-		"根据文章id删除hyperlink记录"
+		"""
+		Delete corresponding hyperlink record by article id
+		@param id article id
+		"""
 		self.crossRefLinkDao.deleteBySrcId(id)
 		self.crossRefLinkDao.deleteByDesId(id)
 
@@ -118,7 +126,8 @@ class HyperlinkProcess(object):
 
 	def updateOprLoadStatus(self,queueItem):
 		"""
-		更新队列中文章的状态
+		Update article status in hyperlink queue
+		@param queueItem 
 		"""
 		if queueItem.contentType =='T':
 			if queueItem.actionType in ['D','U']:
@@ -132,7 +141,12 @@ class HyperlinkProcess(object):
 	
 	def addCrossRefLink(self,article,targetArticle,keywordId='',itemId='',attachmentId=''):
 		"""
-		add record to cross_ref_link
+		Add record to cross_ref_link
+		@param article the article which has link to another article 
+		@param targetArticle 
+		@param keywordId
+		@param itemId provision sequence number
+		@param attachmentId
 		"""
 		crossRefLink=CrossRefLink()
 		crossRefLink.srcArticleId=article.id
@@ -152,9 +166,10 @@ class HyperlinkProcess(object):
 		
 		self.crossRefLinkDao.add(crossRefLink)
 
-	def search(self,article,start=0,posTupleList=[]):
+	def search(self,content,start=0,posTupleList=[]):
 		"""
-		implements in subclass	
+		To be implemented in subclass	
+		@param content 
 		"""
 		pass
 
@@ -166,6 +181,5 @@ class HyperlinkProcess(object):
 
 	def process(self,article):
 		posTupleList=self.search(article.content)
-		for posTupleLis in posTupleList:
-			article=self.pattern(self,article,posTupleList)	
+		article=self.pattern(article,posTupleList)	
 		return article

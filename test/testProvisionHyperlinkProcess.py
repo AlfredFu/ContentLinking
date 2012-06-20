@@ -28,8 +28,6 @@ def testCheckProvisionExist(content,itemId):
 	
 	
 def testHyperlinkProvi():
-	print phprocess.addProvisionPosTag(content)
-
 	keywordProcess=ProvisionHyperlinkProcess()
 	#keywordProcess.process()
 	i=1
@@ -37,21 +35,17 @@ def testHyperlinkProvi():
 		if i>1:break
 		i+=1
 		article=keywordProcess.getArticle(queueItem)	
-		print article.content
-		#print "======================================================================================================="
-		#print article.id,article.title	
-		keywordProcess.log.info("keyword process article type:%s id:%s" % (queueItem.contentType,queueItem.targetId))
-		print "keyword process article type:%s id:%s" % (queueItem.contentType,queueItem.targetId)
-		print "======================================================================================================="
 		#keywordProcess.updateOprLoadStatus(queueItem)
 		#article.content=keywordProcess.eraseHyperlink(article.content)
-		posTupleList=keywordProcess.search(article.content)
-		article=keywordProcess.pattern(article,posTupleList)
+		#posTupleList=keywordProcess.search(article.content)
+		#article=keywordProcess.pattern(article,posTupleList)
 		#print posTupleList
 		print article.content
 		#print article.content
+		keywordProcess.process(article)
 		keywordProcess.updateArticle(article)
 
 if __name__=='__main__':
 	#print testAddProTag()
-	print testCheckProvisionExist(testAddProTag(),5)
+	#print testCheckProvisionExist(testAddProTag(),5)
+	testHyperlinkProvi()

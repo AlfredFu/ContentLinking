@@ -20,6 +20,7 @@ class LawDAO(DAO):
 		except Exception,e:
 			self.log.error(e)
 			self.log.error("Error occured in method getAll() of LawDAO.py")
+
 	def update(self,article):
 		try:
 			if article.content:
@@ -71,6 +72,28 @@ class LawDAO(DAO):
 		except Exception,e:
 			self.log.error(e)	
 		return article
+	
+	def getByOrigin(self,originId,providerId,isEnglish):
+		"""
+		根据originId,providerId,isEnglish获取法规
+		"""
+		article=Law()	
+		try:
+			self.cursor_stg.execute("SELECT tax.taxid as id,tax.title,tax_content.content,tax.origin_id,tax.provider_id,tax.isEnglish FROM tax LEFT JOIN tax_content ON tax.taxid=tax_content.taxid WHERE tax.origin_id='%s' and tax.provider_id=%s and tax.isEnglish='%s' and display=1;" % (originId,providerId,isEnglish))
+			row=self.cursor_stg.fetchone()
+			if row:
+				article.id=row[0]
+				article.title=row[1]
+				article.content=row[2]
+				article.originId=row[3]
+				article.providerId=row[4]
+				article.isEnglish=row[5]
+			else:
+				raise Exception("No law with id %s found!" %id)
+		except Exception,e:
+			self.log.error(e)	
+		return article
+
 if __name__ =="__main__":
 	lawDAO=LawDAO()
 	print lawDAO.getLawByKeywordId(2505)
