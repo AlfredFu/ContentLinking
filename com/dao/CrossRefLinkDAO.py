@@ -48,8 +48,11 @@ class CrossRefLinkDAO(DAO):
 	def getByDesSrcId(self,desId,srcId):
 		pass
 	
-	def getRelatedArticleId(self,id):
-		self.cursor_hyperlink.execute("SELECT des_article_id AS articleId FROM "+CrossRefLinkDAO.table+" WHERE src_article_id=%s UNION SELECT src_article_id AS articleId FROM cross_ref_link WHERE des_article_id=%s; " %(id,id))
-		return self.cursor_hyperlink.fetchall()
-
-
+	def getRelatedArticleId(self,id,contentType):
+		try:
+			sql="SELECT des_article_id AS articleId,des_content_type as content_type FROM "+CrossRefLinkDAO.table+" WHERE src_article_id=%s and src_content_type='%s' UNION SELECT src_article_id AS articleId,src_content_type as content_type FROM "+CrossRefLinkDAO.table+" WHERE des_article_id=%s and des_content_type='%s'; " %(id,contentType,id,contentType)
+			self.cursor_hyperlink.execute(sql)
+			return self.cursor_hyperlink.fetchall()
+		except Exception,e:
+			self.log.error(e)
+			self.log.error(sql)

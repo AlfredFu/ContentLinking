@@ -49,8 +49,13 @@ class HyperlinkQueueDAO(DAO):
 			self.log.error(e)
 			
 	def add(self,queueItem):
-		self.cursor_stg.execute("INSERT INTO %s (content_type,origin_id,provider_id,is_english,target_id,action_type,status,upd_time,infiledate ) values(%s,%s,%s,%s,%s,%s,%s)" % HyperlinkQueueDAO.table,queueItem.attrToTuple())
-		self.conn_stg.commit()
+		try:
+			sql="REPLACElINTO %s (content_type,origin_id,provider_id,is_english,target_id,action_type,status,upd_time,infiledate ) values(%s,%s,%s,%s,%s,%s,%s)" % ((HyperlinkQueueDAO.table,)+queueItem.toTuple())
+			self.cursor_stg.execute(sql)
+			self.conn_stg.commit()
+		except Exception,e:
+			self.log.error(e)
+			self.log.error(sql)
 
 	def addMany(self,queueTupleList):
 		self.cursor_stg.executemany("INSERT INTO "+HyperlinkQueueDAO.table+" (content_type,origin_id,provider_id,is_english,target_id,action_type,status,upd_time,infiledate ) values(%s,%s,%s,%s,%s,%s,%s,NOW(),CURDATE())" ,queueTupleList)
@@ -71,7 +76,7 @@ class HyperlinkQueueDAO(DAO):
 			print e
 			self.log.error(e)
 
-	def updateStatus(self,targetId,status,contentType):
+	def updateStatus(self,targetId,contentType,status):
 		"""
 		更新hyperlink队列中谋篇文章的hyperlink状态
 		"""
@@ -82,7 +87,7 @@ class HyperlinkQueueDAO(DAO):
 			print e
 			self.log.error(e)
 
-	def updateActionType(self,targetId,actionType,contentType):
+	def updateActionType(self,targetId,contentType,actionType):
 		"""
 		更新队列中某篇文章的状态
 		"""

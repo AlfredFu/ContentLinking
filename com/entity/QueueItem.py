@@ -27,4 +27,4 @@ class QueueItem(object):
 		pass
 
 	def toTuple(self):
-		return (self.content_type,self.origin_id,self.provider_id,self.is_english,self.target_id,self.action_type,self.status,self.upd_time,self.infiledate)
+		return (self.contentType,self.originId,self.providerId,self.isEnglish,self.targetId,self.actionType,self.status,self.updTime,self.infiledate)
