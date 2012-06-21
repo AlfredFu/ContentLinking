@@ -4,7 +4,7 @@ import re
 
 class ProvisionHyperlinkProcess(HyperlinkProcess):
 	"""
-	法条hyperlink
+	process provision hyperlink
 	"""
 	def __init__(self):
 		super(ProvisionHyperlinkProcess,self).__init__()
@@ -14,9 +14,11 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 
 	def addProvisionPosTag(self,content):
 		"""
-		给法条添加上位置标记
-		开始标记<a name="i2" re="T"></a>
-		结束标记<a name="end_a148318_att-1_i1" re="T"></a>
+		Mark provision position with following html tag(will not be displayed):
+		Mark start position with:<a name="i2" re="T"></a>
+		Mark end position with:<a name="end_i1" re="T"></a>
+		@param content
+		return content after marked with html tag
 		"""	
 		provisionStartPattern=re.compile(r'(article ([\d\.]+)(.+\n?.+)+)(\n{2,})',re.I)
 		content=provisionStartPattern.sub(r'<a name="i\2" re="T"></a>\1<a name="end_i\2" re="T"></a>\4',content)	
@@ -26,20 +28,37 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 
 	def removeProvisionPosTag(self,content):
 		"""
-		移除法条位置标记
+		Remove provision position mark in content
+		@param content
+		return 
 		"""
 		return re.sub(r'<a name="(end_)?i[\d\.]+" re="T"></a>','',content)
 
-	def checkProvisionExist(self,originId,providerId,isEnglish='Y',contentType='T',itemId):
+	def checkProvisionExist(self,provisionNum,originId,providerId,isEnglish='Y',contentType='T'):
 		"""
-		判断法条在文章中是否存在(只在已加法条位置标记后有效)
-		存在返回True,否则返回false(如果在找到多个也返回false,避免hyperlink错误)
+		Check provision is exist in target article which specified by param originId,providerId,isEnglish and contentType
+		@param provisionNum provision number
+		return if provision exist in target article return True
+		else return False
+		(If multiple provision with the same number if found ,False will be returned)
 		"""
 		article=self.getArticleByOrigin(originId,providerId,isEnglish,contentType)
-		if article:
-			if article.content.count('<a name="i%s" re="T"></a>' % itemId)==1:
+		if article and provisionNum:
+			if article.content.count('<a name="i%s" re="T"></a>' % provisionNum)==1:
 				return True
-		return False
+		return False 
+
+	def getOriginByHref(self,href):
+		"""
+		Get origin id,provider id and isEnglish by hreflink
+		return param map of hreflink href
+		"""	
+		hrefArgs=href[href.find("?")+1:].split("&")
+		hrefArgsMap={}
+		for hrefArg in hrefArgs:
+			tmpL=hrefArg.split("=")
+			hrefArgsMap[tmpL[0]]=tmpL[1]				
+		return hrefArgsMap
 	
 	def search(self,content,start=0,posTupleList=[]):
 		tmpContent=content[start:]
@@ -50,12 +69,8 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 				endPos=start+matches.end(1)
 				href= matches.group('href')
 				articleNum = matches.group('articleNum')
-				hrefArgs=href[href.find("?")+1:].split("&")
-				hrefArgsMap={}
-				for hrefArg in hrefArgs:
-					tmpL=hrefArg.split("=")
-					hrefArgsMap[tmpL[0]]=tmpL[1]				
-				if self.checkProvisionExist(hrefArgsMap['origin_id'],hrefArgsMap['provider_id'],hrefArgsMap['isEnglish'],hrefArgsMap['content_type']):# check provision exist in target article
+				hrefArgsMap=self.getOriginByHref(href)
+				if self.checkProvisionExist(articleNum,hrefArgsMap['origin_id'],hrefArgsMap['provider_id'],hrefArgsMap['isEnglish'],hrefArgsMap['content_type']):# check provision exist in target article
 					hreflinkTag='<a href="%s" class="link_2" re="T" cate="en_href" >' % (href+"#i"+articleNum,) 
 					#get keyword id
 					keyword=self.keywordDao.findByContent(matches.group('keyword'))
@@ -75,12 +90,26 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 			endPos=posTuple[1]
 			hreflinkTag=posTuple[3]
 			article.content=article.content[:startPos]+hreflinkTag+article.content[startPos:endPos]+"</a>"+article.content[endPos:]
-			#TODO add cross ref link
+			# add cross ref link
+			matches=re.search(r'<a href="(?P<hreflink>[^"^#]*?)#(?P<proNum>[\d\.]*)" class="link_2" re="T" cate="en_href" >',hreflinkTag)
+			hreflink=matches.group('hreflink')#target linked url
+			provisionNum=matches.group('proNum')#provision number in article
+			hrefArgsMap=self.getOriginByHref(hreflink)
+			try:
+				originId=hrefArgsMap['origin_id']
+				providerId=hrefArgsMap['provider_id']
+				isEnglish=hrefArgsMap['isEnglish']
+				contentType=hrefArgsMap['content_type']
+				targetArticle=self.getArticleByOrigin(originId,providerId,isEnglish,contentType)
+				self.addCrossRef(article,targetArticle,posTuple[2],provisionNum)
+			except Exception,e:
+				self.log.error(e)
+				self.log.error("Add cross ref link failed in pattern method of ProvisionHyperlinkProcess.py")
 		return article
 
 	def process(self,article):
 		"""
-		override method process(self,article) in parent class
+		Override method process(self,article) in parent class
 		@param article
 		"""	
 		if article.contentType == Article.CONTENT_TYPE_LAW:

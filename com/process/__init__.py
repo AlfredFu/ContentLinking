@@ -19,11 +19,12 @@ class HyperlinkProcess(object):
 		self.queueDao=HyperlinkQueueDAO.HyperlinkQueueDAO()
 		self.exNewsDao=ExNewsDAO()
 		self.log=getLog()    
+		self.hyperlinkPatternStr=r'<a href="[^"]*" class="link_2" re="T" cate="en_href" >'
 
 	def eraseHyperlink(self,content):
 		"""
 		清除hyperlink所加的超链接
-		hyperlink sample:<a href='' class='link_2' re='T' cate='en_href' >Criminal Law</a>
+		hyperlink sample:<a href='' class='link_2' re='T' cate='en_href'>Criminal Law</a>
 		@param content 文章内容
 		return 清除hyperlink链接后的文章内容
 		"""	
@@ -98,7 +99,7 @@ class HyperlinkProcess(object):
 		latestDate=''
 		latestArticle=None
 		for targetArticle in articleCandidate:
-			if article.contentType=='C':#法规以发文日期作为比较日期
+			if article.contentType==Article.CONTENT_TYPE_CASE:#法规以发文日期作为比较日期
 				compDate=max([targetArticle.proDate,targetArticle.effectDate])#其他内容类型以发文日期和生效日期最近的一个作为比较日期
 			else:
 				compDate=targetArticle.prodate
@@ -122,19 +123,19 @@ class HyperlinkProcess(object):
 		将相关文章的相关文章action_type属性改为U
 		"""
 		for item in self.crossRefLinkDao.getRelatedArticleId(queueItem.targetId):
-			self.queueDao.updateActionType('U',item[0])
+			self.queueDao.updateActionType(Article.ACTION_TYPE_UPDATE,item[0])
 
 	def updateOprLoadStatus(self,queueItem):
 		"""
 		Update article status in hyperlink queue
 		@param queueItem 
 		"""
-		if queueItem.contentType =='T':
-			if queueItem.actionType in ['D','U']:
+		if queueItem.contentType ==Article.CONTENT_TYPE_LAW:
+			if queueItem.actionType in [Article.ACTION_TYPE_DELETE,Article.ACTION_TYPE_UPDATE]:
 				self.updateRelatedArticleActionType(queueItem)#找出相关文章，更新相关文章的在hyperlink队列中的状态为U
-			elif article.actionType=='N':
+			elif article.actionType==Article.ACTION_TYPE_NEW:
 				self.queueDao.addAllToQueue()#更新队列中状态为空的数据状态为U
-		if queueItem.actionType in ['D','U']:
+		if queueItem.actionType in [Article.ACTION_TYPE_DELETE,Article.ACTION_TYPE_UPDATE]:
 			self.deleteCrossRefLinkByArticleId(queueItem.targetId)#删除cross_ref_link表中的记录
 			#TODO处理被引用的文章
 		self.queueDao.updateStatus(queueItem.targetId,QueueItem.STATUS_PROCESSING,queueItem.contentType)

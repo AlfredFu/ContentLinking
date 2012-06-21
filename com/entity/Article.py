@@ -10,7 +10,7 @@ class Article(object):
 
 	ACTION_TYPE_NEW='N'
 	ACTION_TYPE_UPDATE='U'
-	ACTION_TYPE_DEL='D'
+	ACTION_TYPE_DELETE='D'
 
 	STATUS_AWAIT=1#await to be processed
 	STATUS_PROCESSING=3#article being processed

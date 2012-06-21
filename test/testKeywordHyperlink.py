@@ -18,8 +18,8 @@ from com.process.KeywordHyperlinkProcess import *
 		article=self.pattern(posTupleList,article)
 		#self.updateArticle(article)
 		return article
-		
 """
+		
 
 
 
