@@ -21,7 +21,8 @@ class VersionDAO(DAO):
 			#TODO optimize
 			#self.cursor.executemany("replace into versions(src_origin_id,src_provider_id,src_isenglish,des_origin_id,des_provider_id,des_isenglish) values('%s',%s,'%s','%s',%s,'%s')",tupleList)
 			for tuple in tupleList:
-				self.cursor.execute("replace into versions(src_origin_id,src_provider_id,src_isenglish,des_origin_id,des_provider_id,des_isenglish) values('%s',%s,'%s','%s',%s,'%s')" % tuple)
+				self.cursor_stg.execute("replace into versions(src_origin_id,src_provider_id,src_isenglish,des_origin_id,des_provider_id,des_isenglish) values('%s',%s,'%s','%s',%s,'%s')" % tuple)
+			self.conn_stg.commit()
 			#print "insert into versions(src_origin_id,src_provider_id,src_isenglish,des_origin_id,des_provider_id,des_isenglish) values('%s',%s,'%s','%s',%s,'%s')"
 		except Exception,e:
 			print e
@@ -29,7 +30,8 @@ class VersionDAO(DAO):
 
 	def deleteByOrigin(self,originId,providerId,isEnglish):
 		try:
-			self.cursor.execute("DELETE FROM versions WHERE (src_origin_id='%s' and src_provider_id=%s and src_isenglish='%s') or (des_origin_id='%s' and des_provider_id=%s and des_isenglish='%s')" %(originId,providerId,isEnglish,originId,providerId,isEnglish))
+			self.cursor_stg.execute("DELETE FROM versions WHERE (src_origin_id='%s' and src_provider_id=%s and src_isenglish='%s') or (des_origin_id='%s' and des_provider_id=%s and des_isenglish='%s')" %(originId,providerId,isEnglish,originId,providerId,isEnglish))
+			self.conn_stg.commit()
 		except Exception,e:
 			print e
 			self.log.error(e)

@@ -73,7 +73,7 @@ class AbbreviationHyperlinkProcess(HyperlinkProcess):
 			abbrPos=content.rfind(abbrPosTuple[2],start)
 		
 		if abbrPos!=-1:
-			if  not self.checkHyperlinkedKeyword(content,abbrPos,abbrPos+len(abbrPosTuple[2])):#文章中出现的简称未加超链接标签
+			if  not self.checkHyperlinkedKeyword(content,abbrPos,abbrPos+len(abbrPosTuple[2])):#if text is not warpped with hyperlink html tag
 				content=content[:abbrPos]+abbrPosTuple[3]+abbrPosTuple[2]+"</a>"+content[abbrPos+len(abbrPosTuple[2]):]
 			content=self.patternContent(content,abbrPosTuple,start,abbrPos)
 		return content
