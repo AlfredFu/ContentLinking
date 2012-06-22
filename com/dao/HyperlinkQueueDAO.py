@@ -50,7 +50,7 @@ class HyperlinkQueueDAO(DAO):
 			
 	def add(self,queueItem):
 		try:
-			sql="REPLACElINTO %s (content_type,origin_id,provider_id,is_english,target_id,action_type,status,upd_time,infiledate ) values(%s,%s,%s,%s,%s,%s,%s)" % ((HyperlinkQueueDAO.table,)+queueItem.toTuple())
+			sql="REPLACE INTO %s (content_type,origin_id,provider_id,is_english,target_id,action_type,status,upd_time,infiledate ) values(%s,%s,%s,%s,%s,%s,%s)" % ((HyperlinkQueueDAO.table,)+queueItem.toTuple())
 			self.cursor_stg.execute(sql)
 			self.conn_stg.commit()
 		except Exception,e:
@@ -63,7 +63,7 @@ class HyperlinkQueueDAO(DAO):
 
 	def updateActionType(self,id,type):
 		try:
-			self.cursor_stg.execute("UPDATE opr_load_status SET action_type='%s' WHERE target_id=%s AND action_type=''" % (type,id))
+			self.cursor_stg.execute("UPDATE opr_load_status_en SET action_type='%s' WHERE target_id=%s AND action_type=''" % (type,id))
 			self.conn_stg.commit()
 		except Exception,e:
 			print e
@@ -71,7 +71,7 @@ class HyperlinkQueueDAO(DAO):
 
 	def addAllToQueue(self):
 		try:
-			self.cursor_stg.execute("UPDATE opr_load_status SET action_type='U' WHERE action_type=''")
+			self.cursor_stg.execute("UPDATE opr_load_status_en SET action_type='U' WHERE action_type=''")
 		except Exception,e:
 			print e
 			self.log.error(e)

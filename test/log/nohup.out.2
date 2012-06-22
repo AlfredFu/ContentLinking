@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "com/process/main.py", line 1, in ?
+    from com.process.KeywordHyperlinkProcess import *
+ImportError: No module named com.process.KeywordHyperlinkProcess
+Traceback (most recent call last):
+  File "com/process/main.py", line 12, in ?
+    khp.begin(queueItem)
+  File "/home/fred/workspace/EnglishHyperlink/com/process/__init__.py", line 195, in begin
+    keyword.type=Keyword.TYPE_FULL
+AttributeError: type object 'Keyword' has no attribute 'TYPE_FULL'
+Traceback (most recent call last):
+  File "com/process/main.py", line 14, in ?
+    article=khp.process(article)
+  File "/home/fred/workspace/EnglishHyperlink/com/process/__init__.py", line 210, in process
+    posTupleList=self.search(article.content)
+  File "/home/fred/workspace/EnglishHyperlink/com/process/KeywordHyperlinkProcess.py", line 27, in search
+    while lowerCaseContent.find(lowerKeywordContent,start) != -1:
+KeyboardInterrupt
+/home/fred/workspace/EnglishHyperlink/com/dao/CrossRefLinkDAO.py:35: Warning: Incorrect integer value: '' for column 'des_item_id' at row 1
+  self.cursor_stg.execute("insert into "+CrossRefLinkDAO.table+"(src_article_id,keyword_id,des_article_id,des_item_id,des_attachment_id,src_content_type,src_origin_id,src_provider_id,src_isenglish,des_content_type,des_origin_id,des_provider_id,des_isenglish) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" % crossRefLink.toTuple())
+/home/fred/workspace/EnglishHyperlink/com/dao/CrossRefLinkDAO.py:35: Warning: Incorrect integer value: '' for column 'des_attachment_id' at row 1
+  self.cursor_stg.execute("insert into "+CrossRefLinkDAO.table+"(src_article_id,keyword_id,des_article_id,des_item_id,des_attachment_id,src_content_type,src_origin_id,src_provider_id,src_isenglish,des_content_type,des_origin_id,des_provider_id,des_isenglish) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" % crossRefLink.toTuple())

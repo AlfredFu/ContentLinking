@@ -47,15 +47,19 @@ class ArticleDAO(DAO):
 				
 			self.conn_hyperlink.commit()
 		except Exception,e:
-			print e
 			self.log.error("Error occured in addMany() of ArticleDAO.py")
 			self.log.error(e)	
 
 	def add(self,article):
 		try:
-			sql="REPLACE INTO "+ArticleDAO.tableName+"(content_type,origin_id,provider_id,isEnglish,target_id,action_type,status,keyword_id) values('%s','%s',%s,'%s',%s,'%s','%s','%s')" % (article.contentType,article.originId,article.providerId,article.isEnglish,article.id,article.actionType,article.status,article,keywordId)
+			if article.keywordId:
+				sql="REPLACE INTO "+ArticleDAO.tableName+"(content_type,origin_id,provider_id,isEnglish,target_id,action_type,status,keyword_id) values('%s','%s',%s,'%s',%s,'%s','%s',%s)" % (article.contentType,article.originId,article.providerId,article.isEnglish,article.id,article.actionType,article.status,article.keywordId)
+			else:
+				sql="REPLACE INTO "+ArticleDAO.tableName+"(content_type,origin_id,provider_id,isEnglish,target_id,action_type,status) values('%s','%s',%s,'%s',%s,'%s','%s')" % (article.contentType,article.originId,article.providerId,article.isEnglish,article.id,article.actionType,article.status)
+				
 			self.cursor_hyperlink.execute(sql)
 			self.conn_hyperlink.commit()	
 		except Exception,e:
 			self.log.error(e)
-			self.log.error(sql)
+			self.log.error("Error occured in add() of ArticleDAO.py")
+			#self.log.error(sql)

@@ -33,7 +33,7 @@ class LawDAO(DAO):
 			self.log.error(e)
 
 	def updateTime(self,article):
-		self.cursor_stg.execute("UPDATE tax SET indbtime=NOW() WHERE origin_id=%s AND provider_id=%s AND isEnglish='%s';" % (article.origin_id,article.provider_id,article.isEnglish));
+		self.cursor_stg.execute("UPDATE tax SET indbtime=NOW() WHERE origin_id=%s AND provider_id=%s AND isEnglish='%s';" % (article.originId,article.providerId,article.isEnglish));
 
 	def updateTimeByPrimary(self,id):
 		self.cursor_stg.execute("UPDATE tax SET indbtime=NOW() WHERE taxid=%s;" % id) 

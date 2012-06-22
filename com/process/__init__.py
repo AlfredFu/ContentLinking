@@ -1,5 +1,6 @@
 # coding=utf-8
 from com.dao.LawDAO import *
+from com.dao.ArticleDAO import *
 from com.dao.CaseDAO import *
 from com.dao.KeywordDAO import *
 from com.dao.HyperlinkQueueDAO import *
@@ -14,6 +15,7 @@ class HyperlinkProcess(object):
 	def __init__(self):
 		self.crossRefLinkDao=CrossRefLinkDAO.CrossRefLinkDAO()
 		self.lawDao=LawDAO.LawDAO()
+		self.articleDao=ArticleDAO.ArticleDAO()
 		self.caseDao=CaseDAO.CaseDAO()
 		self.keywordDao=KeywordDAO.KeywordDAO()
 		self.queueDao=HyperlinkQueueDAO.HyperlinkQueueDAO()
@@ -133,7 +135,7 @@ class HyperlinkProcess(object):
 		if queueItem.contentType ==Article.CONTENT_TYPE_LAW:
 			if queueItem.actionType in [Article.ACTION_TYPE_DELETE,Article.ACTION_TYPE_UPDATE]:
 				self.updateRelatedArticleStatus(queueItem)#找出相关文章，更新相关文章的在hyperlink队列中的状态为U
-			elif article.actionType==Article.ACTION_TYPE_NEW:
+			elif queueItem.actionType==Article.ACTION_TYPE_NEW:
 				self.queueDao.addAllToQueue()#更新队列中状态为空的数据状态为U
 		if queueItem.actionType in [Article.ACTION_TYPE_DELETE,Article.ACTION_TYPE_UPDATE]:
 			self.deleteCrossRefLinkByArticleId(queueItem.targetId)#删除cross_ref_link表中的记录
@@ -184,18 +186,18 @@ class HyperlinkProcess(object):
 	def begin(self,queueItem):
 		"""
 		"""
-		self.updateOprLoadStatus(self,queueItem)
+		self.updateOprLoadStatus(queueItem)
 		article=self.getArticle(queueItem)
 		keywordId=''
 		if article.contentType==Article.CONTENT_TYPE_LAW:
 			keyword=Keyword()
 			keyword.content=re.sub(r'\(revised in [0-9]{4}\)$','',article.title)
-			keyword.type=Keyword.TYPE_FULL
+			keyword.type=Keyword.KEYWORD_TYPE_FULL
 			keywordId=self.keywordDao.add(keyword)	
 			if re.search(r'of the People\'s Republic of China',keyword.content):
 				abbrKeyword=Keyword()
 				abbrKeyword.content=re.sub(r'of the People\'s Republic of China','',keyword.content,flags=re.I)
-				abbrKeyword.type=Keyword.TYPE_ABBR
+				abbrKeyword.type=Keyword.KEYWORD_TYPE_ABBR
 				abbrKeyword.fullTitleKeywordId=keywordId
 				self.keywordDao.add(abbrKeyword)
 		article.keywordId=keywordId
@@ -204,6 +206,7 @@ class HyperlinkProcess(object):
 			
 
 	def process(self,article):
+		self.log.info("Processing article id:%s,content type:%s" %(article.id,article.contentType))
 		posTupleList=self.search(article.content)
 		article=self.pattern(article,posTupleList)	
 		return article

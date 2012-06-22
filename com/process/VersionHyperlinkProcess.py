@@ -11,8 +11,7 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 	"""
 	def __init__(self):
 		super(VersionHyperlinkProcess,self).__init__()
-		self.versionDao=VersionDAO.VersionDAO()
-		self.articleDao=ArticleDAO()
+		self.versionDao=VersionDAO()
 	
 	def checkMultipleVersion(self,article):
 		"""
@@ -40,7 +39,7 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 		添加文章多版本参考信息
 		"""
 		keyword=self.keywordDao.findByContent(self.tripVersionInfo(article.title))
-		if keyword.id:
+		if  keyword and keyword.id:
 			refVersionArticleList=self.articleDao.findByKeywordId(keyword.id)
 			versionList=[]
 			for reVersionArticle in refVersionArticleList:

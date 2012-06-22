@@ -30,8 +30,8 @@ class AbbreviationHyperlinkProcess(HyperlinkProcess):
 					if hyperlinkTag:
 						abbrPosTuple=(matches.start(1)+start,matches.end(1)+start,abbrStr,hyperlinkTag)
 						posTupleList.append(abbrPosTuple)
-				start=matches.end(1)+start
-				self.search(content,start,posTupleList)
+				start=matches.end(0)+start
+				posTupleList=self.search(content,start,posTupleList)
 		posTupleList.sort(lambda posTuple1,posTuple2: - cmp(posTuple1[0],posTuple2[0]))#根据出现的起始位置排序
 		return posTupleList
 
@@ -78,9 +78,9 @@ class AbbreviationHyperlinkProcess(HyperlinkProcess):
 			content=self.patternContent(content,abbrPosTuple,start,abbrPos)
 		return content
 
-	def pattern(self.article,posTupleList=[]):
+	def pattern(self,article,posTupleList=[]):
 		for posTuple in posTupleList:
-			article.content=self.patternContent(self,article.content,posTuple)	
+			article.content=self.patternContent(article.content,posTuple)	
 		return article
 
 	"""

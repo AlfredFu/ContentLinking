@@ -6,12 +6,9 @@ from com.process.AbbreviationHyperlinkProcess import *
 if __name__=='__main__':
 	khp=KeywordHyperlinkProcess.KeywordHyperlinkProcess()
 	vhp=VersionHyperlinkProcess.VersionHyperlinkProcess()
-	ahp=AbbreviationHyperlinkProcess.AbbreviationHyperlinkProcess()
+	ahp=AbbreviationHyperlinkProcess()
 	
-	i=1
-	for queueItem in self.queueDao.getByContentType(Article.CONTENT_TYPE_LAW):
-		if i>1:break
-		i+=1
+	for queueItem in khp.queueDao.getAll():
 		khp.begin(queueItem)
 		article=khp.getArticle(queueItem)
 		article=khp.process(article)

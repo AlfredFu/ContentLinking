@@ -1,0 +1,20 @@
+/home/fred/workspace/EnglishHyperlink/com/dao/CrossRefLinkDAO.py:35: Warning: Incorrect integer value: '' for column 'des_item_id' at row 1
+  self.cursor_stg.execute("insert into "+CrossRefLinkDAO.table+"(src_article_id,keyword_id,des_article_id,des_item_id,des_attachment_id,src_content_type,src_origin_id,src_provider_id,src_isenglish,des_content_type,des_origin_id,des_provider_id,des_isenglish) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" % crossRefLink.toTuple())
+/home/fred/workspace/EnglishHyperlink/com/dao/CrossRefLinkDAO.py:35: Warning: Incorrect integer value: '' for column 'des_attachment_id' at row 1
+  self.cursor_stg.execute("insert into "+CrossRefLinkDAO.table+"(src_article_id,keyword_id,des_article_id,des_item_id,des_attachment_id,src_content_type,src_origin_id,src_provider_id,src_isenglish,des_content_type,des_origin_id,des_provider_id,des_isenglish) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" % crossRefLink.toTuple())
+Traceback (most recent call last):
+  File "com/process/main.py", line 12, in ?
+    khp.begin(queueItem)
+  File "/home/fred/workspace/EnglishHyperlink/com/process/__init__.py", line 189, in begin
+    self.updateOprLoadStatus(queueItem)
+  File "/home/fred/workspace/EnglishHyperlink/com/process/__init__.py", line 138, in updateOprLoadStatus
+    elif article.actionType==Article.ACTION_TYPE_NEW:
+NameError: global name 'article' is not defined
+Traceback (most recent call last):
+  File "com/process/main.py", line 1, in ?
+    from com.process.KeywordHyperlinkProcess import *
+ImportError: No module named com.process.KeywordHyperlinkProcess
+Traceback (most recent call last):
+  File "com/process/main.py", line 1, in ?
+    from com.process.KeywordHyperlinkProcess import *
+ImportError: No module named com.process.KeywordHyperlinkProcess
