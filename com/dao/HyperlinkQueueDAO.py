@@ -10,7 +10,7 @@ class HyperlinkQueueDAO(DAO):
 	
 	def getAll(self):
 		try:
-			self.cursor_stg.execute("SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s where action_type in ('N','U','D') and status=1" % HyperlinkQueueDAO.table)	
+			self.cursor_stg.execute("SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s where action_type in ('N','U','D') and status=1 order by content_type desc" % HyperlinkQueueDAO.table)	
 			for row in self.cursor_stg.fetchall():
 				queueItem=QueueItem()
 				queueItem.id=row[0]
