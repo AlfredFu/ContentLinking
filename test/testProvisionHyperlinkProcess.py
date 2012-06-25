@@ -45,7 +45,16 @@ def testHyperlinkProvi():
 		keywordProcess.process(article)
 		keywordProcess.updateArticle(article)
 
+def testAddRelativeArticleLink():
+	phprocess=ProvisionHyperlinkProcess()
+	for queueItem in phprocess.queueDao.getByContentTypeStatus('T','9'):
+		article=phprocess.getArticle(queueItem)
+		if article:
+			article.content=phprocess.removeProvisionRelativeArticleLink(article.content)
+			phprocess.addProvisionRelativeArticleLink(article)
+	
 if __name__=='__main__':
 	#print testAddProTag()
 	#print testCheckProvisionExist(testAddProTag(),5)
-	testHyperlinkProvi()
+	#testHyperlinkProvi()
+	testAddRelativeArticleLink()

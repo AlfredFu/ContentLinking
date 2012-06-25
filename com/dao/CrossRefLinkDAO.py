@@ -57,10 +57,11 @@ class CrossRefLinkDAO(DAO):
 			self.log.error(e)
 			self.log.error(sql)
 
-    def collectRelativeStastics(self,desOriginId,desProviderId,desIsEnglish,desContentType):
-        try:
-            sql="select des_item_id,src_content_type,count(*) from "+CrossRefLinkDAO.table+" where des_origin_id='%s' and des_provider_id=%s and des_isEnglish='%s' and des_content_type='%s' and des_item_id <>0 group by src_content_type,des_item_id order by des_item_id asc;" %(desPriginId,desProviderId,desIsEnglish,desContentType)
-            self.cursor_stg.execute(sql)
-            return self.cursor_stg.fetchall()
-        except Exception,e:
-            self.log.error(e)
+	def collectRelativeStastics(self,desOriginId,desProviderId,desIsEnglish,desContentType):
+		try:
+	    		sql="select des_item_id,src_content_type,count(*) from "+CrossRefLinkDAO.table+" where des_origin_id='%s' and des_provider_id=%s and des_isEnglish='%s' and des_content_type='%s' and des_item_id <>0 group by src_content_type,des_item_id order by des_item_id asc;" %(desOriginId,desProviderId,desIsEnglish,desContentType)
+	    		self.cursor_stg.execute(sql)
+	    		return self.cursor_stg.fetchall()
+		except Exception,e:
+	    		self.log.error(e)
+			self.log.error("collectRelativeStatistics() in CrossRefLinkDAO.py")

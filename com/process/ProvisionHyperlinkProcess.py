@@ -11,9 +11,9 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		#self.provisionPatternStr=r"(?P<astr>article\s+(?P<articleNum>\d+\.?\d+))\s+of\s+the\s+(<a href=\"(?P<href>[^\"^>]*?)\" class=\"link_2\" re=\"T\" cate=\"en_href\"\s*>).+?</a>"
 		self.provisionPatternStr=r'(?P<astr>article\s+(?P<articleNum>[\d+\.]+?))\s+of\s+the [\s"]*?(<a href="(?P<href>[^\"^>]*?)" class="link_2" re="T" cate="en_href"\s*>)(?P<keyword>.+?)</a>'
 		self.provisionPattern=re.compile(self.provisionPatternStr,re.I)
-        self.contentTypeMap={'T':'law','C':'case','LM':'newlaw','FL':'foreiginlaw','PNL':'profnewsletter+journal','HN':'hotnews','PC':'pgl_content','LB':'expert+ex_questions','LOTP':'tp_overview','LOFDI':'','EL':'','PEA':''}
-        self.contentTypeNameMap={'T':'Relative law','C':'Case','LM':'Legal news','FL':'Foreign law','PNL':'Newsletters','HN':'Articles','PC':'Practical materials','LB':'Q & A','LOTP':'TP overview','LOFDI':'','EL':'Elearning','PEA':''}
-        self.langRelativeArticle='Relative article:'
+        	self.contentTypeMap={'T':'law','C':'case','LM':'newlaw','FL':'foreiginlaw','PNL':'profnewsletter+journal','HN':'hotnews','PC':'pgl_content','LB':'expert+ex_questions','LOTP':'tp_overview','LOFDI':'','EL':'','PEA':''}
+        	self.contentTypeNameMap={'T':'Relative law','C':'Case','LM':'Legal news','FL':'Foreign law','PNL':'Newsletters','HN':'Articles','PC':'Practical materials','LB':'Q & A','LOTP':'TP overview','LOFDI':'','EL':'Elearning','PEA':''}
+        	self.langRelativeArticle='<br/><font color="red">Relative article:</font>'
 
 	def addProvisionPosTag(self,content):
 		"""
@@ -51,26 +51,34 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 				return True
 		return False 
                      
-    def addRelativeArticleLink(self,article):
-        """
-        Add relative article link for provision
-        """
-        if article:
-            relativeArticleLinkTagMap={} 
-            provisionNum=0
-            for row in self.crossRefLinkDao.collectRelativeStastics(article.originId,article.providerId,article.isEnglish,article.contentType):
-                if provisionNum !=row[0]:
-                    tmpLinkTag=self.langRelativeArticle#reset variable tmpLinkTag
-                    provisionNum=row[0]
-                contentType=row[1]
-                tmpLinkTag+=" <a href='#' onclick='linkage(this,%s,%s,2);return false;' style='text-decoration:underline;color:#00f;'>%s</a>" (self.contentTypeMap[contentType],provisionNum,(self.contentTypeNameMap[contentType]+' %s') % row[2]) 
-                relativeArticleLinkTagMap[provisionNum]=tmpLinkTag
-            for key in relativeArticleLinkTagMap:
-                provisionEndPos=article.content.find('<a name="end_i%s" re="T"></a>' % key)#TODO think about multiple same provision end tag in one article 
-                if provisionEndPos:
-                    article.content=article.content[:provisionEndPos]+relativeArticleLinkTagMap[key]+article.content[provisionEndPos:]
-            self.updateArticle(article)
-                     
+	def addProvisionRelativeArticleLink(self,article):
+		"""
+		Add relative article link for provision
+		"""
+		if article:
+			relativeArticleLinkTagMap={} 
+			provisionNum=0
+			for row in self.crossRefLinkDao.collectRelativeStastics(article.originId,article.providerId,article.isEnglish,article.contentType):
+				if provisionNum !=row[0]:
+					tmpLinkTag=self.langRelativeArticle#reset variable tmpLinkTag
+					provisionNum=row[0]
+				contentType=row[1]
+				tmpLinkTag+=" <a href='#' onclick='linkage(this,%s,%s,2);return false;' style='text-decoration:underline;color:#00f;'>%s</a>" (self.contentTypeMap[contentType],provisionNum,(self.contentTypeNameMap[contentType]+' %s') % row[2]) 
+				relativeArticleLinkTagMap[provisionNum]=tmpLinkTag
+			for key in relativeArticleLinkTagMap:
+				provisionEndPos=article.content.find('<a name="end_i%s" re="T"></a>' % key)#TODO think about multiple same provision end tag in one article 
+				if provisionEndPos:
+				    article.content=article.content[:provisionEndPos]+relativeArticleLinkTagMap[key]+article.content[provisionEndPos:]
+		self.updateArticle(article)
+
+	def removeProvisionRelativeArticleLink(self,content):
+		"""
+		Remove relative article link for provision
+		"""
+		content=content.replace(self.langRelativeArticle,'')	
+		content=re.sub(r" <a href='#' onclick='linkage(this,[\w\+]+?,\d+,2);return false;'[^>]*?>[^<]*?</a>",'',content)
+		return content
+ 
 	def getOriginByHref(self,href):
 		"""
 		Get origin id,provider id and isEnglish by hreflink

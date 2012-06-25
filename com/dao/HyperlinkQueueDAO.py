@@ -45,9 +45,35 @@ class HyperlinkQueueDAO(DAO):
 				queueItem.infiledate=row[11]
 				yield queueItem
 		except Exception,e:
-			print e
 			self.log.error(e)
+			self.log.error("Error occured in getByContentType() of HyperlinkQueueDAO.py")
 			
+	def getByContentTypeStatus(self,contentType,status):
+		"""
+		Get hyperlink queue item by content type and status	
+		param contentType 
+		param status
+		"""
+		try:
+			sql="SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s where content_type='%s' and status=%s" % (HyperlinkQueueDAO.table,contentType,status)
+			self.cursor_stg.execute(sql)
+			for row in self.cursor_stg.fetchall():
+				queueItem=QueueItem()
+				queueItem.id=row[0]
+				queueItem.contentType=row[1]
+				queueItem.originId=row[2]
+				queueItem.providerId=row[3]
+				queueItem.isEnglish=row[4]
+				queueItem.targetId=row[5]
+				queueItem.actionType=row[6]
+				queueItem.status=row[7]
+				queueItem.updTime=row[10]
+				queueItem.infiledate=row[11]
+				yield queueItem
+		except Exception,e:
+			self.log.error(e)
+			self.log.error("Error occured in getByContentTypeStatus() of HyperlinkQueueDAO.py")
+		
 	def add(self,queueItem):
 		try:
 			sql="REPLACE INTO %s (content_type,origin_id,provider_id,is_english,target_id,action_type,status,upd_time,infiledate ) values(%s,%s,%s,%s,%s,%s,%s)" % ((HyperlinkQueueDAO.table,)+queueItem.toTuple())
@@ -66,8 +92,8 @@ class HyperlinkQueueDAO(DAO):
 			self.cursor_stg.execute("UPDATE opr_load_status_en SET action_type='%s' WHERE target_id=%s AND action_type=''" % (type,id))
 			self.conn_stg.commit()
 		except Exception,e:
-			print e
 			self.log.error(e)
+			self.log.error("Error occured in updateActionType() of HyperlinkQueueDAO.py")
 
 	def addAllToQueue(self):
 		try:
@@ -75,6 +101,7 @@ class HyperlinkQueueDAO(DAO):
 		except Exception,e:
 			print e
 			self.log.error(e)
+			self.log.error("Error occured in addAllToQueue() of HyperlinkQueueDAO.py")
 
 	def updateStatus(self,targetId,contentType,status):
 		"""
@@ -86,6 +113,7 @@ class HyperlinkQueueDAO(DAO):
 		except Exception,e:
 			print e
 			self.log.error(e)
+			self.log.error("Error occured in updateStatus() of HyperlinkQueueDAO.py")
 
 	def updateActionType(self,targetId,contentType,actionType):
 		"""
