@@ -41,7 +41,7 @@ class CaseDAO(DAO):
 		except Exception,e:
 			self.log.error(e)	
 
-	def getByKey(self,originId,providerId,isEnglish):
+	def getByOrigin(self,originId,providerId,isEnglish):
 		"根据origin_id,provider_id,isEnglish获取案例"
 		self.cursor_stg.execute("SELECT cases.case_id,cases.title,case_content.content FROM cases LEFT JOIN case_content ON cases.case_id=case_content.case_id WHERE cases.origin_id=%s AND cases.provider_id=%s AND cases.isEnglish='%s'" % (originId,providerId,isEnglish))
 		row =self.cursor_stg.fetchone()

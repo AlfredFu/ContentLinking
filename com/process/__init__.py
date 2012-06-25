@@ -5,6 +5,9 @@ from com.dao.CaseDAO import *
 from com.dao.KeywordDAO import *
 from com.dao.HyperlinkQueueDAO import *
 from com.dao.CrossRefLinkDAO import *
+from com.dao.ProfNewsletterDAO import *
+from com.dao.LncQADAO import *
+from com.dao.ModuleQADAO import *
 from com.dao.ExNewsDAO import *
 from com.entity.HyperlinkQueue import *
 from com.entity.CrossRefLink import *
@@ -19,6 +22,9 @@ class HyperlinkProcess(object):
 		self.caseDao=CaseDAO.CaseDAO()
 		self.keywordDao=KeywordDAO.KeywordDAO()
 		self.queueDao=HyperlinkQueueDAO.HyperlinkQueueDAO()
+		self.newsletterDao=ProfNewsletterDAO.ProfNewsletterDAO()
+		self.lncQADao=LncQADAO.LncQADAO()
+		self.moduleQADao=ModuleQADAO.ModuleQADAO()
 		self.exNewsDao=ExNewsDAO()
 		self.log=getLog()    
 		self.hyperlinkPatternStr=r'<a href="[^"]*" class="link_2" re="T" cate="en_href" >'
@@ -46,7 +52,13 @@ class HyperlinkProcess(object):
 			article=self.lawDao.getById(queueItem.targetId)
 		elif queueItem.contentType == Article.CONTENT_TYPE_CASE:
 			article=self.caseDao.getById(queueItem.targetId)
-		elif queueItem.contentType ==Article.CONTENT_TYPE_NEWS:
+		elif queueItem.contentType == Article.CONTENT_TYPE_NEWSLETTER:
+			article=self.newsletterDao.getById(queueItem.targetId)
+		elif queueItem.contentType == Article.CONTENT_TYPE_LNCQA:
+			article=self.lncQADao.getById(queueItem.targetId)
+		elif queueItem.contentType == Article.CONTENT_TYPE_MODULEQA:
+			article=self.moduleQADao.getById(queueItem.targetId)
+		else:
 			article=self.exNewsDao.getById(queueItem.targetId)
 
 		if article and article.content:
@@ -56,23 +68,49 @@ class HyperlinkProcess(object):
 			article.content=article.content.replace('‘','\'')
 			article.content=article.content.replace('”','"')
 			article.content=article.content.replace('“','"')
-		return article
+			return article
 
 	def getArticleByOrigin(self,originId,providerId,isEnglish='Y',contentType='T'):
-		if contentType==Article.CONTENT_TYPE_LAW:
-			article=self.lawDao.getByOrigin(originId,providerId,isEnglish)	
+		"""
+		Get article by attribute origin_id ,provider_id and isEnglish
+		"""
+		if queueItem.contentType == Article.CONTENT_TYPE_LAW:
+			article=self.lawDao.getByOrigin(originId,providerId,isEnglish)
+		elif queueItem.contentType == Article.CONTENT_TYPE_CASE:
+			article=self.caseDao.getByOrigin(originId,providerId,isEnglish)
+		elif queueItem.contentType == Article.CONTENT_TYPE_NEWSLETTER:
+			article=self.newsletterDao.getByOrigin(originId,providerId,isEnglish)
+		elif queueItem.contentType == Article.CONTENT_TYPE_LNCQA:
+			article=self.lncQADao.getByOrigin(originId,providerId,isEnglish)
+		elif queueItem.contentType == Article.CONTENT_TYPE_MODULEQA:
+			article=self.moduleQADao.getByOrigin(originId,providerId,isEnglish)
+		else:
+			article=self.exNewsDao.getByOrigin(originId,providerId,isEnglish)
+		if article and article.content:
+			article.actionType=queueItem.actionType
+			article.status=queueItem.status	
+			article.content=article.content.replace('’','\'')
+			article.content=article.content.replace('‘','\'')
+			article.content=article.content.replace('”','"')
+			article.content=article.content.replace('“','"')
 			return article
 
 	def updateArticle(self,article):
 		"""
 		做完hyperlink后更新相关文章的时间
 		"""
-		if article.contentType==Article.CONTENT_TYPE_LAW:
-			self.lawDao.update(article)
-		elif article.contentType==Article.CONTENT_TYPE_CASE:
-			self.caseDao.update(article)
+		if queueItem.contentType == Article.CONTENT_TYPE_LAW:
+			article=self.lawDao.update(article)
+		elif queueItem.contentType == Article.CONTENT_TYPE_CASE:
+			article=self.caseDao.update(article)
+		elif queueItem.contentType == Article.CONTENT_TYPE_NEWSLETTER:
+			article=self.newsletterDao.update(article)
+		elif queueItem.contentType == Article.CONTENT_TYPE_LNCQA:
+			article=self.lncQADao.update(article)
+		elif queueItem.contentType == Article.CONTENT_TYPE_MODULEQA:
+			article=self.moduleQADao.update(article)
 		else:
-			self.exNewsDao.update(article)
+			article=self.exNewsDao.update(article)
 
 			
 	def checkHyperlinkedKeyword(self,content,startPos,endPos):
