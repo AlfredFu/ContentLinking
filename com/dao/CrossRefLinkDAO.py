@@ -51,8 +51,16 @@ class CrossRefLinkDAO(DAO):
 	def getRelatedArticleId(self,id,contentType):
 		try:
 			sql="SELECT des_article_id AS articleId,des_content_type as content_type FROM "+CrossRefLinkDAO.table+" WHERE src_article_id=%s and src_content_type='%s' UNION SELECT src_article_id AS articleId,src_content_type as content_type FROM "+CrossRefLinkDAO.table+" WHERE des_article_id=%s and des_content_type='%s'; " %(id,contentType,id,contentType)
-			self.cursor_hyperlink.execute(sql)
-			return self.cursor_hyperlink.fetchall()
+			self.cursor_stg.execute(sql)
+			return self.cursor_stg.fetchall()
 		except Exception,e:
 			self.log.error(e)
 			self.log.error(sql)
+
+    def collectRelativeStastics(self,desOriginId,desProviderId,desIsEnglish,desContentType):
+        try:
+            sql="select des_item_id,src_content_type,count(*) from "+CrossRefLinkDAO.table+" where des_origin_id='%s' and des_provider_id=%s and des_isEnglish='%s' and des_content_type='%s' and des_item_id <>0 group by src_content_type,des_item_id order by des_item_id asc;" %(desPriginId,desProviderId,desIsEnglish,desContentType)
+            self.cursor_stg.execute(sql)
+            return self.cursor_stg.fetchall()
+        except Exception,e:
+            self.log.error(e)

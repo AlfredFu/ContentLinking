@@ -14,21 +14,21 @@ class DBConnUtil:
 
     @staticmethod
     def getConnection(datasource='db'):
-	if datasource not in DBConnUtil.instance or DBConnUtil.instance[datasource] is None:
-		dbOption=getConfigSection(datasource)
-		DBConnUtil.instance[datasource]=None 
-        	try:
-                	DBConnUtil.mutex.acquire()
-                	if DBConnUtil.instance[datasource] is None:
-                    		DBConnUtil.instance[datasource]=DBConnUtil.connect(dbOption['host'],dbOption['username'],dbOption['password'],dbOption['dbname'])
-				#DBConnUtil.instance[datasource].row_factory=MySQLdb.Row
-                	DBConnUtil.mutex.release()
-        	except Exception,e:
-            		DBConnUtil.log.error(e) 
-	cursor=DBConnUtil.instance[datasource].cursor()
-	cursor.execute("set character_set_client = utf8;")	
-	cursor.execute("set character_set_connection = gbk;")	
-	cursor.execute("set character_set_results = utf8;")	
+        if datasource not in DBConnUtil.instance or DBConnUtil.instance[datasource] is None:
+            dbOption=getConfigSection(datasource)
+            DBConnUtil.instance[datasource]=None 
+                try:
+                        DBConnUtil.mutex.acquire()
+                        if DBConnUtil.instance[datasource] is None:
+                                DBConnUtil.instance[datasource]=DBConnUtil.connect(dbOption['host'],dbOption['username'],dbOption['password'],dbOption['dbname'])
+                    #DBConnUtil.instance[datasource].row_factory=MySQLdb.Row
+                        DBConnUtil.mutex.release()
+                except Exception,e:
+                        DBConnUtil.log.error(e) 
+        cursor=DBConnUtil.instance[datasource].cursor()
+        cursor.execute("set character_set_client = utf8;")	
+        cursor.execute("set character_set_connection = gbk;")	
+        cursor.execute("set character_set_results = utf8;")	
         return DBConnUtil.instance[datasource]
 
 
