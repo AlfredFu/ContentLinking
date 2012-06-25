@@ -8,11 +8,15 @@ if __name__=='__main__':
 	vhp=VersionHyperlinkProcess.VersionHyperlinkProcess()
 	ahp=AbbreviationHyperlinkProcess()
 	
+	i=1
 	for queueItem in khp.queueDao.getAll():
+		if i>1:break
+		i+=1
 		khp.begin(queueItem)
 		article=khp.getArticle(queueItem)
-		article=khp.process(article)
-		article=vhp.process(article)
-		article=ahp.process(article)
-		khp.updateArticle(article)
+		if article:
+			article=khp.process(article)
+			article=vhp.process(article)
+			article=ahp.process(article)
+			khp.updateArticle(article)
 		khp.end(queueItem)

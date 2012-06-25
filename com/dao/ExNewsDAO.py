@@ -28,6 +28,9 @@ class ExNewsDAO(DAO):
 			print e
 			self.log.error(e)
 
+	def getById(self):
+		pass
+
 	def getByContentType(self,contentType):
 		pass
 

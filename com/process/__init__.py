@@ -48,9 +48,10 @@ class HyperlinkProcess(object):
 			article=self.caseDao.getById(queueItem.targetId)
 		elif queueItem.contentType ==Article.CONTENT_TYPE_NEWS:
 			article=self.exNewsDao.getById(queueItem.targetId)
-		article.actionType=queueItem.actionType
-		article.status=queueItem.status	
-		if article.content:
+
+		if article and article.content:
+			article.actionType=queueItem.actionType
+			article.status=queueItem.status	
 			article.content=article.content.replace('’','\'')
 			article.content=article.content.replace('‘','\'')
 			article.content=article.content.replace('”','"')
@@ -189,19 +190,20 @@ class HyperlinkProcess(object):
 		self.updateOprLoadStatus(queueItem)
 		article=self.getArticle(queueItem)
 		keywordId=''
-		if article.contentType==Article.CONTENT_TYPE_LAW:
-			keyword=Keyword()
-			keyword.content=re.sub(r'\(revised in [0-9]{4}\)$','',article.title)
-			keyword.type=Keyword.KEYWORD_TYPE_FULL
-			keywordId=self.keywordDao.add(keyword)	
-			if re.search(r'of the People\'s Republic of China',keyword.content):
-				abbrKeyword=Keyword()
-				abbrKeyword.content=re.sub(r'of the People\'s Republic of China','',keyword.content,flags=re.I)
-				abbrKeyword.type=Keyword.KEYWORD_TYPE_ABBR
-				abbrKeyword.fullTitleKeywordId=keywordId
-				self.keywordDao.add(abbrKeyword)
-		article.keywordId=keywordId
-		self.articleDao.add(article)
+		if article: 
+			if article.contentType==Article.CONTENT_TYPE_LAW:
+				keyword=Keyword()
+				keyword.content=re.sub(r'\(revised in [0-9]{4}\)$','',article.title)
+				keyword.type=Keyword.KEYWORD_TYPE_FULL
+				keywordId=self.keywordDao.add(keyword)	
+				if re.search(r'of the People\'s Republic of China',keyword.content):
+					abbrKeyword=Keyword()
+					abbrKeyword.content=re.sub(r'of the People\'s Republic of China','',keyword.content,flags=re.I)
+					abbrKeyword.type=Keyword.KEYWORD_TYPE_ABBR
+					abbrKeyword.fullTitleKeywordId=keywordId
+					self.keywordDao.add(abbrKeyword)
+			article.keywordId=keywordId
+			self.articleDao.add(article)
 		
 			
 
