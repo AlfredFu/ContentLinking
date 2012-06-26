@@ -161,7 +161,7 @@ class HyperlinkProcess(object):
 		"""
 		将相关文章的相关文章action_type属性改为U
 		"""
-		for item in self.crossRefLinkDao.getRelatedArticle(queueItem.targetId,queueItem.contentType):
+		for item in self.crossRefLinkDao.getRelatedArticleId(queueItem.targetId,queueItem.contentType):
 			self.queueDao.updateStatus(item[0],item[1],Article.STATUS_AWAIT)
 
 	def updateOprLoadStatus(self,queueItem):
