@@ -13,16 +13,18 @@ if __name__=='__main__':
 	i=1
 	for queueItem in khp.queueDao.getAll():
 		if i>1:break
-		#i+=1
-		khp.log.info("")
+		i+=1
 		khp.begin(queueItem)
 		article=khp.getArticle(queueItem)
 		if article:
+			khp.log.info("Processing article type:%s id:%s" % (queueItem.contentType,queueItem.targetId))
 			article=khp.process(article)
 			article=vhp.process(article)
 			article=ahp.process(article)
 			article=phprocess.process(article)
 			khp.updateArticle(article)
+		else:
+			khp.log.warning("Article type:%s id:%s was not found" %(queueItem.contentType,queueItem.targetId))
 		khp.end(queueItem)
 	
 	for queueItem in khp.queueDao.getByContentTypeStatus(Article.CONTENT_TYPE_LAW,Article.STATUS_WAIT_UPLOAD):
@@ -30,3 +32,5 @@ if __name__=='__main__':
 		if article:
 			article.content=phprocess.removeProvisionRelativeArticleLink(article.content)
 			phprocess.addProvisionRelativeArticleLink(article)
+		else:
+			khp.log.warning("Article type:%s id:%s was not found" %(queueItem.contentType,queueItem.targetId))

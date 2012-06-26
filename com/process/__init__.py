@@ -74,21 +74,19 @@ class HyperlinkProcess(object):
 		"""
 		Get article by attribute origin_id ,provider_id and isEnglish
 		"""
-		if queueItem.contentType == Article.CONTENT_TYPE_LAW:
+		if contentType == Article.CONTENT_TYPE_LAW:
 			article=self.lawDao.getByOrigin(originId,providerId,isEnglish)
-		elif queueItem.contentType == Article.CONTENT_TYPE_CASE:
+		elif contentType == Article.CONTENT_TYPE_CASE:
 			article=self.caseDao.getByOrigin(originId,providerId,isEnglish)
-		elif queueItem.contentType == Article.CONTENT_TYPE_NEWSLETTER:
+		elif contentType == Article.CONTENT_TYPE_NEWSLETTER:
 			article=self.newsletterDao.getByOrigin(originId,providerId,isEnglish)
-		elif queueItem.contentType == Article.CONTENT_TYPE_LNCQA:
+		elif contentType == Article.CONTENT_TYPE_LNCQA:
 			article=self.lncQADao.getByOrigin(originId,providerId,isEnglish)
-		elif queueItem.contentType == Article.CONTENT_TYPE_MODULEQA:
+		elif contentType == Article.CONTENT_TYPE_MODULEQA:
 			article=self.moduleQADao.getByOrigin(originId,providerId,isEnglish)
 		else:
 			article=self.exNewsDao.getByOrigin(originId,providerId,isEnglish)
 		if article and article.content:
-			article.actionType=queueItem.actionType
-			article.status=queueItem.status	
 			article.content=article.content.replace('’','\'')
 			article.content=article.content.replace('‘','\'')
 			article.content=article.content.replace('”','"')
@@ -99,18 +97,18 @@ class HyperlinkProcess(object):
 		"""
 		做完hyperlink后更新相关文章的时间
 		"""
-		if queueItem.contentType == Article.CONTENT_TYPE_LAW:
-			article=self.lawDao.update(article)
-		elif queueItem.contentType == Article.CONTENT_TYPE_CASE:
-			article=self.caseDao.update(article)
-		elif queueItem.contentType == Article.CONTENT_TYPE_NEWSLETTER:
-			article=self.newsletterDao.update(article)
-		elif queueItem.contentType == Article.CONTENT_TYPE_LNCQA:
-			article=self.lncQADao.update(article)
-		elif queueItem.contentType == Article.CONTENT_TYPE_MODULEQA:
-			article=self.moduleQADao.update(article)
+		if article.contentType == Article.CONTENT_TYPE_LAW:
+			self.lawDao.update(article)
+		elif article.contentType == Article.CONTENT_TYPE_CASE:
+			self.caseDao.update(article)
+		elif article.contentType == Article.CONTENT_TYPE_NEWSLETTER:
+			self.newsletterDao.update(article)
+		elif article.contentType == Article.CONTENT_TYPE_LNCQA:
+			self.lncQADao.update(article)
+		elif article.contentType == Article.CONTENT_TYPE_MODULEQA:
+			self.moduleQADao.update(article)
 		else:
-			article=self.exNewsDao.update(article)
+			self.exNewsDao.update(article)
 
 			
 	def checkHyperlinkedKeyword(self,content,startPos,endPos):
@@ -181,7 +179,7 @@ class HyperlinkProcess(object):
 		self.queueDao.updateStatus(queueItem.targetId,queueItem.contentType,QueueItem.STATUS_PROCESSING)
 	
 	
-	def addCrossRefLink(self,article,targetArticle,keywordId='',itemId='',attachmentId=''):
+	def addCrossRefLink(self,article,targetArticle,keywordId='',itemId=0,attachmentId=0):
 		"""
 		Add record to cross_ref_link
 		@param article the article which has link to another article 
