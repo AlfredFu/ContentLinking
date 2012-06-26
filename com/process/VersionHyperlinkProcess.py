@@ -60,7 +60,7 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 		"""
 		删除版本参照信息
 		"""
-		self.versionDao.deleteByOrigin(originId,providerId,isEnglish)
+		self.versionDao.deleteByOrigin(article.originId,article.providerId,article.isEnglish)
 		
 	"""
 	def process(self):
