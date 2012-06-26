@@ -50,7 +50,7 @@ class CrossRefLinkDAO(DAO):
 	
 	def getRelatedArticleId(self,id,contentType):
 		try:
-			sql="SELECT des_article_id AS articleId,des_content_type as content_type FROM "+CrossRefLinkDAO.table+" WHERE src_article_id=%s and src_content_type='%s' UNION SELECT src_article_id AS articleId,src_content_type as content_type FROM "+CrossRefLinkDAO.table+" WHERE des_article_id=%s and des_content_type='%s'; " %(id,contentType,id,contentType)
+			sql=("SELECT des_article_id AS articleId,des_content_type as content_type FROM "+CrossRefLinkDAO.table+" WHERE src_article_id=%s and src_content_type='%s' UNION SELECT src_article_id AS articleId,src_content_type as content_type FROM "+CrossRefLinkDAO.table+" WHERE des_article_id=%s and des_content_type='%s'; ") %(id,contentType,id,contentType)
 			self.cursor_stg.execute(sql)
 			return self.cursor_stg.fetchall()
 		except Exception,e:
