@@ -245,6 +245,8 @@ class HyperlinkProcess(object):
 
 	def process(self,article):
 		#self.log.info("Processing article id:%s,content type:%s" %(article.id,article.contentType))
+		if article.actionType==Article.ACTION_TYPE_UPDATE:
+			article.content=self.eraseHyperlink(article.content)
 		posTupleList=self.search(article.content)
 		article=self.pattern(article,posTupleList)	
 		return article
