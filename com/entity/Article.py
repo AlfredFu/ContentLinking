@@ -29,3 +29,8 @@ class Article(object):
         	#self.contentType=contentType 内容类型
 		#self.proDate=proDate 发文日期
 		pass
+
+	def __eq__(self,other):
+		if self.originId==other.originId and self.providerId == other.providerId and self.isEnglish==other.isEnglish and self.contentType==other.contentType:
+			return 1
+		return 0	

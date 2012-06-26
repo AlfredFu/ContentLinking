@@ -77,11 +77,11 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 	"""
 
 	def process(self,article):
-		if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:
-			self.deleteVersionRelation(article)
-		if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_NEW]: 
-			self.addVersionRelation(article)
-		#self.updateArticle(article)	
+		if article.contentType==Article.CONTENT_TYPE_LAW:
+			if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:
+				self.deleteVersionRelation(article)
+			if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_NEW]: 
+				self.addVersionRelation(article)
 		return article
 
 if __name__=='__main__':

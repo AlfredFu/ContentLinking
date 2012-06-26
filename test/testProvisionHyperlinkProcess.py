@@ -16,10 +16,39 @@ Article 5 In conducting its business operations, a company shall comply with law
 The legitimate rights and interests of a company shall be protected by law and may not be trespassed against.
 
 Article 6 To establish a company, an application for registration shall be filed with the company registration authority. Where the application meets the establishment requirements of this Law, the company registration authority shall register the company as a limited liability company or joint stock limited company. Where the application does not meet the establishment requirements of this Law, it shall not be registered as a limited liability company or joint stock limited company.
+
 Article 7 Where any law or administrative regulation provides that the establishment of a company shall be subject to approval, the relevant approval formalities shall be complied with prior to the registration of the company.
 The general public may consult the company register at a company registration authority, which shall allow the general public to consult the register.
 
+
 """
+	content1="""
+<pre>
+AMENDMENT TO THE CONSTITUTION OF THE PEOPLE'S REPUBLIC OF CHINA<br />
+(Adopted at the First Session of  the  Seventh  National  People's<br />
+Congress on April 12, 1988  and  promulgated  for  implementation  by  the<br />
+Proclamation No. 8 of the National People's Congress on April 12, 1988)<br />
+Article 1<br />
+Article 11 of the Constitution shall include a new paragraph which reads:<br />
+"The state permits the private sector of the economy to exist and  develop<br />
+within the limits prescribed by law. The private sector of the economy  is<br />
+a complement to the socialist  public  economy.  The  state  protects  the<br />
+lawful rights and interests of the private  sector  of  the  economy,  and<br />
+exercises guidance, supervision and control over the private sector of the<br />
+economy".<br />
+Article 2<br />
+The fourth paragraph of Article 10 of  the  Constitution,  which  provides<br />
+that "no organization or individual may appropriate, buy,  sell  or  lease<br />
+land or otherwise engage in the transfer of land by unlawful means", shall<br />
+be amended as: "No organization or individual may appropriate,  buy,  sell<br />
+or otherwise engage in the transfer of land by unlawful means.  The  right<br />
+to the use of land may be transferred according to law".</pre>
+<br /><br />
+Provided by State Information Center State Legal DatabasesFor Your Reference Only
+<br /><br />
+ <br />
+"""
+	print  phprocess.addProvisionPosTag(content1)
 	return phprocess.addProvisionPosTag(content)
 
 def testCheckProvisionExist(content,itemId):
@@ -54,7 +83,7 @@ def testAddRelativeArticleLink():
 			phprocess.addProvisionRelativeArticleLink(article)
 	
 if __name__=='__main__':
-	#print testAddProTag()
+	print testAddProTag()
 	#print testCheckProvisionExist(testAddProTag(),5)
 	#testHyperlinkProvi()
-	testAddRelativeArticleLink()
+	#testAddRelativeArticleLink()

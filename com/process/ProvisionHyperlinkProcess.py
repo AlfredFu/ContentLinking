@@ -23,9 +23,12 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		@param content
 		return content after marked with html tag
 		"""	
-		provisionStartPattern=re.compile(r'(article ([\d\.]+)(.+\n?.+)+)(\n{2,})',re.I)
-		content=provisionStartPattern.sub(r'<a name="i\2" re="T"></a>\1<a name="end_i\2" re="T"></a>\4',content)	
+		#provisionStartPattern=re.compile(r'(article ([\d\.]+)(.+\n?.+)+)(\n{1,})',re.I)
+		#provisionStartPattern=re.compile(r'^(Article ([\d\.]+)(.+\n?.+)+)(\n{2})',re.MULTILINE)
 		#provisionStartPattern=re.compile(r'(\n{2,})(article ([\d\.]+)(.+\n?.+)+)(\n{2,})',re.I)
+		provisionStartPattern=re.compile(r'(Article ([\d\.]+).?(.\n?.)+?.?)\n\n',re.I)
+		content=provisionStartPattern.sub(r'<a name="i\2" re="T"></a>\1<a name="end_i\2" re="T"></a>\n\n',content)
+		#content=provisionStartPattern.sub(r'<a name="i\2" re="T"></a>\1<a name="end_i\2" re="T"></a>\4',content)	
 		#content=provisionStartPattern.sub(r'\1<a name="i\3" re="T"></a>\2<a name="end_i\3" re="T"></a>\5',content)	
 		return content
 

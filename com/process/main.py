@@ -17,10 +17,13 @@ if __name__=='__main__':
 		khp.begin(queueItem)
 		article=khp.getArticle(queueItem)
 		if article:
-			khp.log.info("Processing article type:%s id:%s" % (queueItem.contentType,queueItem.targetId))
+			khp.log.info("Keyword hyperlink processing article type:%s id:%s" % (queueItem.contentType,queueItem.targetId))
 			article=khp.process(article)
+			khp.log.info("Version hyperlink  processing article type:%s id:%s" % (queueItem.contentType,queueItem.targetId))
 			article=vhp.process(article)
+			khp.log.info("Abbreviation hyperlink  processing article type:%s id:%s" % (queueItem.contentType,queueItem.targetId))
 			article=ahp.process(article)
+			khp.log.info("Provision hyperlink  processing article type:%s id:%s" % (queueItem.contentType,queueItem.targetId))
 			article=phprocess.process(article)
 			khp.updateArticle(article)
 		else:

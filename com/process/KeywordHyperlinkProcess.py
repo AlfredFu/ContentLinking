@@ -52,13 +52,15 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 				
 			#print lawCandidate
 			targetArticle=self.selectTargetArticle(article,lawCandidate)
-			#targetLawUrl="/law/content.php?content_type=T&origin_id="+targetLaw.originId+"&provider_id="+targetLaw.providerId+"&isEnglish="+targetLaw.isEnglish
-			targetArticleUrl="/law/content.php?content_type=%s&origin_id=%s&provider_id=%s&isEnglish=%s" % (targetArticle.contentType,targetArticle.originId,targetArticle.providerId,targetArticle.isEnglish)
-			#rep="<a href='"+targetArticleUrl+"' class='link_3' >"+article.content[posTuple[0]:posTuple[1]]+"</a>"
-			#rep="<a href='%s' class='link_2' re='T' cate='en_href' >%s</a>" % (targetArticleUrl,article.content[posTuple[0]:posTuple[1]])
-			rep='<a href="%s" class="link_2" re="T" cate="en_href" >%s</a>' % (targetArticleUrl,article.content[posTuple[0]:posTuple[1]])
-			article.content=article.content[:posTuple[0]]+rep+article.content[posTuple[1]:]
-			self.addCrossRefLink(article,targetArticle,posTuple[2])#添加hyperlink记录
+			 
+			if not article==targetArticle:
+				#targetLawUrl="/law/content.php?content_type=T&origin_id="+targetLaw.originId+"&provider_id="+targetLaw.providerId+"&isEnglish="+targetLaw.isEnglish
+				targetArticleUrl="/law/content.php?content_type=%s&origin_id=%s&provider_id=%s&isEnglish=%s" % (targetArticle.contentType,targetArticle.originId,targetArticle.providerId,targetArticle.isEnglish)
+				#rep="<a href='"+targetArticleUrl+"' class='link_3' >"+article.content[posTuple[0]:posTuple[1]]+"</a>"
+				#rep="<a href='%s' class='link_2' re='T' cate='en_href' >%s</a>" % (targetArticleUrl,article.content[posTuple[0]:posTuple[1]])
+				rep='<a href="%s" class="link_2" re="T" cate="en_href" >%s</a>' % (targetArticleUrl,article.content[posTuple[0]:posTuple[1]])
+				article.content=article.content[:posTuple[0]]+rep+article.content[posTuple[1]:]
+				self.addCrossRefLink(article,targetArticle,posTuple[2])#添加hyperlink记录
 		return article 
 
 if __name__=="__main__":

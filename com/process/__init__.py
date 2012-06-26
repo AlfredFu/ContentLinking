@@ -244,7 +244,7 @@ class HyperlinkProcess(object):
 			
 
 	def process(self,article):
-		self.log.info("Processing article id:%s,content type:%s" %(article.id,article.contentType))
+		#self.log.info("Processing article id:%s,content type:%s" %(article.id,article.contentType))
 		posTupleList=self.search(article.content)
 		article=self.pattern(article,posTupleList)	
 		return article
