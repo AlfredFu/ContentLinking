@@ -13,7 +13,7 @@ if __name__=='__main__':
 	i=1
 	for queueItem in khp.queueDao.getAll():
 		if i>1:break
-		i+=1
+		#i+=1
 		khp.begin(queueItem)
 		article=khp.getArticle(queueItem)
 		if article:
