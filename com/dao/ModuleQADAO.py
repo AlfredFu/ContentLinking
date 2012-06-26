@@ -1,5 +1,6 @@
 #coding=utf-8
 from com.dao import *
+from com.entity.Article import *
 
 class ModuleQADAO(DAO):
 	def __init__(self):

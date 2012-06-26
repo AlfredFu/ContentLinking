@@ -14,12 +14,14 @@ if __name__=='__main__':
 	for queueItem in khp.queueDao.getAll():
 		if i>1:break
 		#i+=1
+		khp.log.info("")
 		khp.begin(queueItem)
 		article=khp.getArticle(queueItem)
 		if article:
 			article=khp.process(article)
 			article=vhp.process(article)
 			article=ahp.process(article)
+			article=phprocess.process(article)
 			khp.updateArticle(article)
 		khp.end(queueItem)
 	
