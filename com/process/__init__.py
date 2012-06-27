@@ -159,7 +159,7 @@ class HyperlinkProcess(object):
 
 	def updateRelatedArticleStatus(self,queueItem):
 		"""
-		将相关文章的相关文章action_type属性改为U
+		Update related articles,set their status to STATUS_AWAIT
 		"""
 		for item in self.crossRefLinkDao.getRelatedArticleId(queueItem.targetId,queueItem.contentType):
 			self.queueDao.updateStatus(item[0],item[1],Article.STATUS_AWAIT)
@@ -171,7 +171,7 @@ class HyperlinkProcess(object):
 		"""
 		if queueItem.contentType ==Article.CONTENT_TYPE_LAW:
 			if queueItem.actionType in [Article.ACTION_TYPE_DELETE,Article.ACTION_TYPE_UPDATE]:
-				self.updateRelatedArticleStatus(queueItem)#找出相关文章，更新相关文章的在hyperlink队列中的状态为U
+				self.updateRelatedArticleStatus(queueItem)#Update related articles,set their status to STATUS_AWAIT
 			elif queueItem.actionType==Article.ACTION_TYPE_NEW:
 				self.queueDao.addAllToQueue()#更新队列中状态为空的数据状态为U
 		if queueItem.actionType in [Article.ACTION_TYPE_DELETE,Article.ACTION_TYPE_UPDATE]:
@@ -239,14 +239,14 @@ class HyperlinkProcess(object):
 					abbrKeyword.fullTitleKeywordId=keywordId
 					self.keywordDao.add(abbrKeyword)
 			article.keywordId=keywordId
-			self.articleDao.add(article)
+			if article.actionType==Article.ACTION_TYPE_NEW:
+				self.articleDao.add(article)
+			if article.actionType==Article.ACTION_TYPE_UPDATE:
+				article.content=self.eraseHyperlink(article.content)
+			return article
 		
-			
-
 	def process(self,article):
 		#self.log.info("Processing article id:%s,content type:%s" %(article.id,article.contentType))
-		if article.actionType==Article.ACTION_TYPE_UPDATE:
-			article.content=self.eraseHyperlink(article.content)
 		posTupleList=self.search(article.content)
 		article=self.pattern(article,posTupleList)	
 		return article

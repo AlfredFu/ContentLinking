@@ -2,7 +2,7 @@ import logging
 from com.util.ConfigOptionUtil import *
 
 def getLog():
-    logFormate='%(name)s %(asctime)s %(levelname)s %(message)s'
+    logFormate='%(name)s %(asctime)s %(levelname)s source:%(pathname)s line:%(lineno)d msg:%(message)s'
     log=logging.getLogger(getConfigOption('log','name'))
     console=logging.FileHandler(getConfigOption('log','path'),'a')
     formatter=logging.Formatter(logFormate)

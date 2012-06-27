@@ -8,23 +8,25 @@ class CrossRefLinkDAO(DAO):
 		DAO.__init__(self)
 
 	def deleteBySrcId(self,srcId):
-		try:
-			self.cursor_stg.execute('delete from %s where src_article_id=%s' % CrossRefLinkDAO.table)
-			self.conn_stg.commit()
-		except Exception,e:
-			self.log.error(e)
+		if srcId:
+			try:
+				self.cursor_stg.execute('delete from %s where src_article_id=%s' % (CrossRefLinkDAO.table,srcId))
+				self.conn_stg.commit()
+			except Exception,e:
+				self.log.error(e)
 
 	def deleteByDesId(self,desId):
-		try:
-			self.cursor_stg.execute('delete from %s where src_article_id=%s' % CrossRefLinkDAO.table)
-			self.conn_stg.commit()
-		except Exception,e:
-			self.log.error(e)
+		if desId:
+			try:
+				self.cursor_stg.execute('delete from %s where src_article_id=%s' % (CrossRefLinkDAO.table,desId))
+				self.conn_stg.commit()
+			except Exception,e:
+				self.log.error(e)
 		
 			
 	def insert(self,crossRefLink):
 		try:
-			self.cursor_stg.execute("INSERT INTO "+CrossRefLinkDAO.table+"(src_article_id,keyword_id,des_article_id,des_item_id,des_attachment_id) VALUES(%s,%s,%s,%s,%s)" % (crossRefLink.srcId,crossRefLink.keywordId,crossRefLink.desId,crossRefLink.desItemId,crossAttachId))
+			self.cursor_stg.execute("REPLACE INTO "+CrossRefLinkDAO.table+"(src_article_id,keyword_id,des_article_id,des_item_id,des_attachment_id) VALUES(%s,%s,%s,%s,%s)" % (crossRefLink.srcId,crossRefLink.keywordId,crossRefLink.desId,crossRefLink.desItemId,crossAttachId))
 			self.conn.commit()
 		except Exception,e:
 			self.log.error(e) 
@@ -32,7 +34,7 @@ class CrossRefLinkDAO(DAO):
 
 	def add(self,crossRefLink):
 		try:
-			self.cursor_stg.execute("insert into "+CrossRefLinkDAO.table+"(src_article_id,keyword_id,des_article_id,des_item_id,des_attachment_id,src_content_type,src_origin_id,src_provider_id,src_isenglish,des_content_type,des_origin_id,des_provider_id,des_isenglish) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" % crossRefLink.toTuple())
+			self.cursor_stg.execute("replace into "+CrossRefLinkDAO.table+"(src_article_id,keyword_id,des_article_id,des_item_id,des_attachment_id,src_content_type,src_origin_id,src_provider_id,src_isenglish,des_content_type,des_origin_id,des_provider_id,des_isenglish) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" % crossRefLink.toTuple())
 		except Exception,e:
 			self.log.error(e)
 			self.log.error("Error occured in add() of CrossRefLinkDAO")
