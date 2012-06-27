@@ -21,6 +21,7 @@ class ModuleQADAO(DAO):
 				article.providerId=row[4]
 				article.isEnglish=row[5]
 				article.questionId=row[6]
+				article.contentType=Article.CONTENT_TYPE_MODULEQA
 				yield article
 		except Exception,e:
 			self.log.error(e)
@@ -42,6 +43,7 @@ class ModuleQADAO(DAO):
 					article.providerId=row[4]
 					article.isEnglish=row[5]
 					article.questionId=row[6]
+					article.contentType=Article.CONTENT_TYPE_MODULEQA
 					return article
 				else:
 					raise Exception("No question answer with id:%s was found" % id)
@@ -64,6 +66,7 @@ class ModuleQADAO(DAO):
 					article.providerId=row[4]
 					article.isEnglish=row[5]
 					article.questionId=row[6]
+					article.contentType=Article.CONTENT_TYPE_MODULEQA
 					return article
 				else:
 					raise Exception("No question answer with origin id:%s,provider id:%s,isEnglish:%s was found" % (originId,providerId,isEnglish))

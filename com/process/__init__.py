@@ -64,6 +64,7 @@ class HyperlinkProcess(object):
 		if article and article.content:
 			article.actionType=queueItem.actionType
 			article.status=queueItem.status	
+			article.contentType=queueItem.contentType
 			article.content=article.content.replace('’','\'')
 			article.content=article.content.replace('‘','\'')
 			article.content=article.content.replace('”','"')

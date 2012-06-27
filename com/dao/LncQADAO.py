@@ -19,6 +19,7 @@ class LncQADAO(DAO):
 				article.originId=row[4]
 				article.providerId=row[5]
 				article.isEnglish=row[6]
+				article.contentType=Article.CONTENT_TYPE_LNCQA
 				yield article
 		except Exception,e:
 			self.log.error(e)
@@ -39,6 +40,7 @@ class LncQADAO(DAO):
 					article.originId=row[4]
 					article.providerId=row[5]
 					article.isEnglish=row[6]
+					article.contentType=Article.CONTENT_TYPE_LNCQA
 					return article
 				else:
 					raise Exception("No  LNC Q&A with id %s found!" %id)
@@ -62,6 +64,7 @@ class LncQADAO(DAO):
 					article.originId=row[4]
 					article.providerId=row[5]
 					article.isEnglish=row[6]
+					article.contentType=Article.CONTENT_TYPE_LNCQA
 					return article
 				else:
 					raise Exception("No LNC Q&A with origin_id:%s,provider_id:%s,isEnglish:%s found!" %(originId,providerId,isEnglish))

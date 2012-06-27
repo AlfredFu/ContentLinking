@@ -1,5 +1,5 @@
 #coding=utf-8
-from com.entity.ExNews import *
+from com.entity.Article import *
 from com.dao import *
 
 class ExNewsDAO(DAO):
@@ -15,24 +15,87 @@ class ExNewsDAO(DAO):
 		
 		"""
 		try:
-			self.cursor_stg.execute("select id,origin_id,provider_id,isEnglish,title,sub_type,type,alltype,ipnews_category from ex_news where ex_news.is_display=1 and ex_news.isEnglish='Y';")
+			sql="select ex_news.id,ex_news.title,ex_news.origin_id,ex_news.provider_id,ex_news.isEnglish,ex_news_contents.content,ex_news.sub_type,ex_news.type,ex_news.alltype,ex_news.ipnews_category from ex_news left join ex_news_contents on ex_news.id=ex_news_contents.ex_new_id where ex_news.isEnglish='Y' and ex_news.is_display=1;" 
+			self.cursor_stg.execute(sql)
 			for row in self.cursor_stg.fetchall():
-				exNews=ExNews()
-				exNews.id=row[0]
-				exNews.originId=row[1]
-				exNews.providerId=row[2]
-				exNews.isEnglish=row[3]
-				exNews.title=row[4]
-				yield exNews
+				article=self.assemble(row)
+				if article.contentType != Article.CONTENT_TYPE_OTHERS:
+					yield article 
 		except Exception,e:
-			print e
 			self.log.error(e)
 
-	def getById(self):
-		pass
+	def getById(self,id):
+		if id:
+			sql="select ex_news.id,ex_news.title,ex_news.origin_id,ex_news.provider_id,ex_news.isEnglish,ex_news_contents.content,ex_news.sub_type,ex_news.type,ex_news.alltype,ex_news.ipnews_category from ex_news left join ex_news_contents on ex_news.id=ex_news_contents.ex_new_id where ex_news.id=%s" % id
+			try:
+				self.cursor_stg.execute(sql)
+				row=self.cursor_stg.fetchone()
+				if row:
+					article=self.assemble(row)
+					return article
+				else:
+					raise Exception("No article with id:%s in table ex_news is found!" % id)
+			except Exception,e:
+				self.log.error(e)
+
+	def getByOrigin(self,originId,providerId,isEnglish):
+		if originId and providerId and isEnglish:
+			sql="select ex_news.id,ex_news.title,ex_news.origin_id,ex_news.provider_id,ex_news.isEnglish,ex_news_contents.content,ex_news.sub_type,ex_news.type,ex_news.alltype,ex_news.ipnews_category from ex_news left join ex_news_contents on ex_news.id=ex_news_contents.ex_new_id where ex_news.origin_id='%s' and ex_news.provider_id=%s and ex_news.isEnglish='%s';" % (originId,providerId,isEnglish) 
+			try:
+				self.cursor_stg.execute(sql)
+				row=self.cursor_stg.fetchone()
+				if row:
+					article=self.assemble(row)
+					return article
+				else:
+					raise Exception("No article with origin_id:%s,provider_id:%s,isEnglish:%s is found in table ex_news!" %(originId,providerId,isEnglish))
+			except Exception,e:
+				self.log.error(e)
+
+
+	def update(self,article):
+		if article and article.id:
+			updateTimeSql="update ex_news set update_time=NOW() where id=%s;" % article.id	
+			try:
+				self.cursor_stg.execute(updateTimeSql)
+				if article.content:
+					article.content=article.content.replace("'","\\'")
+					article.content=article.content.replace('"','\\"')
+					updateContentSql="update ex_news_contents set content='%s' where ex_new_id=%s" % article.id
+					self.cursor_stg.execute(updateContentSql)
+				self.conn_stg.commit()
+			except Exception,e:
+				self.log.error(e)
+		else:
+			self.log.warning("No Illegal article")
+	
+	def assemble(self,row):
+		if row:
+			article=Article()
+			article.id=row[0]
+			article.title=row[1]
+			article.originId=row[2]
+			article.providerId=row[3]
+			article.isEnglish=row[4]
+			article.content=row[5]
+			article.subType=row[6]
+			article.type=row[7]
+			article.allType=row[8]
+			article.ipnewsCategory=row[9]
+			if article.subType == 1:
+				article.contentType=Article.CONTENT_TYPE_NEWLAW#每日快讯(新法快报)
+			elif article.subType==3 and article.ipnewsCategory==1:
+					article.contentType=Article.CONTENT_TYPE_HOTNEWS#评论文章
+			elif article.subType==4:
+				article.contentType=Article.CONTENT_TYPE_PRACTICAL#实用资料
+			elif article.subType==6:
+				article.contentType=Article.CONTENT_TYPE_ELEARNING#在线培训
+			elif article.subType==7:
+				article.contentType=Article.CONTENT_TYPE_TPOVERVIEW
+			else:
+				article.contentType=Article.CONTENT_TYPE_OTHERS
+			return article
+			
 
 	def getByContentType(self,contentType):
-		pass
-
-	def update(self,exNews):
 		pass
