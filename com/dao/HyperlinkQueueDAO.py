@@ -1,5 +1,6 @@
 #coding=utf-8
 from com.entity.QueueItem import *
+from com.entity.Article import *
 from com.dao import *
 
 class HyperlinkQueueDAO(DAO):
@@ -84,37 +85,52 @@ class HyperlinkQueueDAO(DAO):
 			self.log.error(sql)
 
 	def addMany(self,queueTupleList):
-		self.cursor_stg.executemany("INSERT INTO "+HyperlinkQueueDAO.table+" (content_type,origin_id,provider_id,is_english,target_id,action_type,status,upd_time,infiledate ) values(%s,%s,%s,%s,%s,%s,%s,NOW(),CURDATE())" ,queueTupleList)
-		self.conn_stg.commit()
-
-	def updateActionType(self,id,type):
 		try:
-			self.cursor_stg.execute("UPDATE opr_load_status_en SET action_type='%s' WHERE target_id=%s AND action_type=''" % (type,id))
+			self.cursor_stg.executemany("INSERT INTO "+HyperlinkQueueDAO.table+" (content_type,origin_id,provider_id,is_english,target_id,action_type,status,upd_time,infiledate ) values(%s,%s,%s,%s,%s,%s,%s,NOW(),CURDATE())" ,queueTupleList)
 			self.conn_stg.commit()
 		except Exception,e:
 			self.log.error(e)
-			self.log.error("Error occured in updateActionType() of HyperlinkQueueDAO.py")
+		
+
+	def updateActionType(self,targetId,contentType,actionType):
+		if targetId and contentType and actionType:
+			try:
+				self.cursor_stg.execute("UPDATE opr_load_status_en SET action_type='%s' WHERE target_id=%s AND content_type='%s'" % (actionType,targetId,contentType))
+				self.conn_stg.commit()
+			except Exception,e:
+				self.log.error(e)
 
 	def addAllToQueue(self):
 		try:
-			self.cursor_stg.execute("UPDATE opr_load_status_en SET action_type='U' WHERE action_type=''")
+			sql="UPDATE opr_load_status_en SET status=1 WHERE status=11;"
+			self.cursor_stg.execute(sql)
+			self.conn_stg.commit()
 		except Exception,e:
-			print e
 			self.log.error(e)
-			self.log.error("Error occured in addAllToQueue() of HyperlinkQueueDAO.py")
 
 	def updateStatus(self,targetId,contentType,status):
 		"""
 		更新hyperlink队列中谋篇文章的hyperlink状态
 		"""
-		try:
-			self.cursor_stg.execute("update opr_load_status_en set status=%s where target_id='%s' and content_type='%s'" %(status,targetId,contentType))
-			self.conn_stg.commit()
-		except Exception,e:
-			print e
-			self.log.error(e)
-			self.log.error("Error occured in updateStatus() of HyperlinkQueueDAO.py")
+		if targetId and contentType and status:
+			try:
+				self.cursor_stg.execute("update opr_load_status_en set status=%s where target_id='%s' and content_type='%s' and status <> %s" %(status,targetId,contentType,Article.STATUS_PROCESSING))
+				self.conn_stg.commit()
+			except Exception,e:
+				self.log.error(e)
 
+	def rollbackToStatus(self,targetId,contentType,status=Article.STATUS_FINISHED,toStatus=Article.STATUS_WAIT_UPLOAD):
+		"""
+		将队列中的文章A(由targetId,contentType指定)的状态由status改为toStatus
+		"""
+		if targetId and contentType:
+			sql="update opr_load_status_en set status=%s where target_id=%s and content_type='%s' and status=%s;" %(toStatus,targetId,contentType,status)
+			try:
+				self.cursor_stg.execute(sql)
+				self.conn_stg.commit()
+			except Exception,e:
+				self.log.error(e)
+		
 	def updateActionType(self,targetId,contentType,actionType):
 		"""
 		更新队列中某篇文章的状态

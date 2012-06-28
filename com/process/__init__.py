@@ -150,13 +150,14 @@ class HyperlinkProcess(object):
 				latestArticle=targetArticle
 		return latestArticle
 
-	def deleteCrossRefLinkByArticleId(self,id):
+	def deleteCrossRefLinkByArticleId(self,id,contentType):
 		"""
 		Delete corresponding hyperlink record by article id
 		@param id article id
 		"""
-		self.crossRefLinkDao.deleteBySrcId(id)
-		self.crossRefLinkDao.deleteByDesId(id)
+		#self.crossRefLinkDao.deleteBySrcId(id,contentType)
+		#self.crossRefLinkDao.deleteByDesId(id,contentType)
+		self.crossRefLinkDao.deleteByArticleIdContentType(id,contentType)
 
 	def updateRelatedArticleStatus(self,queueItem):
 		"""
@@ -170,6 +171,7 @@ class HyperlinkProcess(object):
 		Update article status in hyperlink queue
 		@param queueItem 
 		"""
+		"""	
 		if queueItem.contentType ==Article.CONTENT_TYPE_LAW:
 			if queueItem.actionType in [Article.ACTION_TYPE_DELETE,Article.ACTION_TYPE_UPDATE]:
 				self.updateRelatedArticleStatus(queueItem)#Update related articles,set their status to STATUS_AWAIT
@@ -177,7 +179,19 @@ class HyperlinkProcess(object):
 				self.queueDao.addAllToQueue()#更新队列中状态为空的数据状态为U
 		if queueItem.actionType in [Article.ACTION_TYPE_DELETE,Article.ACTION_TYPE_UPDATE]:
 			self.deleteCrossRefLinkByArticleId(queueItem.targetId)#删除cross_ref_link表中的记录
-		self.queueDao.updateStatus(queueItem.targetId,queueItem.contentType,QueueItem.STATUS_PROCESSING)
+		"""
+		if queueItem:
+			if queueItem.actionType in [Article.ACTION_TYPE_DELETE,Article.ACTION_TYPE_UPDATE]:
+				self.deleteCrossRefLinkByArticleId(queueItem.targetId,queueItem.contentType)#删除cross_ref_link表中的记录
+			for item in self.crossRefLinkDao.getBySrcArticleIdContentType(queueItem.targetId,queueItem.contentType):#找出被当前文章引用的文章	
+				self.queueDao.rollbackToStatus(item[0],item[1])#将status为STATUS_FINISHED改为STATUS_WAIT_UPLOAD
+			for item in self.crossRefLinkDao.getByDesArticleIdContentType(queueItem.targetId,queueItem.contentType):#找出引用当前文章的文章
+				self.queueDao.updateStatus(item[0],item[1],Article.STATUS_AWAIT)#将队列中的状态改为待处理
+			if queueItem.contentType ==Article.CONTENT_TYPE_LAW and queueItem.actionType==Article.ACTION_TYPE_NEW:
+				self.queueDao.updateActionType(queueItem.targetId,queueItem.contentType,Article.ACTION_TYPE_UPDATE)
+				self.queueDao.addAllToQueue()
+			
+			self.queueDao.updateStatus(queueItem.targetId,queueItem.contentType,QueueItem.STATUS_PROCESSING)
 	
 	
 	def addCrossRefLink(self,article,targetArticle,keywordId='',itemId=0,attachmentId=0):
