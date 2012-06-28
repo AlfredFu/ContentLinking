@@ -126,19 +126,20 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 			article.content=article.content[:startPos]+hreflinkTag+article.content[startPos:endPos]+"</a>"+article.content[endPos:]
 			# add cross ref link
 			matches=re.search(r'<a href="(?P<hreflink>[^"^#]*?)#(?P<proNum>[\d\.]*)" class="link_2" re="T" cate="en_href" >',hreflinkTag)
-			hreflink=matches.group('hreflink')#target linked url
-			provisionNum=matches.group('proNum')#provision number in article
-			hrefArgsMap=self.getOriginByHref(hreflink)
-			try:
-				originId=hrefArgsMap['origin_id']
-				providerId=hrefArgsMap['provider_id']
-				isEnglish=hrefArgsMap['isEnglish']
-				contentType=hrefArgsMap['content_type']
-				targetArticle=self.getArticleByOrigin(originId,providerId,isEnglish,contentType)
-				self.addCrossRef(article,targetArticle,posTuple[2],provisionNum)
-			except Exception,e:
-				self.log.error(e)
-				self.log.error("Add cross ref link failed in pattern method of ProvisionHyperlinkProcess.py")
+			if matches: 
+				hreflink=matches.group('hreflink')#target linked url
+				provisionNum=matches.group('proNum')#provision number in article
+				hrefArgsMap=self.getOriginByHref(hreflink)
+				try:
+					originId=hrefArgsMap['origin_id']
+					providerId=hrefArgsMap['provider_id']
+					isEnglish=hrefArgsMap['isEnglish']
+					contentType=hrefArgsMap['content_type']
+					targetArticle=self.getArticleByOrigin(originId,providerId,isEnglish,contentType)
+					self.addCrossRef(article,targetArticle,posTuple[2],provisionNum)
+				except Exception,e:
+					self.log.error(e)
+					self.log.error("Add cross ref link failed in pattern method of ProvisionHyperlinkProcess.py")
 		return article
 
 	def process(self,article):
