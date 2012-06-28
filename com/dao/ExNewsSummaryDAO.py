@@ -66,5 +66,5 @@ class ExNewsSummaryDAO(DAO):
 			article.providerId=row[2]
 			article.isEnglish=row[3]
 			article.content=row[4]
-			article.contentType=Article.CONTENT_TYPE_SUMMARY
+			article.contentType=Article.CONTENT_TYPE_OVERVIEW_SUMMARY
 			return article

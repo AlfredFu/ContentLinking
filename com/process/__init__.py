@@ -88,6 +88,8 @@ class HyperlinkProcess(object):
 		else:
 			article=self.exNewsDao.getByOrigin(originId,providerId,isEnglish)
 		if article and article.content:
+			if not article.contentType:
+				article.contentType=contentType
 			article.content=article.content.replace('’','\'')
 			article.content=article.content.replace('‘','\'')
 			article.content=article.content.replace('”','"')

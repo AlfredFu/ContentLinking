@@ -31,6 +31,7 @@ class ProfNewsletterDAO(DAO):
 				article.providerId=row[5]
 				article.isEnglish=row[6]
 				article.fkProfNewsletterId=row[7]
+				article.contentType=Article.CONTENT_TYPE_NEWSLETTER
 				yield article
 		except Exception,e:
 			self.log.error(e)
@@ -62,6 +63,7 @@ class ProfNewsletterDAO(DAO):
 					article.providerId=row[5]
 					article.isEnglish=row[6]
 					article.fkProfNewsletterId=row[7]
+					article.contentType=Article.CONTENT_TYPE_NEWSLETTER
 					return article
 				else:
 					raise Exception("No  professional newsletter with id %s found!" %id)
@@ -95,6 +97,7 @@ class ProfNewsletterDAO(DAO):
 					article.providerId=row[5]
 					article.isEnglish=row[6]
 					article.fkProfNewsletterId=row[7]
+					article.contentType=Article.CONTENT_TYPE_NEWSLETTER
 					return article
 				else:
 					raise Exception("No professional newsletter with origin_id:%s,provider_id:%s,isEnglish:%s found!" %(originId,providerId,isEnglish))
