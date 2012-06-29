@@ -8,7 +8,7 @@ class LncQADAO(DAO):
 
 	def getAll(self):
 		try:
-			sql="select announceid,boardid,topic,body,origin_id,provider_id,isEnglish where display=1 and isEnglish='Y';"
+			sql="select announceid,boardid,topic,body,origin_id,provider_id,isEnglish from listboard where display=1 and isEnglish='Y';"
 			self.cursor_stg.execute(sql)
 			for row in self.cursor_stg.fetchall():
 				article=Article()
@@ -27,7 +27,7 @@ class LncQADAO(DAO):
 
 	def getById(self,id):
 		if id:
-			sql="select announceid,boardid,topic,body,origin_id,provider_id,isEnglish where announceid=%s" % id
+			sql="select announceid,boardid,topic,body,origin_id,provider_id,isEnglish from listboard where announceid=%s" % id
 			try:
 				self.cursor_stg.execute(sql)
 				row=self.cursor_stg.fetchone()
@@ -51,7 +51,7 @@ class LncQADAO(DAO):
 
 	def getByOrigin(self,originId,providerId,isEnglish):
 		if originId and providerId and isEnglish:
-			sql="select announceid,boardid,topic,body,origin_id,provider_id,isEnglish where origin_id='%s' and provider_id=%s and isEnglish='%s';" % (originId,providerId,isEnglish)
+			sql="select announceid,boardid,topic,body,origin_id,provider_id,isEnglish from listboard where origin_id='%s' and provider_id=%s and isEnglish='%s';" % (originId,providerId,isEnglish)
 			try:
 				self.cursor_stg.execute(sql)
 				row=self.cursor_stg.fetchone()

@@ -61,7 +61,7 @@ class ExNewsDAO(DAO):
 				if article.content:
 					article.content=article.content.replace("'","\\'")
 					article.content=article.content.replace('"','\\"')
-					updateContentSql="update ex_news_contents set content='%s' where ex_new_id=%s" % article.id
+					updateContentSql="update ex_news_contents set content='%s' where ex_new_id=%s" % (article.content,article.id)
 					self.cursor_stg.execute(updateContentSql)
 				self.conn_stg.commit()
 			except Exception,e:

@@ -62,4 +62,3 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 
 if __name__=="__main__":
     process=KeywordHyperlinkProcess()
-    process.process()
