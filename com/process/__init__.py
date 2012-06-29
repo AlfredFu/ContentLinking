@@ -258,12 +258,11 @@ class HyperlinkProcess(object):
 			article.keywordId=keywordId
 			if article.actionType==Article.ACTION_TYPE_NEW:
 				self.articleDao.add(article)
-			if article.actionType==Article.ACTION_TYPE_UPDATE:
-				article.content=self.eraseHyperlink(article.content)
+			#if article.actionType==Article.ACTION_TYPE_UPDATE:
+			article.content=self.eraseHyperlink(article.content)
 			return article
 		
 	def process(self,article):
-		#self.log.info("Processing article id:%s,content type:%s" %(article.id,article.contentType))
 		posTupleList=self.search(article.content)
 		article=self.pattern(article,posTupleList)	
 		return article

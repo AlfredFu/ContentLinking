@@ -2,6 +2,7 @@ from com.process.KeywordHyperlinkProcess import *
 from com.process.VersionHyperlinkProcess import *
 from com.process.ProvisionHyperlinkProcess import *
 from com.process.AbbreviationHyperlinkProcess import *
+from com.process.filter import *
 
 
 if __name__=='__main__':
@@ -13,7 +14,9 @@ if __name__=='__main__':
 	i=1
 	for queueItem in khp.queueDao.getAll():
 		if i>1:break
-		i+=1
+		#i+=1
+		if articleList and (queueItem.contentType,queueItem.originId,queueItem.providerId,queueItem.isEnglish) not in articleList:
+			continue
 		#article=khp.getArticle(queueItem)
 		article=khp.begin(queueItem)
 		if article:

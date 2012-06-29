@@ -110,7 +110,7 @@ class ProfNewsletterDAO(DAO):
 			article.content=article.content.replace("'","\\'")
 			article.content=article.content.replace('"','\\"')
 			sql1="update profNewsletter set editedAt=NOW() where id=%s ;" %article.fkProfNewsletterId
-			sql2="update profNewsletter set content='%s' where id=%s;" %(article.content,article.id)
+			sql2="update profNewsletter_Ext set content='%s',editedExtAt=NOW() where id=%s;" %(article.content,article.id)
 			try:
 				self.cursor_stg.execute(sql1)
 				self.cursor_stg.execute(sql2)

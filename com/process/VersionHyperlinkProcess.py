@@ -78,6 +78,7 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 
 	def process(self,article):
 		if article.contentType==Article.CONTENT_TYPE_LAW:
+			#self.queueDao.updateActionType(queueItem.targetId,queueItem.contentType,Article.ACTION_TYPE_UPDATE)
 			if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:
 				self.deleteVersionRelation(article)
 			if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_NEW]: 
