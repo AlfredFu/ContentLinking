@@ -11,7 +11,7 @@ class HyperlinkQueueDAO(DAO):
 	
 	def getAll(self):
 		try:
-			self.cursor_stg.execute("SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s where action_type in ('N','U','D') and status=1 order by content_type desc" % HyperlinkQueueDAO.table)	
+			self.cursor_stg.execute("SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s where action_type in ('N','U','D') and status=1 order by content_type asc" % HyperlinkQueueDAO.table)	
 			for row in self.cursor_stg.fetchall():
 				queueItem=QueueItem()
 				queueItem.id=row[0]
@@ -49,14 +49,17 @@ class HyperlinkQueueDAO(DAO):
 			self.log.error(e)
 			self.log.error("Error occured in getByContentType() of HyperlinkQueueDAO.py")
 			
-	def getByContentTypeStatus(self,contentType,status):
+	def getByContentTypeStatus(self,contentType,status,actionType=''):
 		"""
 		Get hyperlink queue item by content type and status	
 		param contentType 
 		param status
 		"""
 		try:
-			sql="SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s where content_type='%s' and status=%s" % (HyperlinkQueueDAO.table,contentType,status)
+			if actionType:
+				sql="SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s where content_type='%s' and status=%s and action_type='%s';" % (HyperlinkQueueDAO.table,contentType,status,actionType)
+			else:
+				sql="SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s where content_type='%s' and status=%s" % (HyperlinkQueueDAO.table,contentType,status)
 			self.cursor_stg.execute(sql)
 			for row in self.cursor_stg.fetchall():
 				queueItem=QueueItem()

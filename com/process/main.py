@@ -11,12 +11,11 @@ if __name__=='__main__':
 	phprocess=ProvisionHyperlinkProcess.ProvisionHyperlinkProcess()
 	ahp=AbbreviationHyperlinkProcess()
 
-	#initial phase 
-	
-	i=1
+	#initial phase	 
+	khp.initial()	
+
+	#process phase
 	for queueItem in khp.queueDao.getAll():
-		if i>1:break
-		#i+=1
 		if articleList and (queueItem.contentType,queueItem.originId,queueItem.providerId,queueItem.isEnglish) not in articleList:
 			continue
 		#article=khp.getArticle(queueItem)

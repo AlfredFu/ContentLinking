@@ -36,12 +36,38 @@ class HyperlinkProcess(object):
 		@param content 文章内容
 		return 清除hyperlink链接后的文章内容
 		"""	
-		content=re.sub(r'<a\s+?[^>]*?cate=["\']en_href["\']\s*>([^<]*?)</a>',r'\1',content)
-		#content=re.sub(r'<a\s+href=[\'"][/\w\d\-\.]*?[\'"]\s+class=[\'"]link_2[\'"]\s+re=[\'"]T[\'"]\s+cate=[\'"]en_href[\'"]\s*>(.*?)</a>',r'\1',content)
-		#content=re.sub(r'<a[^>]+?>([^<]*?)</a>','\\1',content)
-		#contentcontent=re.sub(r'<?/?a>','',content)
-		return content
-	
+		if article and article.content:
+			article.content=re.sub(r'<a\s+?[^>]*?cate=["\']en_href["\']\s*>([^<]*?)</a>',r'\1',article.content)
+			#content=re.sub(r'<a\s+href=[\'"][/\w\d\-\.]*?[\'"]\s+class=[\'"]link_2[\'"]\s+re=[\'"]T[\'"]\s+cate=[\'"]en_href[\'"]\s*>(.*?)</a>',r'\1',content)
+			#content=re.sub(r'<a[^>]+?>([^<]*?)</a>','\\1',content)
+			#contentcontent=re.sub(r'<?/?a>','',content)
+
+	def addProvisionPosTag(self,article):
+		"""
+		Mark provision position with following html tag(will not be displayed):
+		Mark start position with:<a name="i2" re="T"></a>
+		Mark end position with:<a name="end_i1" re="T"></a>
+		@param article 
+		"""	
+		if article and article.content:
+			#provisionStartPattern=re.compile(r'(article ([\d\.]+)(.+\n?.+)+)(\n{1,})',re.I)
+			#provisionStartPattern=re.compile(r'^(Article ([\d\.]+)(.+\n?.+)+)(\n{2})',re.MULTILINE)
+			#provisionStartPattern=re.compile(r'(\n{2,})(article ([\d\.]+)(.+\n?.+)+)(\n{2,})',re.I)
+			provisionStartPattern=re.compile(r'(Article ([\d\.]+).?(.\n?)+?.?)(\n\n|<br />\n?<br />)',re.I)
+			article.content=provisionStartPattern.sub(r'<a name="i\2" re="T"></a>\1<a name="end_i\2" re="T"></a>\4',article.content)
+			#content=provisionStartPattern.sub(r'<a name="i\2" re="T"></a>\1<a name="end_i\2" re="T"></a>\4',content)	
+			#content=provisionStartPattern.sub(r'\1<a name="i\3" re="T"></a>\2<a name="end_i\3" re="T"></a>\5',content)	
+
+	def removeProvisionPosTag(self,article):
+		"""
+		Remove provision position mark in content
+		@param article 
+		return 
+		"""
+		if article and article.content:
+			article.content=re.sub(r'<a name="(end_)?i[\d\.]+" re="T"></a>','',article.content)
+
+
 	def getArticle(self,queueItem):
 		"""
 		根据Hyperlink队列中的元素获取文章
@@ -238,31 +264,47 @@ class HyperlinkProcess(object):
 		@param article 
 		"""
 		pass
+	
+	def initial(self):
+		"""
+		Update keyword list and article list accroding to hyperlink queue		
+		"""
+		for queueItem in self.queueDao.getAll():
+			article=self.getArticle(queueItem)
+			if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:
+				self.articleDao.deleteByTarget(article.id,article.contentType)
+				self.keywordDao.deleteByTarget(article.id,article.contentType)
+				if article.actionType==Article.ACTION_TYPE_UPDATE:
+					self.eraseHyperlink(article)
+					self.removeProvisionPosTag(article)
+			
+			if article.actionType in [Article.ACTION_TYPE_NEW,Article.ACTION_TYPE_UPDATE]:
+				if article.contentType==Article.CONTENT_TYPE_LAW:			
+					self.addProvisionPosTag(article)	
+					keyword=Keyword()
+					keyword.content=re.sub(r'\(revised in [0-9]{4}\)$','',article.title)
+					keyword.type=Keyword.KEYWORD_TYPE_FULL
+					keywordId=self.keywordDao.add(keyword)	
+					if re.search(r'of the People\'s Republic of China',keyword.content):
+						abbrKeyword=Keyword()
+						abbrKeyword.content=re.sub(r'of the People\'s Republic of China','',keyword.content,flags=re.I)
+						abbrKeyword.type=Keyword.KEYWORD_TYPE_ABBR
+						abbrKeyword.fullTitleKeywordId=keywordId
+						self.keywordDao.add(abbrKeyword)
+				else:
+					keywordId=''
+				article.keywordId=keywordId
+				self.articleDao.add(article)
+			self.updateArticle(article)
+		
 
 	def begin(self,queueItem):
 		"""
+		Update queue items status and get article accroding queue item
 		"""
 		self.updateOprLoadStatus(queueItem)
 		article=self.getArticle(queueItem)
-		keywordId=''
-		if article: 
-			if article.contentType==Article.CONTENT_TYPE_LAW:
-				keyword=Keyword()
-				keyword.content=re.sub(r'\(revised in [0-9]{4}\)$','',article.title)
-				keyword.type=Keyword.KEYWORD_TYPE_FULL
-				keywordId=self.keywordDao.add(keyword)	
-				if re.search(r'of the People\'s Republic of China',keyword.content):
-					abbrKeyword=Keyword()
-					abbrKeyword.content=re.sub(r'of the People\'s Republic of China','',keyword.content,flags=re.I)
-					abbrKeyword.type=Keyword.KEYWORD_TYPE_ABBR
-					abbrKeyword.fullTitleKeywordId=keywordId
-					self.keywordDao.add(abbrKeyword)
-			article.keywordId=keywordId
-			if article.actionType==Article.ACTION_TYPE_NEW:
-				self.articleDao.add(article)
-			#if article.actionType==Article.ACTION_TYPE_UPDATE:
-			article.content=self.eraseHyperlink(article.content)
-			return article
+		return article
 		
 	def process(self,article):
 		posTupleList=self.search(article.content)

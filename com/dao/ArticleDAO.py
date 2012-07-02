@@ -47,7 +47,6 @@ class ArticleDAO(DAO):
 				
 			self.conn_hyperlink.commit()
 		except Exception,e:
-			self.log.error("Error occured in addMany() of ArticleDAO.py")
 			self.log.error(e)	
 
 	def add(self,article):
@@ -61,5 +60,21 @@ class ArticleDAO(DAO):
 			self.conn_hyperlink.commit()	
 		except Exception,e:
 			self.log.error(e)
-			self.log.error("Error occured in add() of ArticleDAO.py")
-			#self.log.error(sql)
+	
+	def deleteByOrigin(self,originId,providerId,isEnglish,contentType):
+		if originId and providerId and isEnglish and contentType:
+			sql="delete from article_en where origin_id='%s' and provider_id=%s and isEnglish='%s' and content_type='%s';" %(originId,providerId,isEnglish,contentType)
+			try:
+				self.cursor_hyperlink.execute(sql)
+				self.conn_hyperlink.commit()
+			except Exception,e:
+				self.log.error(e)
+
+	def deleteByTarget(self,targetId,contentType):
+		if targetId and contentType:
+			sql="delete from article_en where target_id=%s and content_type='%s';" %(targetId,contentType)
+			try:
+				self.cursor_hyperlink.execute(sql)
+				self.conn_hyperlink.commit()
+			except Exception,e:
+				self.log.error(e)

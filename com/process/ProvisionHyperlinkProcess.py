@@ -16,31 +16,6 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
         	self.reArticleStart='<br/><font color="red">(Relative article:</font>'
         	self.reArticleEnd='<font color="red">)</font>'
 
-	def addProvisionPosTag(self,content):
-		"""
-		Mark provision position with following html tag(will not be displayed):
-		Mark start position with:<a name="i2" re="T"></a>
-		Mark end position with:<a name="end_i1" re="T"></a>
-		@param content
-		return content after marked with html tag
-		"""	
-		#provisionStartPattern=re.compile(r'(article ([\d\.]+)(.+\n?.+)+)(\n{1,})',re.I)
-		#provisionStartPattern=re.compile(r'^(Article ([\d\.]+)(.+\n?.+)+)(\n{2})',re.MULTILINE)
-		#provisionStartPattern=re.compile(r'(\n{2,})(article ([\d\.]+)(.+\n?.+)+)(\n{2,})',re.I)
-		provisionStartPattern=re.compile(r'(Article ([\d\.]+).?(.\n?)+?.?)(\n\n|<br />\n?<br />)',re.I)
-		content=provisionStartPattern.sub(r'<a name="i\2" re="T"></a>\1<a name="end_i\2" re="T"></a>\4',content)
-		#content=provisionStartPattern.sub(r'<a name="i\2" re="T"></a>\1<a name="end_i\2" re="T"></a>\4',content)	
-		#content=provisionStartPattern.sub(r'\1<a name="i\3" re="T"></a>\2<a name="end_i\3" re="T"></a>\5',content)	
-		return content
-
-	def removeProvisionPosTag(self,content):
-		"""
-		Remove provision position mark in content
-		@param content
-		return 
-		"""
-		return re.sub(r'<a name="(end_)?i[\d\.]+" re="T"></a>','',content)
-
 	def checkProvisionExist(self,provisionNum,originId,providerId,isEnglish='Y',contentType='T'):
 		"""
 		Check provision is exist in target article which specified by param originId,providerId,isEnglish and contentType
