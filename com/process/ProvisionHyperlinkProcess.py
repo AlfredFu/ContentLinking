@@ -13,7 +13,8 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		self.provisionPattern=re.compile(self.provisionPatternStr,re.I)
         	self.contentTypeMap={'T':'law','C':'case','LM':'newlaw','FL':'foreiginlaw','PNL':'profnewsletter+journal','HN':'hotnews','PC':'pgl_content','LB':'expert+ex_questions','LOTP':'tp_overview','LOFDI':'','EL':'','PEA':''}
         	self.contentTypeNameMap={'T':'Relative law','C':'Case','LM':'Legal news','FL':'Foreign law','PNL':'Newsletters','HN':'Articles','PC':'Practical materials','LB':'Q & A','LOTP':'TP overview','LOFDI':'','EL':'Elearning','PEA':''}
-        	self.langRelativeArticle='<br/><font color="red">Relative article:</font>'
+        	self.reArticleStart='<br/><font color="red">(Relative article:</font>'
+        	self.reArticleEnd='<font color="red">)</font>'
 
 	def addProvisionPosTag(self,content):
 		"""
@@ -63,23 +64,24 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 			provisionNum=0
 			for row in self.crossRefLinkDao.collectRelativeStastics(article.originId,article.providerId,article.isEnglish,article.contentType):
 				if provisionNum !=row[0]:
-					tmpLinkTag=self.langRelativeArticle#reset variable tmpLinkTag
+					tmpLinkTag=self.reArticleStart#reset variable tmpLinkTag
 					provisionNum=row[0]
 				contentType=row[1]
-				tmpLinkTag+=" <a href='#' onclick='linkage(this,%s,%s,2);return false;' style='text-decoration:underline;color:#00f;'>%s</a>" (self.contentTypeMap[contentType],provisionNum,(self.contentTypeNameMap[contentType]+' %s') % row[2]) 
+				#tmpLinkTag+=" <a href='#' onclick='linkage(this,%s,%s,2);return false;' style='text-decoration:underline;color:#00f;'>%s</a>" % (self.contentTypeMap[contentType],provisionNum,(self.contentTypeNameMap[contentType]+' %s') % row[2]) 
+				tmpLinkTag+=' <a href="#" onclick="linkage(this,%s,%s,2);return false;" style="text-decoration:underline;color:#00f;">%s</a>' % (self.contentTypeMap[contentType],provisionNum,(self.contentTypeNameMap[contentType]+" %s") % row[2]) 
 				relativeArticleLinkTagMap[provisionNum]=tmpLinkTag
 			for key in relativeArticleLinkTagMap:
 				provisionEndPos=article.content.find('<a name="end_i%s" re="T"></a>' % key)#TODO think about multiple same provision end tag in one article 
 				if provisionEndPos:
-				    article.content=article.content[:provisionEndPos]+relativeArticleLinkTagMap[key]+article.content[provisionEndPos:]
+				    article.content=article.content[:provisionEndPos]+self.reArticleStart+relativeArticleLinkTagMap[key]+self.reArticleEnd+article.content[provisionEndPos:]
 		self.updateArticle(article)
 
 	def removeProvisionRelativeArticleLink(self,content):
 		"""
 		Remove relative article link for provision
 		"""
-		content=content.replace(self.langRelativeArticle,'')	
-		content=re.sub(r" <a href='#' onclick='linkage(this,[\w\+]+?,\d+,2);return false;'[^>]*?>[^<]*?</a>",'',content)
+		content=content.replace(self.reArticleStart,'')	
+		content=re.sub(r' <a href="#" onclick="linkage(this,[\w\+]+?,\d+,2);return false;"[^>]*?>[^<]*?</a>','',content)
 		return content
  
 	def getOriginByHref(self,href):
@@ -125,7 +127,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 			hreflinkTag=posTuple[3]
 			article.content=article.content[:startPos]+hreflinkTag+article.content[startPos:endPos]+"</a>"+article.content[endPos:]
 			# add cross ref link
-			matches=re.search(r'<a href="(?P<hreflink>[^"^#]*?)#(?P<proNum>[\d\.]*)" class="link_2" re="T" cate="en_href" >',hreflinkTag)
+			matches=re.search(r'<a href="(?P<hreflink>[^"^#]*?)#i(?P<proNum>[\d\.]*)" class="link_2" re="T" cate="en_href" >',hreflinkTag)
 			if matches: 
 				hreflink=matches.group('hreflink')#target linked url
 				provisionNum=matches.group('proNum')#provision number in article
@@ -136,10 +138,10 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 					isEnglish=hrefArgsMap['isEnglish']
 					contentType=hrefArgsMap['content_type']
 					targetArticle=self.getArticleByOrigin(originId,providerId,isEnglish,contentType)
-					self.addCrossRef(article,targetArticle,posTuple[2],provisionNum)
+					#print "provisionNum:",provisionNum
+					self.addCrossRefLink(article,targetArticle,posTuple[2],provisionNum)
 				except Exception,e:
 					self.log.error(e)
-					self.log.error("Add cross ref link failed in pattern method of ProvisionHyperlinkProcess.py")
 		return article
 
 	def process(self,article):

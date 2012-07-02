@@ -20,6 +20,7 @@ if __name__=='__main__':
 		#article=khp.getArticle(queueItem)
 		article=khp.begin(queueItem)
 		if article:
+			print article.id,article.contentType
 			khp.log.info("Keyword hyperlink processing article type:%s id:%s" % (queueItem.contentType,queueItem.targetId))
 			article=khp.process(article)
 			khp.log.info("Version hyperlink  processing article type:%s id:%s" % (queueItem.contentType,queueItem.targetId))

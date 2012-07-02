@@ -159,7 +159,9 @@ class HyperlinkProcess(object):
 		"""
 		#self.crossRefLinkDao.deleteBySrcId(id,contentType)
 		#self.crossRefLinkDao.deleteByDesId(id,contentType)
-		self.crossRefLinkDao.deleteByArticleIdContentType(id,contentType)
+		#self.crossRefLinkDao.deleteByArticleIdContentType(id,contentType)
+		#self.crossRefLinkDao.deleteByDesIdContentType(id,contentType)
+		self.crossRefLinkDao.deleteBySrcIdContentType(id,contentType)
 
 	def updateRelatedArticleStatus(self,queueItem):
 		"""
