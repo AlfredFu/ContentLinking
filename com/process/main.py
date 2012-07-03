@@ -20,7 +20,7 @@ if __name__=='__main__':
 			continue
 		khp.begin(queueItem)
 		article=khp.getArticle(queueItem)
-		if article:
+		if article and article.content:
 			khp.log.info("Keyword hyperlink processing article type:%s id:%s" % (queueItem.contentType,queueItem.targetId))
 			article=khp.process(article)
 			khp.log.info("Version hyperlink  processing article type:%s id:%s" % (queueItem.contentType,queueItem.targetId))
@@ -36,7 +36,7 @@ if __name__=='__main__':
 	
 	for queueItem in khp.queueDao.getByContentTypeStatus(Article.CONTENT_TYPE_LAW,Article.STATUS_WAIT_UPLOAD):
 		article=phprocess.getArticle(queueItem)
-		if article:
+		if article and article.content:
 			article.content=phprocess.removeProvisionRelativeArticleLink(article.content)
 			phprocess.addProvisionRelativeArticleLink(article)
 		else:

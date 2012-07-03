@@ -28,7 +28,7 @@ class HyperlinkProcess(object):
 		self.exNewsDao=ExNewsDAO()
 		self.log=getLog()    
 		self.hyperlinkPatternStr=r'<a href="[^"]*" class="link_2" re="T" cate="en_href" >'
-		self.multiVerPat=re.compile(r'\(revised in [0-9]{4}|[0-9]{4} version\)\s*$',re.I)
+		self.multiVerPat=re.compile(r'\(revised in [0-9]{4}\)\s*$',re.I)
 
 	def eraseHyperlink(self,article):
 		"""
@@ -88,14 +88,15 @@ class HyperlinkProcess(object):
 		else:
 			article=self.exNewsDao.getById(queueItem.targetId)
 
-		if article and article.content:
+		if article:
 			article.actionType=queueItem.actionType
 			article.status=queueItem.status	
 			article.contentType=queueItem.contentType
-			article.content=article.content.replace('’','\'')
-			article.content=article.content.replace('‘','\'')
-			article.content=article.content.replace('”','"')
-			article.content=article.content.replace('“','"')
+			if article.content:
+				article.content=article.content.replace('’','\'')
+				article.content=article.content.replace('‘','\'')
+				article.content=article.content.replace('”','"')
+				article.content=article.content.replace('“','"')
 			return article
 
 	def getArticleByOrigin(self,originId,providerId,isEnglish='Y',contentType='T'):
@@ -114,13 +115,14 @@ class HyperlinkProcess(object):
 			article=self.moduleQADao.getByOrigin(originId,providerId,isEnglish)
 		else:
 			article=self.exNewsDao.getByOrigin(originId,providerId,isEnglish)
-		if article and article.content:
-			if not article.contentType:
+		if article:
+			if article.contentType:
 				article.contentType=contentType
-			article.content=article.content.replace('’','\'')
-			article.content=article.content.replace('‘','\'')
-			article.content=article.content.replace('”','"')
-			article.content=article.content.replace('“','"')
+			if article.content:
+				article.content=article.content.replace('’','\'')
+				article.content=article.content.replace('‘','\'')
+				article.content=article.content.replace('”','"')
+				article.content=article.content.replace('“','"')
 			return article
 
 	def updateArticle(self,article):
@@ -265,8 +267,12 @@ class HyperlinkProcess(object):
 		"""
 		abbrPat=re.compile(r'of the People\'s Republic of China\s*$',re.I)
 		for queueItem in self.queueDao.getAll():
+			#debug code
+			#if queueItem.targetId not in [145713,227934,228431,230987,231159,470853]:
+				#continue
 			article=self.getArticle(queueItem)
 			if not article:
+				self.log.warning("no article with id:%s,type:%s found" %(queueItem.targetId,queueItem.contentType))
 				continue
 			if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:#
 				if article.contentType==Article.CONTENT_TYPE_LAW:
@@ -288,9 +294,11 @@ class HyperlinkProcess(object):
 					keyword.content=keyword.content.lower()#convert letters to lower case
 					keyword.type=Keyword.KEYWORD_TYPE_FULL
 					keywordId=self.keywordDao.add(keyword)	
-					if abbrPat.search(keyword.content):
+					if abbrPat.search(article.title):
 						abbrKeyword=Keyword()
-						abbrKeyword.content=abbrPat.sub('',keyword.content)
+						abbrKeyword.content=abbrPat.sub('',article.title)
+						abbrKeyword.content=abbrKeyword.content.strip()
+						abbrKeyword.content=abbrKeyword.content.lower()
 						abbrKeyword.type=Keyword.KEYWORD_TYPE_ABBR
 						abbrKeyword.fullTitleKeywordId=keywordId
 						self.keywordDao.add(abbrKeyword)
