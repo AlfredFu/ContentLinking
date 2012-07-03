@@ -107,8 +107,7 @@ class ProfNewsletterDAO(DAO):
 
 	def update(self,article):
 		if article and article.id and article.content and article.fkProfNewsletterId:
-			article.content=article.content.replace("'","\\'")
-			article.content=article.content.replace('"','\\"')
+			article.content=self.escape_string(article.content)
 			sql1="update profNewsletter set editedAt=NOW() where id=%s ;" %article.fkProfNewsletterId
 			sql2="update profNewsletter_Ext set content='%s',editedExtAt=NOW() where id=%s;" %(article.content,article.id)
 			try:
@@ -117,9 +116,6 @@ class ProfNewsletterDAO(DAO):
 				self.conn_stg.commit()	
 			except Exception,e:
 				self.log.error(e)
-				self.log.error(sql1)
-				self.log.error(sql2)
-				self.log.error("Exception occured in update() of ProfNewsletterDAO.py")
 
 if __name__=="__main__":
 	dao=ProfNewsletterDAO()

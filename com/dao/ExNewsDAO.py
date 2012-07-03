@@ -59,8 +59,7 @@ class ExNewsDAO(DAO):
 			try:
 				self.cursor_stg.execute(updateTimeSql)
 				if article.content:
-					article.content=article.content.replace("'","\\'")
-					article.content=article.content.replace('"','\\"')
+					article.content=self.escape_string(article.content)
 					updateContentSql="update ex_news_contents set content='%s' where ex_new_id=%s" % (article.content,article.id)
 					self.cursor_stg.execute(updateContentSql)
 				self.conn_stg.commit()

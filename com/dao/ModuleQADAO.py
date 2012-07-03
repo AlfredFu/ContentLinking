@@ -76,8 +76,8 @@ class ModuleQADAO(DAO):
 
 	def update(self,article):
 		if article and article.questionId and article.content:
-			article.content=article.content.replace("'","\\'")
-			article.content=article.content.replace('"','\\"')
+			article.content=self.escape_string(article.content)
+			
 			sql1="update ex_expert_questions set update_time=NOW(),fetch_time=NOW() where id=%s" % article.questionId
 			sql2="update ex_expert_answers set content='%s' where id=%s" %(article.content,article.id)		
 			try:
@@ -86,6 +86,4 @@ class ModuleQADAO(DAO):
 				self.conn_stg.commit()
 			except Exception,e:
 				self.log.error(e)
-				self.log.error(sql1)
-				self.log.error(sql2)
 			

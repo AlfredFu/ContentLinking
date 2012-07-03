@@ -28,8 +28,9 @@ class HyperlinkProcess(object):
 		self.exNewsDao=ExNewsDAO()
 		self.log=getLog()    
 		self.hyperlinkPatternStr=r'<a href="[^"]*" class="link_2" re="T" cate="en_href" >'
+		self.multiVerPat=re.compile(r'\(revised in [0-9]{4}|[0-9]{4} version\)\s*$',re.I)
 
-	def eraseHyperlink(self,content):
+	def eraseHyperlink(self,article):
 		"""
 		清除hyperlink所加的超链接
 		hyperlink sample:<a href='' class='link_2' re='T' cate='en_href'>Criminal Law</a>
@@ -187,7 +188,8 @@ class HyperlinkProcess(object):
 		#self.crossRefLinkDao.deleteByDesId(id,contentType)
 		#self.crossRefLinkDao.deleteByArticleIdContentType(id,contentType)
 		#self.crossRefLinkDao.deleteByDesIdContentType(id,contentType)
-		self.crossRefLinkDao.deleteBySrcIdContentType(id,contentType)
+		if id and contentType:
+			self.crossRefLinkDao.deleteByArticleIdContentType(id,contentType)
 
 	def updateRelatedArticleStatus(self,queueItem):
 		"""
@@ -201,16 +203,8 @@ class HyperlinkProcess(object):
 		Update article status in hyperlink queue
 		@param queueItem 
 		"""
-		"""	
-		if queueItem.contentType ==Article.CONTENT_TYPE_LAW:
-			if queueItem.actionType in [Article.ACTION_TYPE_DELETE,Article.ACTION_TYPE_UPDATE]:
-				self.updateRelatedArticleStatus(queueItem)#Update related articles,set their status to STATUS_AWAIT
-			elif queueItem.actionType==Article.ACTION_TYPE_NEW:
-				self.queueDao.addAllToQueue()#更新队列中状态为空的数据状态为U
-		if queueItem.actionType in [Article.ACTION_TYPE_DELETE,Article.ACTION_TYPE_UPDATE]:
-			self.deleteCrossRefLinkByArticleId(queueItem.targetId)#删除cross_ref_link表中的记录
-		"""
 		if queueItem:
+			"""
 			if queueItem.actionType in [Article.ACTION_TYPE_DELETE,Article.ACTION_TYPE_UPDATE]:
 				self.deleteCrossRefLinkByArticleId(queueItem.targetId,queueItem.contentType)#删除cross_ref_link表中的记录
 			for item in self.crossRefLinkDao.getBySrcArticleIdContentType(queueItem.targetId,queueItem.contentType):#找出被当前文章引用的文章	
@@ -220,7 +214,7 @@ class HyperlinkProcess(object):
 			if queueItem.contentType ==Article.CONTENT_TYPE_LAW and queueItem.actionType==Article.ACTION_TYPE_NEW:
 				self.queueDao.updateActionType(queueItem.targetId,queueItem.contentType,Article.ACTION_TYPE_UPDATE)
 				self.queueDao.addAllToQueue()
-			
+			"""	
 			self.queueDao.updateStatus(queueItem.targetId,queueItem.contentType,QueueItem.STATUS_PROCESSING)
 	
 	
@@ -269,42 +263,51 @@ class HyperlinkProcess(object):
 		"""
 		Update keyword list and article list accroding to hyperlink queue		
 		"""
+		abbrPat=re.compile(r'of the People\'s Republic of China\s*$',re.I)
 		for queueItem in self.queueDao.getAll():
 			article=self.getArticle(queueItem)
-			if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:
+			if not article:
+				continue
+			if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:#
+				if article.contentType==Article.CONTENT_TYPE_LAW:
+					self.keywordDao.deleteByTarget(article.id,article.contentType)
 				self.articleDao.deleteByTarget(article.id,article.contentType)
-				self.keywordDao.deleteByTarget(article.id,article.contentType)
 				if article.actionType==Article.ACTION_TYPE_UPDATE:
 					self.eraseHyperlink(article)
 					self.removeProvisionPosTag(article)
-			
+				for item in self.crossRefLinkDao.getRelatedArticleId(queueItem.targetId,queueItem.contentType):#更新相关文章的状态	
+					self.queueDao.updateStatus(item[0],item[1],Article.STATUS_AWAIT)
+				self.deleteCrossRefLinkByArticleId(queueItem.targetId,queueItem.contentType)#删除cross_ref_link表中的记录
+					
 			if article.actionType in [Article.ACTION_TYPE_NEW,Article.ACTION_TYPE_UPDATE]:
 				if article.contentType==Article.CONTENT_TYPE_LAW:			
 					self.addProvisionPosTag(article)	
 					keyword=Keyword()
-					keyword.content=re.sub(r'\(revised in [0-9]{4}\)$','',article.title)
+					keyword.content=self.multiVerPat.sub('',article.title)
+					keyword.content=keyword.content.strip()#strip whitespace
+					keyword.content=keyword.content.lower()#convert letters to lower case
 					keyword.type=Keyword.KEYWORD_TYPE_FULL
 					keywordId=self.keywordDao.add(keyword)	
-					if re.search(r'of the People\'s Republic of China',keyword.content):
+					if abbrPat.search(keyword.content):
 						abbrKeyword=Keyword()
-						abbrKeyword.content=re.sub(r'of the People\'s Republic of China','',keyword.content,flags=re.I)
+						abbrKeyword.content=abbrPat.sub('',keyword.content)
 						abbrKeyword.type=Keyword.KEYWORD_TYPE_ABBR
 						abbrKeyword.fullTitleKeywordId=keywordId
 						self.keywordDao.add(abbrKeyword)
+					if article.actionType==Article.ACTION_TYPE_NEW:
+						#TODO将所有文章加入到队列
+						pass
 				else:
 					keywordId=''
 				article.keywordId=keywordId
 				self.articleDao.add(article)
 			self.updateArticle(article)
 		
-
 	def begin(self,queueItem):
 		"""
 		Update queue items status and get article accroding queue item
 		"""
 		self.updateOprLoadStatus(queueItem)
-		article=self.getArticle(queueItem)
-		return article
 		
 	def process(self,article):
 		posTupleList=self.search(article.content)
@@ -316,3 +319,7 @@ class HyperlinkProcess(object):
 		Update article status to STATUS_WAIT_UPLOAD in hyperlink queue
 		"""
 		self.queueDao.updateStatus(queueItem.targetId,queueItem.contentType,Article.STATUS_WAIT_UPLOAD)
+
+if __name__=="__main__":
+	process=HyperlinkProcess()	
+	process.initial()

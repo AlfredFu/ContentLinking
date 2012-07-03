@@ -11,20 +11,33 @@ class KeywordDAO(DAO):
 		self.cursor_hyperlink.execute("use lnc;")
 
 	def add(self,keyword):
-		try:
-			keyword.content=keyword.content.replace("'","\\'")
-			keyword.content=keyword.content.replace('"','\\"')
-			if not keyword.fullTitleKeywordId:
-				self.cursor_hyperlink.execute("replace into keyword_en(keyword,status,type) values('%s','NOR','%s')" % (keyword.content,keyword.type))
-			else:
-				self.cursor_hyperlink.execute("replace into keyword_en(keyword,status,type,full_title_keyword_id) values('%s','NOR','%s',%s)" % (keyword.content,keyword.type,keyword.fullTitleKeywordId))
-            		self.conn_hyperlink.commit()
-			return self.cursor_hyperlink.lastrowid
-		except Exception,e:
-			self.log.error(e)
+		if keyword:
+			try:
+				#keyword.content=keyword.content.replace("'","\\'")
+				#keyword.content=keyword.content.replace('"','\\"')
+				keyword.content=self.escape_string(keyword.content)
+				if not keyword.fullTitleKeywordId:
+					self.cursor_hyperlink.execute("replace into keyword_en(keyword,status,type) values('%s','NOR','%s')" % (keyword.content,keyword.type))
+				else:
+					self.cursor_hyperlink.execute("replace into keyword_en(keyword,status,type,full_title_keyword_id) values('%s','NOR','%s',%s)" % (keyword.content,keyword.type,keyword.fullTitleKeywordId))
+				self.conn_hyperlink.commit()
+				return self.cursor_hyperlink.lastrowid
+			except Exception,e:
+				self.log.error(e)
 	
 	def deleteByTarget(self,targetId,contentType):
-		pass
+		if targetId and contentType:
+			sql1="select keyword_id from article_en where target_id=%s and content_type='%s' and keyword_id is not null" %(targetId,contentType)
+			try:
+				self.cursor_hyperlink.execute(sql1)
+				row=self.cursor_hyperlink.fetchone()
+				if row:
+					keywordId=row[0]
+					sql2="delete from keyword_en where keyword_id =%s" % keywordId
+					self.cursor_hyperlink.execute(sql2)
+					self.conn_hyperlink.commit()
+			except Exception,e:
+				self.log.error(e)
 
     	def getAll(self):
 		try:
@@ -54,14 +67,16 @@ class KeywordDAO(DAO):
 		"""
 		根据关键词内容找到关键词
 		"""
-		try:
-			self.cursor_hyperlink.execute("select keyword_id,keyword,status,type,full_title_keyword_id,removed_record_id,isenabling from keyword_en where keyword='%s'" % content.replace("'","\\'"))
-			row=self.cursor_hyperlink.fetchone()
-			if row:
-				keyword=self.assembleKeyword(row)
-				return keyword
-		except Exception,e:
-			self.log.error(e)
+		if content:
+			content=self.escape_string(content)
+			try:
+				self.cursor_hyperlink.execute("select keyword_id,keyword,status,type,full_title_keyword_id,removed_record_id,isenabling from keyword_en where keyword='%s'" % content)
+				row=self.cursor_hyperlink.fetchone()
+				if row:
+					keyword=self.assembleKeyword(row)
+					return keyword
+			except Exception,e:
+				self.log.error(e)
 
 	def assembleKeyword(self,row):
 		keyword=Keyword()

@@ -124,9 +124,6 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		Override method process(self,article) in parent class
 		@param article
 		"""	
-		if article.contentType == Article.CONTENT_TYPE_LAW and article.actionType in [Article.ACTION_TYPE_NEW,Article.ACTION_TYPE_UPDATE]:#if article is law and 
-			article.content=self.removeProvisionPosTag(article.content)
-			article.content=self.addProvisionPosTag(article.content)
 		posTupleList=self.search(article.content)
 		article=self.pattern(article,posTupleList)	
 		return article

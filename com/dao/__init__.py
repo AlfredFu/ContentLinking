@@ -1,5 +1,6 @@
 from com.util.DBConnUtil import *
 from com.util.LogUtil import *
+import MySQLdb
 
 class DAO(object):
 	def __init__(self):
@@ -14,3 +15,11 @@ class DAO(object):
 		self.cursor_hyperlink=self.conn_hyperlink.cursor()
 		
 		self.log=getLog()    
+
+	def escape_string(self,str):
+		if str:
+			return MySQLdb.escape_string(str)
+
+if __name__=="__main__":
+	dao=DAO()
+	print dao.escape_string("People's")

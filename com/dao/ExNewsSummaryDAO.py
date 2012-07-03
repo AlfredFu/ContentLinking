@@ -49,8 +49,7 @@ class ExNewsSummaryDAO(DAO):
 	def update(self,article):
 		if article and article.id:
 			updateTimeSql="update ex_news set update_timei=NOW() where id=%s" % article.id
-			article.content=article.content.replace("'","\\'")
-			article.content=article.content.replace('"','\\"')
+			article.content=self.escape_string(article.content)
 			updateContentSql="update ex_news_summary set content='%s' where ex_new_id=%s;" %(article.content,article.id)
 			try:
 				self.cursor_stg.execute(updateTimeSql)

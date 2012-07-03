@@ -105,7 +105,7 @@ class HyperlinkQueueDAO(DAO):
 
 	def addAllToQueue(self):
 		try:
-			sql="UPDATE opr_load_status_en SET status=1 WHERE status=11;"
+			sql="UPDATE opr_load_status_en SET status=1 WHERE status<>1;"
 			self.cursor_stg.execute(sql)
 			self.conn_stg.commit()
 		except Exception,e:

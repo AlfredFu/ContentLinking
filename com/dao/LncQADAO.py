@@ -74,9 +74,8 @@ class LncQADAO(DAO):
 				
 	def update(self,article):
 		if article and article.content:
-			article.content=article.content.replace("'","\\'")
-			article.content=article.content.replace('"','\\"')
-			sql="update listboard set content='%s',fetch_time=CURDATE() where announceid=%s" % (article.content,article.id)
+			article.content=self.escape_string(article.content)
+			sql="update listboard set body='%s',fetch_time=CURDATE() where announceid=%s" % (article.content,article.id)
 			try:
 				self.cursor_stg.execute(sql)
 				self.conn_stg.commit()

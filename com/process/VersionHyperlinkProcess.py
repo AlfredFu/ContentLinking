@@ -20,7 +20,7 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 		否返回False
 		"""
 		if article.title:
-			if re.search(r'\(revised in [0-9]{4}\)$',article.title,re.I):
+			if self.multiVerPat.search(article.title):
 				return True
 		return False
 
@@ -30,8 +30,7 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 		return 去掉版本信息字符串后的标题
 		"""
 		if title:
-			p=re.compile(r'\(revised in [0-9]{4}\)$',re.I)
-			title=p.sub('',title)
+			title=self.multiVerPat.sub('',title)
 		return title
 		
 	def addVersionRelation(self,article):

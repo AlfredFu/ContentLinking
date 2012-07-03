@@ -32,59 +32,28 @@ def initialQueue():
 	status=1
 
 	queueItemList=[]
-	articleList=[]
 	for case in caseDao.getAll():
 		queueItemList.append((case.contentType,case.originId,case.providerId,case.isEnglish,case.id,actionType,status))
 
-	p=re.compile(r'\(revised in [0-9]{4}\)$',re.I)
-	ss=re.compile(r'of the People\'s Republic of China',re.I)
 	for law in lawDao.getAll():
 		queueItemList.append((law.contentType,law.originId,law.providerId,law.isEnglish,law.id,actionType,status))
-		
-		if law.title:
-			keyword=Keyword()
-			keyword.content=p.sub('',law.title)
-			keyword.type=Keyword.KEYWORD_TYPE_FULL
-			keyword.fullTitleKeywordId=''
-			keywordId=keywordDao.add(keyword)
-
-			if ss.search(law.title):
-				abbrKeyword=Keyword()
-				abbrKeyword.content=ss.sub('',law.title)	 
-				abbrKeyword.type=Keyword.KEYWORD_TYPE_ABBR
-				abbrKeyword.fullTitleKeywordId=keywordId
-				keywordDao.add(abbrKeyword)
-			article=law
-			articleList.append((article.contentType,article.originId,article.providerId,article.isEnglish,article.id,'N','1',keywordId))
-
 
 	for news in exNewsDao.getAll():
 		queueItemList.append((news.contentType,news.originId,news.providerId,news.isEnglish,news.id,actionType,status))
-		article=news
-		articleList.append((article.contentType,article.originId,article.providerId,article.isEnglish,article.id,'N','1',0))
 
 	for news in exNewsSummaryDao.getAll():
 		queueItemList.append((news.contentType,news.originId,news.providerId,news.isEnglish,news.id,actionType,status))
-		article=news
-		articleList.append((article.contentType,article.originId,article.providerId,article.isEnglish,article.id,'N','1',0))
 
 	for news in lncQADao.getAll():
 		queueItemList.append((news.contentType,news.originId,news.providerId,news.isEnglish,news.id,actionType,status))
-		article=news
-		articleList.append((article.contentType,article.originId,article.providerId,article.isEnglish,article.id,'N','1',0))
-
 	
 	for news in profNewsletterDao.getAll():
 		queueItemList.append((news.contentType,news.originId,news.providerId,news.isEnglish,news.id,actionType,status))
-		article=news
-		articleList.append((article.contentType,article.originId,article.providerId,article.isEnglish,article.id,'N','1',0))
 
 	for news in moduleQADao.getAll():
 		queueItemList.append((news.contentType,news.originId,news.providerId,news.isEnglish,news.id,actionType,status))
-		article=news
-		articleList.append((article.contentType,article.originId,article.providerId,article.isEnglish,article.id,'N','1',0))
+
 	hyperlinkQueueDao.addMany(queueItemList)
-	articleDao.addMany(articleList)
 
 if __name__=="__main__":
 	initialQueue()

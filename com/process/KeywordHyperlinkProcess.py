@@ -22,13 +22,13 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 			return False
 		lowerCaseContent=content.lower()#case inseneistive
 		for keyword in self.keywordDao.getAll():
-			keyword.content=keyword.content.strip()
-			lowerKeywordContent=keyword.content.lower()
+			keywordLen=len(keyword.content)	
 			start=0
-			while lowerCaseContent.find(lowerKeywordContent,start) != -1:
-				startPos=lowerCaseContent.find(lowerKeywordContent,start)
-				endPos=startPos+len(lowerKeywordContent)				
-				posTuple=(startPos,endPos,keyword.id,keyword.content,keyword.fullTitleKeywordId)
+			while lowerCaseContent.find(keyword.content,start) != -1:
+				startPos=lowerCaseContent.find(keyword.content,start)
+				endPos=startPos+keywordLen
+				matchStr=content[startPos:endPos]
+				posTuple=(startPos,endPos,keyword.id,matchStr,keyword.fullTitleKeywordId)
 				if not checkNested():
 					posTupleList.append(posTuple)
 				start=endPos

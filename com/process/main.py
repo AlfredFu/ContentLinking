@@ -18,8 +18,8 @@ if __name__=='__main__':
 	for queueItem in khp.queueDao.getAll():
 		if articleList and (queueItem.contentType,queueItem.originId,queueItem.providerId,queueItem.isEnglish) not in articleList:
 			continue
-		#article=khp.getArticle(queueItem)
-		article=khp.begin(queueItem)
+		khp.begin(queueItem)
+		article=khp.getArticle(queueItem)
 		if article:
 			khp.log.info("Keyword hyperlink processing article type:%s id:%s" % (queueItem.contentType,queueItem.targetId))
 			article=khp.process(article)
