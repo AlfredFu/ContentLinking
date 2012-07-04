@@ -3,6 +3,10 @@ import MySQLdb
 from com.util.ConfigOptionUtil import *
 from com.util.LogUtil import *
 
+def escapeString(str):
+	if str:
+		return MySQLdb.escape_string(str)
+
 class DBConnUtil:
     instance={}
     mutex=threading.Lock()

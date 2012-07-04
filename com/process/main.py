@@ -16,8 +16,12 @@ if __name__=='__main__':
 
 	#process phase
 	for queueItem in khp.queueDao.getAll():
+		#debug code
+		#begin
 		if articleList and (queueItem.contentType,queueItem.originId,queueItem.providerId,queueItem.isEnglish) not in articleList:
 			continue
+		print queueItem.targetId,queueItem.contentType
+		#end
 		khp.begin(queueItem)
 		article=khp.getArticle(queueItem)
 		if article and article.content:

@@ -12,6 +12,7 @@ from com.dao.ExNewsDAO import *
 from com.entity.HyperlinkQueue import *
 from com.entity.CrossRefLink import *
 from com.entity.QueueItem import *
+from com.process.filter import *
 import re
 
 class HyperlinkProcess(object):
@@ -268,8 +269,10 @@ class HyperlinkProcess(object):
 		abbrPat=re.compile(r'of the People\'s Republic of China\s*$',re.I)
 		for queueItem in self.queueDao.getAll():
 			#debug code
-			#if queueItem.targetId not in [145713,227934,228431,230987,231159,470853]:
-				#continue
+			#begin
+			if articleList and (queueItem.contentType,queueItem.originId,queueItem.providerId,queueItem.isEnglish) not in articleList:
+				continue
+			#end
 			article=self.getArticle(queueItem)
 			if not article:
 				self.log.warning("no article with id:%s,type:%s found" %(queueItem.targetId,queueItem.contentType))
@@ -319,7 +322,10 @@ class HyperlinkProcess(object):
 		
 	def process(self,article):
 		posTupleList=self.search(article.content)
+		#print "posTuplelist id:",id(posTupleList)
 		article=self.pattern(article,posTupleList)	
+		#print posTupleList
+		del posTupleList[:]#清空list,否则会出现记录位置被重复使用的错误
 		return article
 
 	def end(self,queueItem):

@@ -36,19 +36,17 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		"""
 		if article:
 			relativeArticleLinkTagMap={} 
-			provisionNum=0
 			for row in self.crossRefLinkDao.collectRelativeStastics(article.originId,article.providerId,article.isEnglish,article.contentType):
-				if provisionNum !=row[0]:
-					tmpLinkTag=self.reArticleStart#reset variable tmpLinkTag
-					provisionNum=row[0]
+				provisionNum=row[0]#法条序号 
+				if provisionNum not in relativeArticleLinkTagMap.keys():
+					relativeArticleLinkTagMap[provisionNum]=''
 				contentType=row[1]
-				#tmpLinkTag+=" <a href='#' onclick='linkage(this,%s,%s,2);return false;' style='text-decoration:underline;color:#00f;'>%s</a>" % (self.contentTypeMap[contentType],provisionNum,(self.contentTypeNameMap[contentType]+' %s') % row[2]) 
-				tmpLinkTag+=' <a href="#" onclick="linkage(this,%s,%s,2);return false;" style="text-decoration:underline;color:#00f;">%s</a>' % (self.contentTypeMap[contentType],provisionNum,(self.contentTypeNameMap[contentType]+" %s") % row[2]) 
-				relativeArticleLinkTagMap[provisionNum]=tmpLinkTag
-			for key in relativeArticleLinkTagMap:
+				relativeArticleLinkTagMap[provisionNum]+=' <a href="#" onclick="linkage(this,%s,%s,2);return false;" style="text-decoration:underline;color:#00f;">%s</a>' % (self.contentTypeMap[contentType],provisionNum,(self.contentTypeNameMap[contentType]+" %s") % row[2]) 
+				
+			for key in relativeArticleLinkTagMap.keys():
 				provisionEndPos=article.content.find('<a name="end_i%s" re="T"></a>' % key)#TODO think about multiple same provision end tag in one article 
-				if provisionEndPos:
-				    article.content=article.content[:provisionEndPos]+self.reArticleStart+relativeArticleLinkTagMap[key]+self.reArticleEnd+article.content[provisionEndPos:]
+				if provisionEndPos!=-1:
+					article.content=article.content[:provisionEndPos]+self.reArticleStart+relativeArticleLinkTagMap[key]+self.reArticleEnd+article.content[provisionEndPos:]
 		self.updateArticle(article)
 
 	def removeProvisionRelativeArticleLink(self,content):
@@ -56,6 +54,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		Remove relative article link for provision
 		"""
 		content=content.replace(self.reArticleStart,'')	
+		content=content.replace(self.reArticleEnd,'')	
 		content=re.sub(r' <a href="#" onclick="linkage(this,[\w\+]+?,\d+,2);return false;"[^>]*?>[^<]*?</a>','',content)
 		return content
  
@@ -126,6 +125,8 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		"""	
 		posTupleList=self.search(article.content)
 		article=self.pattern(article,posTupleList)	
+		#print posTupleList
+		del posTupleList[:]#清空list,否则会出现记录位置被重复使用的错误
 		return article
 
 if __name__=="__main__":

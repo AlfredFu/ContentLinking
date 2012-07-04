@@ -1,6 +1,5 @@
 from com.util.DBConnUtil import *
 from com.util.LogUtil import *
-import MySQLdb
 
 class DAO(object):
 	def __init__(self):
@@ -17,9 +16,7 @@ class DAO(object):
 		self.log=getLog()    
 
 	def escape_string(self,str):
-		if str:
-			return MySQLdb.escape_string(str)
+		return escapeString(str)#function escapeStirng defined in DBConnUtil
 
 if __name__=="__main__":
-	dao=DAO()
-	print dao.escape_string("People's")
+	print escapeString("People's")
