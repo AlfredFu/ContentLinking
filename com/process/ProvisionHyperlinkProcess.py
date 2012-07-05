@@ -9,9 +9,9 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 	def __init__(self):
 		super(ProvisionHyperlinkProcess,self).__init__()
 		#self.provisionPatternStr=r"(?P<astr>article\s+(?P<articleNum>\d+\.?\d+))\s+of\s+the\s+(<a href=\"(?P<href>[^\"^>]*?)\" class=\"link_2\" re=\"T\" cate=\"en_href\"\s*>).+?</a>"
-		self.provisionPatternStr=r'(?P<astr>article\s+(?P<articleNum>[\d+\.]+?))\s+of\s+the [\s"]*?(<a href="(?P<href>[^\"^>]*?)" class="link_2" re="T" cate="en_href"\s*>)(?P<keyword>.+?)</a>'
-		self.provisionPattern=re.compile(self.provisionPatternStr,re.I)
-		self.mulProviPatn=re.compile(r'',re.I)
+		#self.provisionPatternStr=r'(?P<astr>article\s+(?P<articleNum>[\d+\.]+?))\s+of\s+the [\s"]*?(<a href="(?P<href>[^\"^>]*?)" class="link_2" re="T" cate="en_href"\s*>)(?P<keyword>.+?)</a>'
+		#self.provisionPattern=re.compile(self.provisionPatternStr,re.I)
+		self.mulProviPatn=re.compile(r'(?P<p1>articles?\s+(?P<p11>[\d\.]+))(?P<p2>(,[\d\.]+)*)(\s+(and|or)\s+(?P<p3>[\d\.]+))?\s+of\s+the [\s"]*?(<a href="(?P<href>[^\"^>]*?)" class="link_2" re="T" cate="en_href"\s*>)(?P<keyword>.+?)</a>',re.I)
 		#content type 
         	self.contentTypeMap={'T':'law',\
 					'C':'case',\
@@ -50,8 +50,8 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 					'EL':'Elearning',\
 					'SUMMARY':'Overview summary',\
 					'PEA':'Q & A'}
-        	self.reArticleStart='<br/><font color="red">(Relative article:</font>'
-        	self.reArticleEnd='<font color="red">)</font>'
+        	self.reArticleStart='<br/><font color="red">(Relative article:</font><font color="blue">'
+        	self.reArticleEnd='</font><font color="red">)</font>'
 
 	def checkProvisionExist(self,provisionNum,originId,providerId,isEnglish='Y',contentType='T'):
 		"""
@@ -107,27 +107,47 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 			tmpL=hrefArg.split("=")
 			hrefArgsMap[tmpL[0]]=tmpL[1]				
 		return hrefArgsMap
-	
+
 	def search(self,content,start=0,posTupleList=[]):
 		tmpContent=content[start:]
 		if tmpContent:
-			matches=self.provisionPattern.search(tmpContent)	
+			matches=self.mulProviPatn.search(tmpContent)	
 			if matches:
-				startPos=start+matches.start(1)
-				endPos=start+matches.end(1)
+				provisionNumList=[]
+				#匹配连续出现的法条第一条
+				if matches.group('p1'):
+					startPos=start+matches.start('p1')
+					endPos=start+matches.end('p1')
+					provisionNum=matches.group('p11')
+					provisionNumList.append((startPos,endPos,provisionNum))
+
+				if matches.group('p2'):
+					startPos=start+matches.start('p2')
+					for tpn in matches.group('p2').split(','):
+						if tpn:
+							endPos=startPos+len(tpn)
+							provisionNum=tpn
+							provisionNumList.append((startPos,endPos,provisionNum))
+						startPos+=(len(tpn)+1)#','长度为一所以要加上
+
+				#匹配连续出现的法条最后一条
+				if matches.group('p3'):
+					startPos=start+matches.start('p3')
+					endPos=start+matches.end('p3')
+					provisionNum=matches.group('p3')
+					provisionNumList.append((startPos,endPos,provisionNum))
+
 				href= matches.group('href')
-				articleNum = matches.group('articleNum')
 				hrefArgsMap=self.getOriginByHref(href)
-				if self.checkProvisionExist(articleNum,hrefArgsMap['origin_id'],hrefArgsMap['provider_id'],hrefArgsMap['isEnglish'],hrefArgsMap['content_type']):# check provision exist in target article
-					hreflinkTag='<a href="%s" class="link_2" re="T" cate="en_href" >' % (href+"#i"+articleNum,) 
-					#get keyword id
-					keyword=self.keywordDao.findByContent(matches.group('keyword'))
-					keywordId=''
-					if keyword:
-						keywordId=keyword.id	
-					#posTuple=(startPos,endPos,matches.group('astr'),hreflinkTag)	
-					posTuple=(startPos,endPos,keywordId,hreflinkTag)	
-					posTupleList.append(posTuple)
+				for provisionNumTuple in provisionNumList:
+					if self.checkProvisionExist(provisionNumTuple[2],hrefArgsMap['origin_id'],hrefArgsMap['provider_id'],hrefArgsMap['isEnglish'],hrefArgsMap['content_type']):# check provision exist in target article
+						hreflinkTag='<a href="%s" class="link_2" re="T" cate="en_href" >' % (href+"#i"+provisionNumTuple[2]) 
+						keyword=self.keywordDao.findByContent(matches.group('keyword'))#get keyword id by keyword str
+						keywordId=''
+						if keyword:
+							keywordId=keyword.id	
+						posTuple=(provisionNumTuple[0],provisionNumTuple[1],keywordId,hreflinkTag)	
+						posTupleList.append(posTuple)
 				self.search(content,endPos,posTupleList)
 		posTupleList.sort(lambda posTuple1,posTuple2:-cmp(posTuple1[0],posTuple2[0]))
 		return posTupleList 
