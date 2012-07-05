@@ -122,6 +122,17 @@ class HyperlinkQueueDAO(DAO):
 			except Exception,e:
 				self.log.error(e)
 
+	def updateStatusActionType(self,targetId,contentType,status,actionType='U'):
+		"""
+		更新hyperlink队列中谋篇文章的hyperlink状态
+		"""
+		if targetId and contentType and status and actionType:
+			try:
+				self.cursor_stg.execute("update opr_load_status_en set status=%s,actionType='%s' where target_id='%s' and content_type='%s';" %(status,actionType,targetId,contentType))
+				self.conn_stg.commit()
+			except Exception,e:
+				self.log.error(e)
+
 	def rollbackToStatus(self,targetId,contentType,status=Article.STATUS_FINISHED,toStatus=Article.STATUS_WAIT_UPLOAD):
 		"""
 		将队列中的文章A(由targetId,contentType指定)的状态由status改为toStatus
@@ -133,17 +144,6 @@ class HyperlinkQueueDAO(DAO):
 				self.conn_stg.commit()
 			except Exception,e:
 				self.log.error(e)
-		
-	def updateActionType(self,targetId,contentType,actionType):
-		"""
-		更新队列中某篇文章的状态
-		"""
-		try:
-			self.cursor_stg.execute("update opr_load_status_en set action_type='%s' where target_id='%s' and content_type='%s'" % (actionType,targetId,contentType))
-			self.conn_stg.commit()
-		except Exception,e:
-			self.log.error(e)
-			self.log.error("Error occured in updateActionType of HyperlinkQueueDAO")
 			
 if __name__ =="__main__":
 	dao=HyperlinkQueueDAO()

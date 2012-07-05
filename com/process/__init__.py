@@ -272,6 +272,7 @@ class HyperlinkProcess(object):
 			#begin
 			if articleList and (queueItem.contentType,queueItem.originId,queueItem.providerId,queueItem.isEnglish) not in articleList:
 				continue
+			#print queueItem.targetId,' ',queueItem.contentType
 			#end
 			article=self.getArticle(queueItem)
 			if not article:
@@ -285,7 +286,8 @@ class HyperlinkProcess(object):
 					self.eraseHyperlink(article)
 					self.removeProvisionPosTag(article)
 				for item in self.crossRefLinkDao.getRelatedArticleId(queueItem.targetId,queueItem.contentType):#更新相关文章的状态	
-					self.queueDao.updateStatus(item[0],item[1],Article.STATUS_AWAIT)
+					#self.queueDao.updateStatus(item[0],item[1],Article.STATUS_AWAIT)
+					self.queueDao.updateStatusActionType(item[0],item[1],Article.STATUS_AWAIT,Article.ACTION_TYPE_UPDATE)
 				self.deleteCrossRefLinkByArticleId(queueItem.targetId,queueItem.contentType)#删除cross_ref_link表中的记录
 					
 			if article.actionType in [Article.ACTION_TYPE_NEW,Article.ACTION_TYPE_UPDATE]:

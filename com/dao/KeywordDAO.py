@@ -68,6 +68,7 @@ class KeywordDAO(DAO):
 		根据关键词内容找到关键词
 		"""
 		if content:
+			content=content.lower()
 			content=self.escape_string(content)
 			try:
 				self.cursor_hyperlink.execute("select keyword_id,keyword,status,type,full_title_keyword_id,removed_record_id,isenabling from keyword_en where keyword='%s'" % content)

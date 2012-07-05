@@ -66,17 +66,17 @@ class LawDAO(DAO):
 				
 				self.cursor_stg.execute("SELECT tax.taxid as id,tax.title,tax_content.content,tax.origin_id,tax.provider_id,tax.isEnglish FROM tax LEFT JOIN tax_content ON tax.taxid=tax_content.taxid WHERE tax.taxid=%s;" % id)
 				row=self.cursor_stg.fetchone()
-				article=Law()	
 				if row:
+					article=Law()	
 					article.id=row[0]
 					article.title=row[1]
 					article.content=row[2]
 					article.originId=row[3]
 					article.providerId=row[4]
 					article.isEnglish=row[5]
+					return article
 				else:
 					raise Exception("No law with id %s found!" %id)
-				return article
 			except Exception,e:
 				self.log.error(e)	
 	

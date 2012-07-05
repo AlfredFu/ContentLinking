@@ -11,8 +11,45 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		#self.provisionPatternStr=r"(?P<astr>article\s+(?P<articleNum>\d+\.?\d+))\s+of\s+the\s+(<a href=\"(?P<href>[^\"^>]*?)\" class=\"link_2\" re=\"T\" cate=\"en_href\"\s*>).+?</a>"
 		self.provisionPatternStr=r'(?P<astr>article\s+(?P<articleNum>[\d+\.]+?))\s+of\s+the [\s"]*?(<a href="(?P<href>[^\"^>]*?)" class="link_2" re="T" cate="en_href"\s*>)(?P<keyword>.+?)</a>'
 		self.provisionPattern=re.compile(self.provisionPatternStr,re.I)
-        	self.contentTypeMap={'T':'law','C':'case','LM':'newlaw','FL':'foreiginlaw','PNL':'profnewsletter+journal','HN':'hotnews','PC':'pgl_content','LB':'expert+ex_questions','LOTP':'tp_overview','LOFDI':'','EL':'','PEA':''}
-        	self.contentTypeNameMap={'T':'Relative law','C':'Case','LM':'Legal news','FL':'Foreign law','PNL':'Newsletters','HN':'Articles','PC':'Practical materials','LB':'Q & A','LOTP':'TP overview','LOFDI':'','EL':'Elearning','PEA':''}
+		self.mulProviPatn=re.compile(r'',re.I)
+		#content type 
+        	self.contentTypeMap={'T':'law',\
+					'C':'case',\
+					'LM':'newlaw',\
+					'FL':'foreiginlaw',\
+					'PNL':'profnewsletter+journal',\
+					'HN':'hotnews',\
+					'PC':'pgl_content',\
+					'LB':'expert+ex_questions',\
+					'LOTP':'tp_overview',\
+					'LOFDI':'investment_overview',\
+					'LOEP':'ep_overview',\
+					'LOEE':'energy_overview',\
+					'LOCP':'cp_overview',\
+					'LOCS':'cs_overview',\
+					'LOIP':'ip_overview',\
+					'EL':'ep_elearning',\
+					'SUMMARY':'summary',\
+					'PEA':'expert+ex_questions'}
+		#content type name display in user agent
+        	self.contentTypeNameMap={'T':'Legislation',\
+					'C':'Case',\
+					'LM':'Legal news',\
+					'FL':'Foreign law',\
+					'PNL':'Newsletters',\
+					'HN':'Articles',\
+					'PC':'Practical materials',\
+					'LB':'Q & A',\
+					'LOTP':'Tax overview',\
+					'LOFDI':'Investment overview',\
+					'LOEP':'Employment overview',\
+					'LOEE':'Energy overview',\
+					'LOCP':'Corporate overview',\
+					'LOCS':'Financing overview',\
+					'LOIP':'IP overview',\
+					'EL':'Elearning',\
+					'SUMMARY':'Overview summary',\
+					'PEA':'Q & A'}
         	self.reArticleStart='<br/><font color="red">(Relative article:</font>'
         	self.reArticleEnd='<font color="red">)</font>'
 
@@ -41,7 +78,8 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 				if provisionNum not in relativeArticleLinkTagMap.keys():
 					relativeArticleLinkTagMap[provisionNum]=''
 				contentType=row[1]
-				relativeArticleLinkTagMap[provisionNum]+=' <a href="#" onclick="linkage(this,%s,%s,2);return false;" style="text-decoration:underline;color:#00f;">%s</a>' % (self.contentTypeMap[contentType],provisionNum,(self.contentTypeNameMap[contentType]+" %s") % row[2]) 
+				if contentType:
+					relativeArticleLinkTagMap[provisionNum]+=' <a href="#" onclick="linkage(this,\'%s\',%s,2);return false;" style="text-decoration:underline;color:#00f;">%s</a>' % (self.contentTypeMap[contentType],provisionNum,(self.contentTypeNameMap[contentType]+" %s") % row[2]) 
 				
 			for key in relativeArticleLinkTagMap.keys():
 				provisionEndPos=article.content.find('<a name="end_i%s" re="T"></a>' % key)#TODO think about multiple same provision end tag in one article 
@@ -55,7 +93,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		"""
 		content=content.replace(self.reArticleStart,'')	
 		content=content.replace(self.reArticleEnd,'')	
-		content=re.sub(r' <a href="#" onclick="linkage(this,[\w\+]+?,\d+,2);return false;"[^>]*?>[^<]*?</a>','',content)
+		content=re.sub(r' <a href="#" onclick="linkage(this,\'[\w\+]+?\',\d+,2);return false;"[^>]*?>[^<]*?</a>','',content)
 		return content
  
 	def getOriginByHref(self,href):

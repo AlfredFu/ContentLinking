@@ -20,7 +20,7 @@ if __name__=='__main__':
 		#begin
 		if articleList and (queueItem.contentType,queueItem.originId,queueItem.providerId,queueItem.isEnglish) not in articleList:
 			continue
-		print queueItem.targetId,queueItem.contentType
+		#print queueItem.targetId,queueItem.contentType
 		#end
 		khp.begin(queueItem)
 		article=khp.getArticle(queueItem)
