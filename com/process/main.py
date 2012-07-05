@@ -3,6 +3,7 @@ from com.process.VersionHyperlinkProcess import *
 from com.process.ProvisionHyperlinkProcess import *
 from com.process.AbbreviationHyperlinkProcess import *
 from com.process.filter import *
+from com.util.lexismail import *
 
 
 if __name__=='__main__':
@@ -45,3 +46,5 @@ if __name__=='__main__':
 			phprocess.addProvisionRelativeArticleLink(article)
 		else:
 			khp.log.warning("Article type:%s id:%s was not found" %(queueItem.contentType,queueItem.targetId))
+
+	sendMail('fred.fu@lexisnexis.com')	

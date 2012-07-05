@@ -19,7 +19,7 @@ class ContentDAO(DAO):
 
 	def getByTarget(self,targetId,contentType):
 		if targetId and contentType:
-			sql="select content from %s where target_id='%s' and content_type='%s'" %(self.tableName,targetId,contentType)
+			sql="select content,target_id,content_type from %s where target_id='%s' and content_type='%s'" %(self.tableName,targetId,contentType)
 			try:
 				self.cursor_stg.execute(sql)
 				row=self.cursor_stg.fetchone()
