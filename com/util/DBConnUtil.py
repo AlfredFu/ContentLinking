@@ -14,12 +14,15 @@ class DBConnUtil:
 
     @staticmethod
     def connect(host,username,password='',db='newlaw'):
+	"""
+	Connect to database server host in 'host' with username password
+	"""
         return MySQLdb.connect(host,username,password,db)
 
     @staticmethod
     def getConnection(datasource='db'):
         if datasource not in DBConnUtil.instance or DBConnUtil.instance[datasource] is None:
-            dbOption=getConfigSection(datasource)
+            dbOption=getConfigSection(datasource)#get meta description of database
             DBConnUtil.instance[datasource]=None 
             try:
             	DBConnUtil.mutex.acquire()
