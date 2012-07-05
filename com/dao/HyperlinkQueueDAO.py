@@ -128,7 +128,7 @@ class HyperlinkQueueDAO(DAO):
 		"""
 		if targetId and contentType and status and actionType:
 			try:
-				self.cursor_stg.execute("update opr_load_status_en set status=%s,actionType='%s' where target_id='%s' and content_type='%s';" %(status,actionType,targetId,contentType))
+				self.cursor_stg.execute("update opr_load_status_en set status=%s,action_type='%s' where target_id='%s' and content_type='%s';" %(status,actionType,targetId,contentType))
 				self.conn_stg.commit()
 			except Exception,e:
 				self.log.error(e)

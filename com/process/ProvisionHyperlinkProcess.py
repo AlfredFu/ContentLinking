@@ -93,7 +93,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		"""
 		content=content.replace(self.reArticleStart,'')	
 		content=content.replace(self.reArticleEnd,'')	
-		content=re.sub(r' <a href="#" onclick="linkage(this,\'[\w\+]+?\',\d+,2);return false;"[^>]*?>[^<]*?</a>','',content)
+		content=re.sub(r' <a href="#" onclick="linkage\(this,\'[\w\+]+?\',\d+,2\);return false;"[^>]*?>[^<]*?</a>','',content)
 		return content
  
 	def getOriginByHref(self,href):
