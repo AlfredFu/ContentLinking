@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from com.process.KeywordHyperlinkProcess import *
 from com.process.VersionHyperlinkProcess import *
 from com.process.ProvisionHyperlinkProcess import *
