@@ -75,13 +75,13 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 			relativeArticleLinkTagMap={} 
 			for row in self.crossRefLinkDao.collectRelativeStastics(article.originId,article.providerId,article.isEnglish,article.contentType):
 				provisionNum=row[0]#法条序号 
-				if provisionNum not in relativeArticleLinkTagMap.keys():
+				if provisionNum not in relativeArticleLinkTagMap:
 					relativeArticleLinkTagMap[provisionNum]=''
 				contentType=row[1]
 				if contentType:
 					relativeArticleLinkTagMap[provisionNum]+=' <a href="#" onclick="linkage(this,\'%s\',%s,2);return false;" style="text-decoration:underline;color:#00f;">%s</a>' % (self.contentTypeMap[contentType],provisionNum,(self.contentTypeNameMap[contentType]+" %s") % row[2]) 
 				
-			for key in relativeArticleLinkTagMap.keys():
+			for key in relativeArticleLinkTagMap:
 				provisionEndPos=article.content.find('<a name="end_i%s" re="T"></a>' % key)#TODO think about multiple same provision end tag in one article 
 				if provisionEndPos!=-1:
 					article.content=article.content[:provisionEndPos]+self.reArticleStart+relativeArticleLinkTagMap[key]+self.reArticleEnd+article.content[provisionEndPos:]
@@ -121,6 +121,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 					provisionNum=matches.group('p11')
 					provisionNumList.append((startPos,endPos,provisionNum))
 
+				#匹配连续出现的中间法条
 				if matches.group('p2'):
 					startPos=start+matches.start('p2')
 					for tpn in matches.group('p2').split(','):
