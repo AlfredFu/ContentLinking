@@ -31,6 +31,8 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 		"""
 		if title:
 			title=self.multiVerPat.sub('',title)
+			title=title.lower()
+			title=title.strip()
 		return title
 		
 	def addVersionRelation(self,article):

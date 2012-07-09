@@ -55,7 +55,7 @@ class HyperlinkProcess(object):
 			#provisionStartPattern=re.compile(r'(article ([\d\.]+)(.+\n?.+)+)(\n{1,})',re.I)
 			#provisionStartPattern=re.compile(r'^(Article ([\d\.]+)(.+\n?.+)+)(\n{2})',re.MULTILINE)
 			#provisionStartPattern=re.compile(r'(\n{2,})(article ([\d\.]+)(.+\n?.+)+)(\n{2,})',re.I)
-			provisionStartPattern=re.compile(r'(Article ([\d\.]+).?(.\n?)+?.?)(\n\n|<br />\n?<br />)',re.I)
+			provisionStartPattern=re.compile(r'(Article ([\d\.]+).?(.\n?)+?.?)(\n\n|<br />\n?<br />)',re.I)#match pargraph which begin with Article * and end with 2 linefeed
 			article.content=provisionStartPattern.sub(r'<a name="i\2" re="T"></a>\1<a name="end_i\2" re="T"></a>\4',article.content)
 			#content=provisionStartPattern.sub(r'<a name="i\2" re="T"></a>\1<a name="end_i\2" re="T"></a>\4',content)	
 			#content=provisionStartPattern.sub(r'\1<a name="i\3" re="T"></a>\2<a name="end_i\3" re="T"></a>\5',content)	
@@ -171,9 +171,9 @@ class HyperlinkProcess(object):
 		latestDate=''
 		latestArticle=None
 		for targetArticle in articleCandidate:
-			if article.contentType==Article.CONTENT_TYPE_CASE:#法规以发文日期作为比较日期
-				compDate=max([targetArticle.proDate,targetArticle.effectDate])#其他内容类型以发文日期和生效日期最近的一个作为比较日期
-			else:
+			if article.contentType==Article.CONTENT_TYPE_CASE:
+				compDate=max([targetArticle.proDate,targetArticle.effectDate])#以发文日期和生效日期最近的一个作为比较日期
+			else:#其他内容类型发文日期作为比较日期
 				compDate=targetArticle.prodate
 					
 			if article.proDate<compDate:continue#发文日期在法规生效日期或法文日期之后，法规不能被引用
@@ -299,9 +299,19 @@ class HyperlinkProcess(object):
 					keyword.content=keyword.content.lower()#convert letters to lower case
 					keyword.type=Keyword.KEYWORD_TYPE_FULL
 					keywordId=self.keywordDao.add(keyword)	
+					"""
+					if self.multiVerPat.search(article.title):
+						multiVerKeyword.content=self.multiVerPat.sub('',article.title)
+						multiVerKeyword.content=multiVerKeyword.content.strip()
+						multiVerKeyword.content=multiVerKeyword.content.lower()
+						multiVerKeyword.type=Keyword.KEYWORD_TYPE_ABBR
+						multiVerKeyword.fullTitleKeywordId=keywordId
+						keywordId=self.keywordDao.add(multiVerKeyword)
+					"""
 					if abbrPat.search(article.title):
 						abbrKeyword=Keyword()
-						abbrKeyword.content=abbrPat.sub('',article.title)
+						abbrKeyword.content=self.multiVerPat.sub('',article.title)
+						abbrKeyword.content=abbrPat.sub('',abbrKeyword.content)
 						abbrKeyword.content=abbrKeyword.content.strip()
 						abbrKeyword.content=abbrKeyword.content.lower()
 						abbrKeyword.type=Keyword.KEYWORD_TYPE_ABBR
