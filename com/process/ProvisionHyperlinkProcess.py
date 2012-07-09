@@ -50,7 +50,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 					'EL':'Elearning',\
 					'SUMMARY':'Overview summary',\
 					'PEA':'Q & A'}
-        	self.reArticleStart='<br/><font color="red">(Relative article:</font><font color="blue">'
+        	self.reArticleStart='<br/><font color="red">(Relevant articles:</font><font color="blue">'
         	self.reArticleEnd='</font><font color="red">)</font>'
 
 	def checkProvisionExist(self,provisionNum,originId,providerId,isEnglish='Y',contentType='T'):
