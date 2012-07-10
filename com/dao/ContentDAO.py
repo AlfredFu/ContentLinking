@@ -27,3 +27,11 @@ class ContentDAO(DAO):
 					return row[0]
 			except Exception,e:
 				self.log.error(e)
+
+	def deleteAll(self):
+		sql="delete from %s" % self.tableName
+		try:
+			self.cursor_stg.execute(sql)
+			self.conn_stg.commit()
+		except Exception,e:
+			self.log.error(e)
