@@ -59,27 +59,37 @@ class CaseDAO(DAO):
 			except Exception,e:
 				self.log.error(e)
 
-	def updateContent(self,article):
+	def updateContent(self,article,isTransfer=False):
 		"update content and in_time"
 		if article:
 			try:
 				article.content=self.escape_string(article.content)
-				self.cursor_stg.execute("UPDATE case_content SET content='%s' WHERE case_id=%s" % (article.content,article.id))
-				self.conn_stg.commit()
+				sql="UPDATE case_content SET content='%s' WHERE case_id=%s" % (article.content,article.id)
+				if isTransfer:
+					self.cursor.execute(sql);
+					self.conn.commit()
+				else:
+					self.cursor_stg.execute(sql);
+					self.conn_stg.commit()
 			except Exception,e:
 				self.log.error(e)
 
-	def updateTime(self,article):
+	def updateTime(self,article,isTransfer=False):
 		if article:
 			try:
-				self.cursor_stg.execute("UPDATE cases SET cases.in_time=NOW() WHERE case_id=%s" % article.id)
-				self.conn_stg.commit()
+				sql="UPDATE cases SET cases.in_time=NOW() WHERE case_id=%s" % article.id
+				if isTransfer:
+					self.cursor.execute(sql);
+					self.conn.commit()
+				else:
+					self.cursor_stg.execute(sql);
+					self.conn_stg.commit()
 			except Exception,e:
 				self.log.error(e)
 
-	def update(self,article):
-		self.updateContent(article)
-		self.updateTime(article)
+	def update(self,article,isTransfer=False):
+		self.updateContent(article,isTransfer)
+		self.updateTime(article,isTransfer)
 		
 if __name__=='__main__':
 	caseDao=CaseDAO()

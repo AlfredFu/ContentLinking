@@ -72,13 +72,17 @@ class LncQADAO(DAO):
 				self.log.error(e)
 				self.log.error(sql)
 				
-	def update(self,article):
+	def update(self,article,isTransfer=False):
 		if article and article.content:
 			article.content=self.escape_string(article.content)
 			sql="update listboard set body='%s',fetch_time=CURDATE() where announceid=%s" % (article.content,article.id)
 			try:
-				self.cursor_stg.execute(sql)
-				self.conn_stg.commit()
+				if isTransfer:
+					self.cursor.execute(sql)
+					self.conn.commit()
+				else:
+					self.cursor_stg.execute(sql)
+					self.conn_stg.commit()
 			except Exception,e:
 				self.log.error(e)
 				self.log.error(sql)

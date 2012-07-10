@@ -21,18 +21,33 @@ class LawDAO(DAO):
 		except Exception,e:
 			self.log.error(e)
 
-	def update(self,article):
-		try:
-			if article.content:
-				article.content=self.escape_string(article.content)
-				self.cursor_stg.execute("UPDATE tax_content SET content='%s' WHERE origin_id='%s' AND provider_id=%s AND isEnglish='%s'" % (article.content,article.originId,article.providerId,article.isEnglish))
-				self.conn_stg.commit()
-			self.updateTime(article)	
-		except Exception,e:
-			self.log.error(e)
+	def update(self,article,isTransfer=False):
+		if article.originId and article.providerId and article.isEnglish and article.content:
+			article.content=self.escape_string(article.content)
+			sql="UPDATE tax_content SET content='%s' WHERE origin_id='%s' AND provider_id=%s AND isEnglish='%s'" % (article.content,article.originId,article.providerId,article.isEnglish)
+			try:
+				if isTransfer:
+					self.cursor.execute(sql)
+					self.conn.commit()
+				else:
+					self.cursor_stg.execute(sql)
+					self.conn_stg.commit()
+				self.updateTime(article)	
+			except Exception,e:
+				self.log.error(e)
 
-	def updateTime(self,article):
-		self.cursor_stg.execute("UPDATE tax SET indbtime=NOW() WHERE origin_id='%s' AND provider_id=%s AND isEnglish='%s';" % (article.originId,article.providerId,article.isEnglish));
+	def updateTime(self,article,isTransfer=False):
+		if article.originId and article.providerId and article.isEnglish:
+			sql="UPDATE tax SET indbtime=NOW() WHERE origin_id='%s' AND provider_id=%s AND isEnglish='%s';" % (article.originId,article.providerId,article.isEnglish)
+			try:
+				if isTransfer:
+					self.cursor.execute(sql);
+					self.conn.commit()
+				else:
+					self.cursor_stg.execute(sql);
+					self.conn_stg.commit()
+			except Exception,e:
+				self.log.error(e)
 
 	def updateTimeByPrimary(self,id):
 		if id:

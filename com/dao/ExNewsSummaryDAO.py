@@ -46,15 +46,20 @@ class ExNewsSummaryDAO(DAO):
 				self.log.error(e)
 				
 
-	def update(self,article):
+	def update(self,article,isTransfer=False):
 		if article and article.id:
 			updateTimeSql="update ex_news set update_timei=NOW() where id=%s" % article.id
 			article.content=self.escape_string(article.content)
 			updateContentSql="update ex_news_summary set content='%s' where ex_new_id=%s;" %(article.content,article.id)
 			try:
-				self.cursor_stg.execute(updateTimeSql)
-				self.cursor_stg.execute(updateContentSql)
-				self.conn_stg.commit()
+				if isTransfer:
+					self.cursor.execute(updateTimeSql)
+					self.cursor.execute(updateContentSql)
+					self.conn.commit()
+				else:
+					self.cursor_stg.execute(updateTimeSql)
+					self.cursor_stg.execute(updateContentSql)
+					self.conn_stg.commit()
 			except Exception,e:
 				self.log.error(e)
 	def assemble(self,row):

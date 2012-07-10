@@ -74,16 +74,21 @@ class ModuleQADAO(DAO):
 				self.log.error(e)
 				self.log.error(sql)
 
-	def update(self,article):
+	def update(self,article,isTransfer=False):
 		if article and article.questionId and article.content:
 			article.content=self.escape_string(article.content)
 			
 			sql1="update ex_expert_questions set update_time=NOW(),fetch_time=NOW() where id=%s" % article.questionId
 			sql2="update ex_expert_answers set content='%s' where id=%s" %(article.content,article.id)		
 			try:
-				self.cursor_stg.execute(sql1)
-				self.cursor_stg.execute(sql2)
-				self.conn_stg.commit()
+				if isTransfer: 
+					self.cursor.execute(sql1)
+					self.cursor.execute(sql2)
+					self.conn.commit()
+				else:
+					self.cursor_stg.execute(sql1)
+					self.cursor_stg.execute(sql2)
+					self.conn_stg.commit()
 			except Exception,e:
 				self.log.error(e)
 			

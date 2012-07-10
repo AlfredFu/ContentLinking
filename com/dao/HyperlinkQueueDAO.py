@@ -29,6 +29,25 @@ class HyperlinkQueueDAO(DAO):
 			print e
 			self.log.error(e)
 			
+	def getByStatus(self,status=Article.STATUS_WAIT_UPLOAD):
+		try:
+			self.cursor_stg.execute("SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s where action_type in ('N','U','D') and status=%s order by content_type asc" % (HyperlinkQueueDAO.table,status))	
+			for row in self.cursor_stg.fetchall():
+				queueItem=QueueItem()
+				queueItem.id=row[0]
+				queueItem.contentType=row[1]
+				queueItem.originId=row[2]
+				queueItem.providerId=row[3]
+				queueItem.isEnglish=row[4]
+				queueItem.targetId=row[5]
+				queueItem.actionType=row[6]
+				queueItem.status=row[7]
+				queueItem.updTime=row[10]
+				queueItem.infiledate=row[11]
+				yield queueItem
+		except Exception,e:
+			self.log.error(e)
+
 	def getByContentType(self,contentType=''):
 		try:
 			self.cursor_stg.execute("SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,dc_status_code,dc_error_desc,upd_time,infiledate FROM %s where status=1 and content_type='%s'" % (HyperlinkQueueDAO.table,contentType))	

@@ -105,15 +105,20 @@ class ProfNewsletterDAO(DAO):
 				self.log.error(e)
 				self.log.error(sql)
 
-	def update(self,article):
+	def update(self,article,isTransfer=False):
 		if article and article.id and article.content and article.fkProfNewsletterId:
 			article.content=self.escape_string(article.content)
 			sql1="update profNewsletter set editedAt=NOW() where id=%s ;" %article.fkProfNewsletterId
 			sql2="update profNewsletter_Ext set content='%s',editedExtAt=NOW() where id=%s;" %(article.content,article.id)
 			try:
-				self.cursor_stg.execute(sql1)
-				self.cursor_stg.execute(sql2)
-				self.conn_stg.commit()	
+				if isTransfer:
+					self.cursor.execute(sql1)
+					self.cursor.execute(sql2)
+					self.conn.commit()	
+				else:
+					self.cursor_stg.execute(sql1)
+					self.cursor_stg.execute(sql2)
+					self.conn_stg.commit()	
 			except Exception,e:
 				self.log.error(e)
 
