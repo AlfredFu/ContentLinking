@@ -30,7 +30,7 @@ class ModuleQADAO(DAO):
 
 	def getById(self,id):
 		if id:	
-			sql="select id,title,content,origin_id,provider_id,isEnglish,ex_expert_question_id from ex_expert_answers where id=%s" % id 
+			sql="select id,title,content,origin_id,provider_id,isEnglish,ex_expert_question_id,update_time from ex_expert_answers where id=%s" % id 
 			try:
 				self.cursor_stg.execute(sql)
 				row=self.cursor_stg.fetchone()
@@ -43,6 +43,7 @@ class ModuleQADAO(DAO):
 					article.providerId=row[4]
 					article.isEnglish=row[5]
 					article.questionId=row[6]
+					article.proDate=row[7]
 					article.contentType=Article.CONTENT_TYPE_MODULEQA
 					return article
 				else:
@@ -53,7 +54,7 @@ class ModuleQADAO(DAO):
 
 	def getByOrigin(self,originId,providerId,isEnglish):
 		if originId and providerId and isEnglish:
-			sql="select id,title,content,origin_id,provider_id,isEnglish,ex_expert_question_id from ex_expert_answers where origin_id='%s' and provider_id=%s and isEnglish='%s';" % (originId,providerId,isEnglish) 
+			sql="select id,title,content,origin_id,provider_id,isEnglish,ex_expert_question_id,update_time from ex_expert_answers where origin_id='%s' and provider_id=%s and isEnglish='%s';" % (originId,providerId,isEnglish) 
 			try:
 				self.cursor_stg.execute(sql)
 				row=self.cursor_stg.fetchone()
@@ -66,6 +67,7 @@ class ModuleQADAO(DAO):
 					article.providerId=row[4]
 					article.isEnglish=row[5]
 					article.questionId=row[6]
+					article.proDate=row[7]
 					article.contentType=Article.CONTENT_TYPE_MODULEQA
 					return article
 				else:

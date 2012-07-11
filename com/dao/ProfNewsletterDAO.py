@@ -46,7 +46,8 @@ class ProfNewsletterDAO(DAO):
 					profNewsletter_Ext.origin_id,
 					profNewsletter_Ext.provider_id,
 					profNewsletter_Ext.isEnglish,
-					profNewsletter_Ext.fk_profNewsletter_id 
+					profNewsletter_Ext.fk_profNewsletter_id,
+					profNewsletter_Ext.createdExtAt 
 				from (profNewsletter_Ext INNER JOIN profNewsletter ON profNewsletter_Ext.fk_profNewsletter_id = profNewsletter.id) 
 				where profNewsletter_Ext.id =%s;
 				""" % id
@@ -63,6 +64,7 @@ class ProfNewsletterDAO(DAO):
 					article.providerId=row[5]
 					article.isEnglish=row[6]
 					article.fkProfNewsletterId=row[7]
+					article.proDate=row[8]
 					article.contentType=Article.CONTENT_TYPE_NEWSLETTER
 					return article
 				else:
@@ -80,7 +82,8 @@ class ProfNewsletterDAO(DAO):
 					profNewsletter_Ext.origin_id,
 					profNewsletter_Ext.provider_id,
 					profNewsletter_Ext.isEnglish, 
-					profNewsletter_Ext.fk_profNewsletter_id 
+					profNewsletter_Ext.fk_profNewsletter_id,
+					profNewsletter_Ext.createdExtAt 
 				from (profNewsletter_Ext INNER JOIN profNewsletter ON profNewsletter_Ext.fk_profNewsletter_id = profNewsletter.id) 
 				where profNewsletter_Ext.origin_id ='%s' and profNewsletter_Ext.provider_id=%s and profNewsletter_Ext.isEnglish='%s';
 				""" % (originId,providerId,isEnglish)
@@ -97,6 +100,7 @@ class ProfNewsletterDAO(DAO):
 					article.providerId=row[5]
 					article.isEnglish=row[6]
 					article.fkProfNewsletterId=row[7]
+					article.proDate=row[8]
 					article.contentType=Article.CONTENT_TYPE_NEWSLETTER
 					return article
 				else:

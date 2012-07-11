@@ -26,7 +26,7 @@ class CaseDAO(DAO):
 		"根据主键信息获取案例"
 		if id:
 			try:
-				self.cursor_stg.execute("SELECT cases.case_id as id,cases.title,case_content.content,cases.origin_id,cases.provider_id,cases.isEnglish FROM cases LEFT JOIN case_content ON cases.case_id=case_content.case_id WHERE cases.case_id=%s;" % id)
+				self.cursor_stg.execute("SELECT cases.case_id as id,cases.title,case_content.content,cases.origin_id,cases.provider_id,cases.isEnglish,cases.issue_date,cases.effect_date FROM cases LEFT JOIN case_content ON cases.case_id=case_content.case_id WHERE cases.case_id=%s;" % id)
 				row=self.cursor_stg.fetchone()
 				if row:
 					article=Case()	
@@ -36,6 +36,8 @@ class CaseDAO(DAO):
 					article.originId=row[3]
 					article.providerId=row[4]
 					article.isEnglish=row[5]
+					article.proDate=row[6]
+					article.effectDate=row[7]
 					return article
 				else:
 					raise Exception("No case with id %s found!" %id)
@@ -46,16 +48,21 @@ class CaseDAO(DAO):
 		"根据origin_id,provider_id,isEnglish获取案例"
 		if originId and providerId and isEnglish:
 			try:
-				self.cursor_stg.execute("SELECT cases.case_id,cases.title,case_content.content FROM cases LEFT JOIN case_content ON cases.case_id=case_content.case_id WHERE cases.origin_id=%s AND cases.provider_id=%s AND cases.isEnglish='%s'" % (originId,providerId,isEnglish))
+				self.cursor_stg.execute("SELECT cases.case_id,cases.title,case_content.content,cases.issue_date,cases.effect_date FROM cases LEFT JOIN case_content ON cases.case_id=case_content.case_id WHERE cases.origin_id=%s AND cases.provider_id=%s AND cases.isEnglish='%s'" % (originId,providerId,isEnglish))
 				row =self.cursor_stg.fetchone()
-				case=Case()
-				case.id=row[0]
-				case.title=row[1]
-				case.content=row[2]
-				case.originId=originId
-				case.providerId=providerId
-				case.isEnglish=isEnglish
-				return case	
+				if row:
+					case=Case()
+					case.id=row[0]
+					case.title=row[1]
+					case.content=row[2]
+					article.proDate=row[3]
+					article.effectDate=row[4]
+					case.originId=originId
+					case.providerId=providerId
+					case.isEnglish=isEnglish
+					return case	
+				else:
+					raise Exception("No case with origin_id:%s,provider_id:%s,isEnglish:%s found!" %(originId,providerId,isEnglish))
 			except Exception,e:
 				self.log.error(e)
 

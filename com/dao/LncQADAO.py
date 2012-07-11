@@ -27,7 +27,7 @@ class LncQADAO(DAO):
 
 	def getById(self,id):
 		if id:
-			sql="select announceid,boardid,topic,body,origin_id,provider_id,isEnglish from listboard where announceid=%s" % id
+			sql="select announceid,boardid,topic,body,origin_id,provider_id,isEnglish,dateandtime from listboard where announceid=%s" % id
 			try:
 				self.cursor_stg.execute(sql)
 				row=self.cursor_stg.fetchone()
@@ -40,6 +40,7 @@ class LncQADAO(DAO):
 					article.originId=row[4]
 					article.providerId=row[5]
 					article.isEnglish=row[6]
+					article.proDate=row[7]
 					article.contentType=Article.CONTENT_TYPE_LNCQA
 					return article
 				else:
@@ -51,7 +52,7 @@ class LncQADAO(DAO):
 
 	def getByOrigin(self,originId,providerId,isEnglish):
 		if originId and providerId and isEnglish:
-			sql="select announceid,boardid,topic,body,origin_id,provider_id,isEnglish from listboard where origin_id='%s' and provider_id=%s and isEnglish='%s';" % (originId,providerId,isEnglish)
+			sql="select announceid,boardid,topic,body,origin_id,provider_id,isEnglish,dateandtime from listboard where origin_id='%s' and provider_id=%s and isEnglish='%s';" % (originId,providerId,isEnglish)
 			try:
 				self.cursor_stg.execute(sql)
 				row=self.cursor_stg.fetchone()
@@ -64,6 +65,7 @@ class LncQADAO(DAO):
 					article.originId=row[4]
 					article.providerId=row[5]
 					article.isEnglish=row[6]
+					article.proDate=row[7]
 					article.contentType=Article.CONTENT_TYPE_LNCQA
 					return article
 				else:

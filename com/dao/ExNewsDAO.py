@@ -15,7 +15,7 @@ class ExNewsDAO(DAO):
 		
 		"""
 		try:
-			sql="select ex_news.id,ex_news.title,ex_news.origin_id,ex_news.provider_id,ex_news.isEnglish,ex_news_contents.content,ex_news.sub_type,ex_news.type,ex_news.alltype,ex_news.ipnews_category from ex_news left join ex_news_contents on ex_news.id=ex_news_contents.ex_new_id where ex_news.isEnglish='Y' and ex_news.is_display=1;" 
+			sql="select ex_news.id,ex_news.title,ex_news.origin_id,ex_news.provider_id,ex_news.isEnglish,ex_news_contents.content,ex_news.sub_type,ex_news.type,ex_news.alltype,ex_news.ipnews_category,ex_news.promulgation_date from ex_news left join ex_news_contents on ex_news.id=ex_news_contents.ex_new_id where ex_news.isEnglish='Y' and ex_news.is_display=1;" 
 			self.cursor_stg.execute(sql)
 			for row in self.cursor_stg.fetchall():
 				for article in self.generatorAssemble(row):
@@ -26,7 +26,7 @@ class ExNewsDAO(DAO):
 
 	def getById(self,id):
 		if id:
-			sql="select ex_news.id,ex_news.title,ex_news.origin_id,ex_news.provider_id,ex_news.isEnglish,ex_news_contents.content,ex_news.sub_type,ex_news.type,ex_news.alltype,ex_news.ipnews_category from ex_news left join ex_news_contents on ex_news.id=ex_news_contents.ex_new_id where ex_news.id=%s" % id
+			sql="select ex_news.id,ex_news.title,ex_news.origin_id,ex_news.provider_id,ex_news.isEnglish,ex_news_contents.content,ex_news.sub_type,ex_news.type,ex_news.alltype,ex_news.ipnews_category,ex_news.promulgation_date from ex_news left join ex_news_contents on ex_news.id=ex_news_contents.ex_new_id where ex_news.id=%s" % id
 			try:
 				self.cursor_stg.execute(sql)
 				row=self.cursor_stg.fetchone()
@@ -40,7 +40,7 @@ class ExNewsDAO(DAO):
 
 	def getByOrigin(self,originId,providerId,isEnglish):
 		if originId and providerId and isEnglish:
-			sql="select ex_news.id,ex_news.title,ex_news.origin_id,ex_news.provider_id,ex_news.isEnglish,ex_news_contents.content,ex_news.sub_type,ex_news.type,ex_news.alltype,ex_news.ipnews_category from ex_news left join ex_news_contents on ex_news.id=ex_news_contents.ex_new_id where ex_news.origin_id='%s' and ex_news.provider_id=%s and ex_news.isEnglish='%s';" % (originId,providerId,isEnglish) 
+			sql="select ex_news.id,ex_news.title,ex_news.origin_id,ex_news.provider_id,ex_news.isEnglish,ex_news_contents.content,ex_news.sub_type,ex_news.type,ex_news.alltype,ex_news.ipnews_category,ex_news.promulgation_date from ex_news left join ex_news_contents on ex_news.id=ex_news_contents.ex_new_id where ex_news.origin_id='%s' and ex_news.provider_id=%s and ex_news.isEnglish='%s';" % (originId,providerId,isEnglish) 
 			try:
 				self.cursor_stg.execute(sql)
 				row=self.cursor_stg.fetchone()
@@ -85,6 +85,7 @@ class ExNewsDAO(DAO):
 			article.type=row[7]
 			article.allType=row[8]
 			article.ipnewsCategory=row[9]
+			article.proDate=row[10]
 			if article.subType == 1:
 				article.contentType=Article.CONTENT_TYPE_NEWLAW#每日快讯(新法快报)
 				yield article
@@ -119,6 +120,7 @@ class ExNewsDAO(DAO):
                         article.type=row[7]
                         article.allType=row[8]
                         article.ipnewsCategory=row[9]
+			article.proDate=row[10]
                         if article.subType == 1:
                                 article.contentType=Article.CONTENT_TYPE_NEWLAW#每日快讯(新法快报)
                         elif article.subType==3 and article.ipnewsCategory==1:
