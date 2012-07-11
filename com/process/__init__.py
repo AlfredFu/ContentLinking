@@ -30,6 +30,7 @@ class HyperlinkProcess(object):
 		self.log=getLog()    
 		self.hyperlinkPatternStr=r'<a href="[^"]*" class="link_2" re="T" cate="en_href" >'
 		self.multiVerPat=re.compile(r'\(revised in [0-9]{4}\)\s*$',re.I)
+		self.abbrPat=re.compile(r'of the People\'s Republic of China\s*$',re.I)
 
 	def eraseHyperlink(self,article):
 		"""
@@ -171,13 +172,13 @@ class HyperlinkProcess(object):
 		latestDate=''
 		latestArticle=None
 		for targetArticle in articleCandidate:
+			targetLaw=self.lawDao.getById(targetArticle.targetId)
 			if article.contentType==Article.CONTENT_TYPE_CASE:
-				compDate=max([targetArticle.proDate,targetArticle.effectDate])#以发文日期和生效日期最近的一个作为比较日期
+				compDate=max([targetLaw.proDate,targetLaw.effectDate])#以发文日期和生效日期最近的一个作为比较日期
 			else:#其他内容类型发文日期作为比较日期
-				compDate=targetArticle.prodate
-					
+				compDate=targetLaw.proDate
 			if article.proDate<compDate:continue#发文日期在法规生效日期或法文日期之后，法规不能被引用
-			elif latestDate <compDate:
+			elif str(latestDate) <str(compDate):
 				latestDate=compDate
 				latestArticle=targetArticle
 		return latestArticle
@@ -261,12 +262,42 @@ class HyperlinkProcess(object):
 		@param article 
 		"""
 		pass
+
+	def addKeyword(self,title):
+		if title:
+			title=self.multiVerPat.sub('',title)
+			title=title.strip()#strip whitespace
+			title=title.lower()#convert letters to lower case
+			keyword=self.keywordDao.findByContent(title)
+			if not keyword:
+				keyword=Keyword()
+				keyword.content=title
+				keyword.type=Keyword.KEYWORD_TYPE_FULL
+				keywordId=self.keywordDao.add(keyword)	
+				"""
+				if self.multiVerPat.search(article.title):
+					multiVerKeyword.content=self.multiVerPat.sub('',article.title)
+					multiVerKeyword.content=multiVerKeyword.content.strip()
+					multiVerKeyword.content=multiVerKeyword.content.lower()
+					multiVerKeyword.type=Keyword.KEYWORD_TYPE_ABBR
+					multiVerKeyword.fullTitleKeywordId=keywordId
+					keywordId=self.keywordDao.add(multiVerKeyword)
+				"""
+				if self.abbrPat.search(title):
+					abbrKeyword=Keyword()
+					abbrKeyword.content=self.abbrPat.sub('',title)
+					abbrKeyword.content=abbrKeyword.content.strip()
+					abbrKeyword.type=Keyword.KEYWORD_TYPE_ABBR
+					abbrKeyword.fullTitleKeywordId=keywordId
+					self.keywordDao.add(abbrKeyword)
+			else:
+				keywordId=keyword.id
+			return keywordId 
 	
 	def initial(self):
 		"""
 		Update keyword list and article list accroding to hyperlink queue		
 		"""
-		abbrPat=re.compile(r'of the People\'s Republic of China\s*$',re.I)
 		for queueItem in self.queueDao.getAll():
 			#debug code
 			#begin
@@ -293,30 +324,7 @@ class HyperlinkProcess(object):
 			if article.actionType in [Article.ACTION_TYPE_NEW,Article.ACTION_TYPE_UPDATE]:
 				if article.contentType==Article.CONTENT_TYPE_LAW:			
 					self.addProvisionPosTag(article)	
-					keyword=Keyword()
-					keyword.content=self.multiVerPat.sub('',article.title)
-					keyword.content=keyword.content.strip()#strip whitespace
-					keyword.content=keyword.content.lower()#convert letters to lower case
-					keyword.type=Keyword.KEYWORD_TYPE_FULL
-					keywordId=self.keywordDao.add(keyword)	
-					"""
-					if self.multiVerPat.search(article.title):
-						multiVerKeyword.content=self.multiVerPat.sub('',article.title)
-						multiVerKeyword.content=multiVerKeyword.content.strip()
-						multiVerKeyword.content=multiVerKeyword.content.lower()
-						multiVerKeyword.type=Keyword.KEYWORD_TYPE_ABBR
-						multiVerKeyword.fullTitleKeywordId=keywordId
-						keywordId=self.keywordDao.add(multiVerKeyword)
-					"""
-					if abbrPat.search(article.title):
-						abbrKeyword=Keyword()
-						abbrKeyword.content=self.multiVerPat.sub('',article.title)
-						abbrKeyword.content=abbrPat.sub('',abbrKeyword.content)
-						abbrKeyword.content=abbrKeyword.content.strip()
-						abbrKeyword.content=abbrKeyword.content.lower()
-						abbrKeyword.type=Keyword.KEYWORD_TYPE_ABBR
-						abbrKeyword.fullTitleKeywordId=keywordId
-						self.keywordDao.add(abbrKeyword)
+					keywordId=self.addKeyword(article.title)
 					if article.actionType==Article.ACTION_TYPE_NEW:
 						#TODO将所有文章加入到队列
 						pass

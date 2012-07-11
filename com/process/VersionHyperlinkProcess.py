@@ -44,7 +44,8 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 			refVersionArticleList=self.articleDao.findByKeywordId(keyword.id)
 			versionList=[]
 			for reVersionArticle in refVersionArticleList:
-				if (article.originId,article.providerId,article.isEnglish) != (reVersionArticle.originId,reVersionArticle.providerId,reVersionArticle.isEnglish):
+				#if (article.originId,article.providerId,article.isEnglish) != (reVersionArticle.originId,reVersionArticle.providerId,reVersionArticle.isEnglish):
+				if not article==reVersionArticle:
 					versionSrc=Version()
 					versionDes=Version()
 					versionDes.desOriginId=versionSrc.srcOriginId=article.originId

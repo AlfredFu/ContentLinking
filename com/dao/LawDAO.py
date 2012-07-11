@@ -79,7 +79,7 @@ class LawDAO(DAO):
 		if id:
 			try:
 				
-				self.cursor_stg.execute("SELECT tax.taxid as id,tax.title,tax_content.content,tax.origin_id,tax.provider_id,tax.isEnglish FROM tax LEFT JOIN tax_content ON tax.taxid=tax_content.taxid WHERE tax.taxid=%s;" % id)
+				self.cursor_stg.execute("SELECT tax.taxid as id,tax.title,tax_content.content,tax.origin_id,tax.provider_id,tax.isEnglish,tax.date,tax.effect_date FROM tax LEFT JOIN tax_content ON tax.taxid=tax_content.taxid WHERE tax.taxid=%s;" % id)
 				row=self.cursor_stg.fetchone()
 				if row:
 					article=Law()	
@@ -89,6 +89,8 @@ class LawDAO(DAO):
 					article.originId=row[3]
 					article.providerId=row[4]
 					article.isEnglish=row[5]
+					article.proDate=row[6]
+					article.effectDate=row[7]
 					return article
 				else:
 					raise Exception("No law with id %s found!" %id)
@@ -101,7 +103,7 @@ class LawDAO(DAO):
 		"""
 		article=Law()	
 		try:
-			self.cursor_stg.execute("SELECT tax.taxid as id,tax.title,tax_content.content,tax.origin_id,tax.provider_id,tax.isEnglish FROM tax LEFT JOIN tax_content ON tax.taxid=tax_content.taxid WHERE tax.origin_id='%s' and tax.provider_id=%s and tax.isEnglish='%s' and display=1;" % (originId,providerId,isEnglish))
+			self.cursor_stg.execute("SELECT tax.taxid as id,tax.title,tax_content.content,tax.origin_id,tax.provider_id,tax.isEnglish,tax.date,tax.effect_date FROM tax LEFT JOIN tax_content ON tax.taxid=tax_content.taxid WHERE tax.origin_id='%s' and tax.provider_id=%s and tax.isEnglish='%s' and display=1;" % (originId,providerId,isEnglish))
 			row=self.cursor_stg.fetchone()
 			if row:
 				article.id=row[0]
@@ -110,6 +112,8 @@ class LawDAO(DAO):
 				article.originId=row[3]
 				article.providerId=row[4]
 				article.isEnglish=row[5]
+				article.proDate=row[6]
+				article.effectDate=row[7]
 			else:
 				raise Exception("No law with origin_id:%s,provider_id:%s,isEnglish:%s found!" %(originId,providerId,isEnglish))
 		except Exception,e:
