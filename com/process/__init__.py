@@ -174,7 +174,12 @@ class HyperlinkProcess(object):
 		for targetArticle in articleCandidate:
 			targetLaw=self.lawDao.getById(targetArticle.targetId)
 			if article.contentType==Article.CONTENT_TYPE_CASE:
-				compDate=max([targetLaw.proDate,targetLaw.effectDate])#以发文日期和生效日期最近的一个作为比较日期
+				if targetLaw.proDate and targetLaw.effectDate:
+					compDate=max([targetLaw.proDate,targetLaw.effectDate])#以发文日期和生效日期最近的一个作为比较日期
+				elif targetLaw.proDate:
+					compDate=targetLaw.proDate
+				else:
+					compDate=targetLaw.effectDate
 			else:#其他内容类型发文日期作为比较日期
 				compDate=targetLaw.proDate
 			if article.proDate<compDate:continue#发文日期在法规生效日期或法文日期之后，法规不能被引用
