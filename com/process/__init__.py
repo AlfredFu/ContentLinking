@@ -182,7 +182,8 @@ class HyperlinkProcess(object):
 					compDate=targetLaw.effectDate
 			else:#其他内容类型发文日期作为比较日期
 				compDate=targetLaw.proDate
-			if article.proDate<compDate:continue#发文日期在法规生效日期或法文日期之后，法规不能被引用
+			if str(article.proDate)<str(compDate):#发文日期在法规生效日期或法文日期之后，法规不能被引用
+				continue
 			elif str(latestDate) <str(compDate):
 				latestDate=compDate
 				latestArticle=targetArticle
