@@ -44,21 +44,32 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 		for posTuple in posTupleList:
 			if self.checkHyperlinkedKeyword(article.content,posTuple[0],posTuple[1]):#对已加上超链接的关键字不做处理
 				continue
-			if not  posTuple[4]:
+			if not  posTuple[4]:#if fullTitleKeywordId is not exist,means the keyword's type is 'F'
 				lawCandidate=self.lawDao.getLawByKeywordId(posTuple[2])
 			else:
 				lawCandidate=self.lawDao.getLawByKeywordId(posTuple[4])
 			if not lawCandidate:#如果没找到可加上hyperlink的法规
 				continue
-				
+			if self.checkArticleInLawCandidate(article,lawCandidate):
+				continue
 			targetArticle=self.selectTargetArticle(article,lawCandidate)
-			 
 			if targetArticle and  not article==targetArticle:#if current article and target article are not the same article
 				targetArticleUrl="/law/content.php?content_type=%s&origin_id=%s&provider_id=%s&isEnglish=%s" % (targetArticle.contentType,targetArticle.originId,targetArticle.providerId,targetArticle.isEnglish)
 				rep='<a href="%s" class="link_2" re="T" cate="en_href" >%s</a>' % (targetArticleUrl,article.content[posTuple[0]:posTuple[1]])
 				article.content=article.content[:posTuple[0]]+rep+article.content[posTuple[1]:]
 				self.addCrossRefLink(article,targetArticle,posTuple[2])#添加hyperlink记录
 		return article 
+
+	def checkArticleInLawCandidate(self,article,lawCandidate):
+		"""
+		判断文章article是否在文章(法规)列表lawCandidate中
+		"""
+		if article and lawCandidate:
+			for law in lawCandidate:
+				if article.id==law.id and article.contentType==law.contentType:
+					return True
+		return False
+		
 
 if __name__=="__main__":
     process=KeywordHyperlinkProcess()
