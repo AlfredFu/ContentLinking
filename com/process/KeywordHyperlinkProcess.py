@@ -53,7 +53,7 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 				
 			targetArticle=self.selectTargetArticle(article,lawCandidate)
 			 
-			if not article==targetArticle:#if current article and target article are not the same article
+			if targetArticle and  not article==targetArticle:#if current article and target article are not the same article
 				targetArticleUrl="/law/content.php?content_type=%s&origin_id=%s&provider_id=%s&isEnglish=%s" % (targetArticle.contentType,targetArticle.originId,targetArticle.providerId,targetArticle.isEnglish)
 				rep='<a href="%s" class="link_2" re="T" cate="en_href" >%s</a>' % (targetArticleUrl,article.content[posTuple[0]:posTuple[1]])
 				article.content=article.content[:posTuple[0]]+rep+article.content[posTuple[1]:]
