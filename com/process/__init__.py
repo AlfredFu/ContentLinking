@@ -346,12 +346,11 @@ class HyperlinkProcess(object):
 		self.updateOprLoadStatus(queueItem)
 		
 	def process(self,article):
-		posTupleList=self.search(article.content)
-		#print "posTuplelist id:",id(posTupleList)
-		article=self.pattern(article,posTupleList)	
-		#print posTupleList
-		del posTupleList[:]#清空list,否则会出现记录位置被重复使用的错误
-		return article
+		if article:
+			posTupleList=self.search(article.content)
+			article=self.pattern(article,posTupleList)	
+			del posTupleList[:]#清空list,否则会出现记录位置被重复使用的错误
+			return article
 
 	def end(self,queueItem):
 		"""

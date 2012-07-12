@@ -44,6 +44,6 @@ class Article(object):
 		pass
 
 	def __eq__(self,other):
-		if self.originId==other.originId and self.providerId == other.providerId and self.isEnglish==other.isEnglish and self.contentType==other.contentType:
+		if other and self.originId==other.originId and self.providerId == other.providerId and self.isEnglish==other.isEnglish and self.contentType==other.contentType:
 			return 1
 		return 0	
