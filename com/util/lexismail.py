@@ -53,5 +53,10 @@ def sendMail(to,subject=default_mail_subject,content=default_mail_content):
 		server=connectToSMTP()
 		sendMessage(server,to,subject,content)	
 	
+def sendNotification(mailContent=''):
+	mailAddrList=['fred.fu@lexisnexis.com','mingzhou87@gmail.com']
+	for mail_addr  in mailAddrList:
+		sendMail(mail_addr,default_mail_subject,mailContent)
+
 if __name__=='__main__':
-	sendMail('fred.fu@lexisnexis.com')		
+	sendNotification("Hello Fred")
