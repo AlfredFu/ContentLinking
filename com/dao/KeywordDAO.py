@@ -33,7 +33,7 @@ class KeywordDAO(DAO):
 				row=self.cursor_hyperlink.fetchone()
 				if row:
 					keywordId=row[0]
-					sql2="delete from keyword_en where keyword_id =%s" % keywordId
+					sql2="delete from keyword_en where keyword_id =%s or full_title_keyword_id=%s" % (keywordId,keywordId)
 					self.cursor_hyperlink.execute(sql2)
 					self.conn_hyperlink.commit()
 			except Exception,e:

@@ -60,7 +60,7 @@ class LawDAO(DAO):
 	def getLawByKeywordId(self,keywordId):
 		if keywordId:
 			try:
-				self.cursor_hyperlink.execute("SELECT origin_id,provider_id,isEnglish,target_id,action_type FROM article_en WHERE keyword_id=%s AND content_type='T';" % keywordId)
+				self.cursor_hyperlink.execute("SELECT origin_id,provider_id,isEnglish,target_id,action_type FROM article_en WHERE keyword_id=%s AND content_type='T' ORDER BY provider_id asc;" % keywordId)
 				articleList=[]
 				for row in self.cursor_hyperlink.fetchall():
 					article=Law()
