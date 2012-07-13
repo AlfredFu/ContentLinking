@@ -305,12 +305,6 @@ class HyperlinkProcess(object):
 		Update keyword list and article list accroding to hyperlink queue		
 		"""
 		for queueItem in self.queueDao.getAll():
-			#debug code
-			#begin
-			if articleList and (queueItem.contentType,queueItem.originId,queueItem.providerId,queueItem.isEnglish) not in articleList:
-				continue
-			#print queueItem.targetId,' ',queueItem.contentType
-			#end
 			article=self.getArticle(queueItem)
 			if not article:
 				self.log.warning("no article with id:%s,type:%s found" %(queueItem.targetId,queueItem.contentType))

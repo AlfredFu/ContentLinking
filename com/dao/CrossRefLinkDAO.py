@@ -23,7 +23,19 @@ class CrossRefLinkDAO(DAO):
 			except Exception,e:
 				self.log.error(e)
 		
-			
+	def deleteBySrcDes(self,srcId,srcContentType,desId,desContentType,provisionNum=0,attachmentId=0):
+		if srcId and srcContentType and desId and desContentType:
+			sql="delete from %s where src_article_id=%s and src_content_type='%s' and des_article_id=%s and des_content_type='%s'" %(CrossRefLinkDAO.table,srcId,srcContentType,desId,desContentType)
+			if provisionNum:
+				sql+=(" and des_item_id=%s" % provisionNum)	
+			if attachmentId:
+				sql+=(" and des_attachment_id=%s" % attachmentId)
+			try:
+				self.cursor_stg.execute(sql)
+				self.conn_stg.commit()
+			except Exception,e:
+				self.log.error(e)
+				 
 	def deleteByArticleIdContentType(self,articleId,contentType):
 		if articleId and contentType:
 			sql="delete from %s where (des_article_id=%s and des_content_type='%s') or (src_article_id=%s and src_content_type='%s');" \
