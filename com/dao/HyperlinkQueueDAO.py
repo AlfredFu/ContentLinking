@@ -26,7 +26,6 @@ class HyperlinkQueueDAO(DAO):
 				queueItem.infiledate=row[11]
 				yield queueItem
 		except Exception,e:
-			print e
 			self.log.error(e)
 			
 	def getByStatus(self,status=Article.STATUS_WAIT_UPLOAD):

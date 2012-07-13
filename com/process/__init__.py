@@ -154,8 +154,10 @@ class HyperlinkProcess(object):
 		"""
 		if content:
 			#startMatch=re.search(r'<a.+?>\s*$',content[:startPos])#在关键字出现位置前找锚标记a开始标签
-			startMatch=re.search(r'<a[^>]+?>\s*$',content[:startPos])#在关键字出现位置前找锚标记a开始标签
-			endMatch=re.search(r'^</a\s*>',content[endPos:])#在关键字出现位置后找锚标记结束符
+			#startMatch=re.search(r'<a[^>]+?>\s*$',content[:startPos])#在关键字出现位置前找锚标记a开始标签
+			#endMatch=re.search(r'^</a\s*>',content[endPos:])#在关键字出现位置后找锚标记结束符
+			startMatch=re.search(r'<a[^>]+?>[^<]*$',content[:startPos])#在关键字出现位置前找锚标记a开始标签
+			endMatch=re.search(r'[^<]*</a\s*>',content[endPos:])#在关键字出现位置后找锚标记结束符
 			if startMatch and endMatch:
 				return True
 		return False
@@ -228,7 +230,7 @@ class HyperlinkProcess(object):
 			self.queueDao.updateStatus(queueItem.targetId,queueItem.contentType,QueueItem.STATUS_PROCESSING)
 	
 	
-	def addCrossRefLink(self,article,targetArticle,keywordId='',itemId=0,attachmentId=0):
+	def addCrossRefLink(self,article,targetArticle,keywordId=0,itemId=0,attachmentId=0):
 		"""
 		Add record to cross_ref_link
 		@param article the article which has link to another article 
