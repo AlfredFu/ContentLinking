@@ -53,3 +53,4 @@ class ManualHyperlinkProcess(HyperlinkProcess):
 							self.addCrossRefLink(article,targetArticle,keywordId,provisionNum)	
 					except Exception,e:
 						self.log.error(e)
+			return article

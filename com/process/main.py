@@ -2,6 +2,7 @@
 from com.process.KeywordHyperlinkProcess import *
 from com.process.VersionHyperlinkProcess import *
 from com.process.ProvisionHyperlinkProcess import *
+from com.process.ManualHyperlinkProcess import *
 from com.process.AbbreviationHyperlinkProcess import *
 from com.process.filter import *
 from com.util.lexismail import *
@@ -12,6 +13,7 @@ if __name__=='__main__':
 	khp=KeywordHyperlinkProcess.KeywordHyperlinkProcess()
 	vhp=VersionHyperlinkProcess.VersionHyperlinkProcess()
 	phprocess=ProvisionHyperlinkProcess.ProvisionHyperlinkProcess()
+	mhp=ManualHyperlinkProcess.ManualHyperlinkProcess()
 	ahp=AbbreviationHyperlinkProcess()
 
 	#initial phase	 
@@ -30,6 +32,7 @@ if __name__=='__main__':
 			article=vhp.process(article)
 			article=ahp.process(article)
 			article=phprocess.process(article)
+			article=mhp.process(article)
 			khp.updateArticle(article)
 		else:
 			khp.log.warning("Article type:%s id:%s was not found" %(queueItem.contentType,queueItem.targetId))
