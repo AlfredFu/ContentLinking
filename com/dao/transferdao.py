@@ -15,7 +15,7 @@ class TransferDAO(DAO):
 				version=Version()
 				version.srcOriginId=row[0]
 				version.srcProviderId=row[1]
-				version=srcIsEnglish=row[2]
+				version.srcIsEnglish=row[2]
 				version.desOriginId=row[3]
 				version.desProviderId=row[4]
 				version.desisEnglish=row[5]
