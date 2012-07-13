@@ -31,11 +31,15 @@ class KeywordDAO(DAO):
 			try:
 				self.cursor_hyperlink.execute(sql1)
 				row=self.cursor_hyperlink.fetchone()
-				if row:
+				if row and row[0]:
 					keywordId=row[0]
-					sql2="delete from keyword_en where keyword_id =%s or full_title_keyword_id=%s" % (keywordId,keywordId)
-					self.cursor_hyperlink.execute(sql2)
-					self.conn_hyperlink.commit()
+					countKeywordArticleNumSql="select count(*) from article_en where keyword_id=%s and target_id<>%s" % (keywordId,targetId)
+					self.cursor_hyperlink.execute(countKeywordArticleNumSql)
+					row=self.cursor_hyperlink.fetchone()
+					if row and row[0]==0:
+						sql2="delete from keyword_en where keyword_id =%s or full_title_keyword_id=%s" % (keywordId,keywordId)
+						self.cursor_hyperlink.execute(sql2)
+						self.conn_hyperlink.commit()
 			except Exception,e:
 				self.log.error(e)
 
