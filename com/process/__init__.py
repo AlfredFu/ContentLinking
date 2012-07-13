@@ -30,7 +30,7 @@ class HyperlinkProcess(object):
 		self.log=getLog()    
 		self.hyperlinkPatternStr=r'<a href="[^"]*" class="link_2" re="T" cate="en_href" >'
 		#self.multiVerPat=re.compile(r'\(revised in [0-9]{4}\)\s*$',re.I)
-		self.multiVerPat=re.compile(r'\([^)]*)\s*$')
+		self.multiVerPat=re.compile(r'\([^)]*\)\s*$')
 		self.abbrPat=re.compile(r'of the People\'s Republic of China\s*$',re.I)
 
 	def eraseHyperlink(self,article):
