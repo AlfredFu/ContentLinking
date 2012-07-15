@@ -1,8 +1,12 @@
 from com.process.ProvisionHyperlinkProcess import *
+from test.data.content import *
 
 def testAddProTag():
+	article=Article()
+	article.content=content_09
 	phprocess=ProvisionHyperlinkProcess()
-	print phprocess.addProvisionPosTag(content4)
+	phprocess.addProvisionPosTag(article)
+	print article.content
 
 def testCheckProvisionExist(content,itemId):
 	phprocess=ProvisionHyperlinkProcess()
@@ -36,13 +40,14 @@ def testAddRelativeArticleLink():
 			phprocess.addProvisionRelativeArticleLink(article)
 	
 def testMultiPro():
-	content="""<a name="i24" re="T"></a>Article 24 After a party legally fulfills its obligation of capital contribution or legally obtains equity through succession, the company fails to issue to it a certificate of capital contribution, record it into the shareholder register or handle registration formalities with the company registration authority in accordance with articles 32,314,56,89   and 33 of the <a href="/law/content.php?content_type=T&origin_id=4685&provider_id=2&isEnglish=Y" class="link_2" re="T" cate="en_href" >Company Law</a>, the said party claims against the company for performance of foregoing obligations, the people's court shall sustain.<a name="end_i24" re="T"></a><br /><br />"""
+	content=""" in accordance with articles 1.1  and 1.2 of the <a href="/law/content.php?content_type=T&origin_id=4685&provider_id=2&isEnglish=Y" class="link_2" re="T" cate="en_href" >Company Law</a>, the said p<a name="i24" re="T"></a>Article 24 After a party legally fulfills its obligation of capital contribution or legally obtains equity through succession, the company fails to issue to it a certificate of capital contribution, record it into the shareholder register or handle registration formalities with the company registration authority in accordance with articles 32   , 314,56 , 89   and 33 of the <a href="/law/content.php?content_type=T&origin_id=4685&provider_id=2&isEnglish=Y" class="link_2" re="T" cate="en_href" >Company Law</a>, the said party claims against the company for performance of foregoing obligations, the people's court shall sustain.<a name="end_i24" re="T"></a><br /><br />"""
 	
 	phprocess=ProvisionHyperlinkProcess()
 	
 	posList=phprocess.search(content)
 	print posList
 if __name__=='__main__':
+	#testAddProTag()
 	#print testCheckProvisionExist(testAddProTag(),5)
 	#testHyperlinkProvi()
 	#testAddRelativeArticleLink()
