@@ -33,7 +33,6 @@ class ArticleDAO(DAO):
 				articleList.append(article)
 			return articleList
 		except Exception,e:
-			print e
 			self.log.error(e)
 				
 	def addMany(self,articleTupleList):
