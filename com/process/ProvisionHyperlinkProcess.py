@@ -127,7 +127,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 					for tpn in matches.group('p2').split(','):
 						if tpn:
 							endPos=startPos+len(tpn)
-							provisionNum=tpn
+							provisionNum=tpn.strip()	
 							provisionNumList.append((startPos,endPos,provisionNum))
 						startPos+=(len(tpn)+1)#','长度为一所以要加上
 
