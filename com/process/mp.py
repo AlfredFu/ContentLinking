@@ -15,7 +15,7 @@ if __name__=='__main__':
 	ahp=AbbreviationHyperlinkProcess()
 
 	
-	articleList=[('T','230972',1,'Y')]
+	articleList=[('T','1311122',1,'Y'),('T','504647',1,'Y')]
 	for queueItem in khp.queueDao.getAll():
 		if (queueItem.contentType,queueItem.originId,queueItem.providerId,queueItem.isEnglish) in articleList:
 			#khp.keywordDao.deleteByTarget(article.id,article.contentType)
@@ -23,9 +23,10 @@ if __name__=='__main__':
 			print "process"
 			khp.begin(queueItem)
 			article=khp.getArticle(queueItem)
-			khp.eraseHyperlink(article)
-			khp.removeProvisionPosTag(article)
 			if article and article.content:
+				khp.eraseHyperlink(article)
+				khp.removeProvisionPosTag(article)
+				khp.addProvisionPosTag(article)
 				khp.log.info("Hyperlink processing article type:%s id:%s" % (queueItem.contentType,queueItem.targetId))
 				article=khp.process(article)
 				article=vhp.process(article)
