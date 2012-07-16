@@ -24,7 +24,7 @@ queueDao=HyperlinkQueueDAO.HyperlinkQueueDAO()
 newsletterDao=ProfNewsletterDAO.ProfNewsletterDAO()
 lncQADao=LncQADAO.LncQADAO()
 moduleQADao=ModuleQADAO.ModuleQADAO()
-transferDao=transferdao.TransferDAO()
+transferDao=TransferDAO()
 exNewsDao=ExNewsDAO()
 log=getLog()    
 
@@ -92,10 +92,10 @@ def transferArticle():
 			updateArticle(article)
 			queueDao.updateStatus(queueItem.targetId,queueItem.contentType,Article.STATUS_FINISHED)
 
-def main():
+def transferData():
 	transferVersions()
 	transferCrossRefLink()
 	transferArticle()
 
 if __name__=="__main__":
-	main()
+	transferData()
