@@ -11,7 +11,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		#self.provisionPatternStr=r"(?P<astr>article\s+(?P<articleNum>\d+\.?\d+))\s+of\s+the\s+(<a href=\"(?P<href>[^\"^>]*?)\" class=\"link_2\" re=\"T\" cate=\"en_href\"\s*>).+?</a>"
 		#self.provisionPatternStr=r'(?P<astr>article\s+(?P<articleNum>[\d+\.]+?))\s+of\s+the [\s"]*?(<a href="(?P<href>[^\"^>]*?)" class="link_2" re="T" cate="en_href"\s*>)(?P<keyword>.+?)</a>'
 		#self.provisionPattern=re.compile(self.provisionPatternStr,re.I)
-		self.mulProviPatn=re.compile(r'(?P<p1>articles?\s+(?P<p11>[\d\.]+))(?P<p2>(,[\d\.]+)*)(\s+(and|or)\s+(?P<p3>[\d\.]+))?\s+of\s+the [\s"]*?(<a href="(?P<href>[^\"^>]*?)" class="link_2" re="T" cate="en_href"\s*>)(?P<keyword>.+?)</a>',re.I)
+		self.mulProviPatn=re.compile(r'(?P<p1>articles?\s+(?P<p11>[\d\.]+))\s*(?P<p2>(,\s*[\d\.]+\s*)*)(\s+(and|or)\s+(?P<p3>[\d\.]+))?\s+of\s+the [\s"]*?(<a href="(?P<href>[^\"^>]*?)" class="link_2" re="T" cate="en_href"\s*>)(?P<keyword>.+?)</a>',re.I)
 		#content type 
         	self.contentTypeMap={'T':'law',\
 					'C':'case',\
