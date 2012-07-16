@@ -57,7 +57,12 @@ class CrossRefLinkDAO(DAO):
 	def add(self,crossRefLink):
 		try:
 			if crossRefLink:
-				self.cursor_stg.execute("replace into "+CrossRefLinkDAO.table+"(src_article_id,keyword_id,des_article_id,des_item_id,des_attachment_id,src_content_type,src_origin_id,src_provider_id,src_isenglish,des_content_type,des_origin_id,des_provider_id,des_isenglish) values('%s',%s,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" % crossRefLink.toTuple())
+				sql="replace into cross_ref_link_en(src_article_id,keyword_id,des_article_id,des_item_id,\
+					des_attachment_id,src_content_type,src_origin_id,src_provider_id,src_isenglish,\
+					des_content_type,des_origin_id,des_provider_id,des_isenglish) \
+					values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" \
+					% crossRefLink.toTuple() 
+				self.cursor_stg.execute(sql)
 				self.conn_stg.commit()
 		except Exception,e:
 			self.log.error(e)
