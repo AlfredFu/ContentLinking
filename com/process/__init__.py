@@ -323,10 +323,13 @@ class HyperlinkProcess(object):
 					if article.actionType==Article.ACTION_TYPE_NEW:
 						#TODO将所有文章加入到队列
 						pass
-				if keywordId:
-					article.keywordId=keywordId
+					if keywordId:
+						article.keywordId=keywordId
+					else:
+						article.keywordId=''
 				else:
 					article.keywordId=''
+					
 				self.articleDao.add(article)
 			self.updateArticle(article)
 		
