@@ -287,7 +287,7 @@ class HyperlinkProcess(object):
 					abbrKeyword=Keyword()
 					abbrKeyword.content=self.abbrPat.sub('',title)
 					abbrKeyword.content=abbrKeyword.content.strip()
-					if abbrKeyword.find(' ')!=-1:#single word will not be regard as a keyword
+					if abbrKeyword.content.find(' ')!=-1:#single word will not be regard as a keyword
 						abbrKeyword.type=Keyword.KEYWORD_TYPE_ABBR
 						abbrKeyword.fullTitleKeywordId=keywordId
 						self.keywordDao.add(abbrKeyword)
