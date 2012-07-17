@@ -283,22 +283,14 @@ class HyperlinkProcess(object):
 				keyword.content=title
 				keyword.type=Keyword.KEYWORD_TYPE_FULL
 				keywordId=self.keywordDao.add(keyword)	
-				"""
-				if self.multiVerPat.search(article.title):
-					multiVerKeyword.content=self.multiVerPat.sub('',article.title)
-					multiVerKeyword.content=multiVerKeyword.content.strip()
-					multiVerKeyword.content=multiVerKeyword.content.lower()
-					multiVerKeyword.type=Keyword.KEYWORD_TYPE_ABBR
-					multiVerKeyword.fullTitleKeywordId=keywordId
-					keywordId=self.keywordDao.add(multiVerKeyword)
-				"""
 				if self.abbrPat.search(title):
 					abbrKeyword=Keyword()
 					abbrKeyword.content=self.abbrPat.sub('',title)
 					abbrKeyword.content=abbrKeyword.content.strip()
-					abbrKeyword.type=Keyword.KEYWORD_TYPE_ABBR
-					abbrKeyword.fullTitleKeywordId=keywordId
-					self.keywordDao.add(abbrKeyword)
+					if abbrKeyword.find(' ')!=-1:#single word will not be regard as a keyword
+						abbrKeyword.type=Keyword.KEYWORD_TYPE_ABBR
+						abbrKeyword.fullTitleKeywordId=keywordId
+						self.keywordDao.add(abbrKeyword)
 			else:
 				keywordId=keyword.id
 			return keywordId 
@@ -331,9 +323,10 @@ class HyperlinkProcess(object):
 					if article.actionType==Article.ACTION_TYPE_NEW:
 						#TODO将所有文章加入到队列
 						pass
+				if keywordId:
+					article.keywordId=keywordId
 				else:
-					keywordId=''
-				article.keywordId=keywordId
+					article.keywordId=''
 				self.articleDao.add(article)
 			self.updateArticle(article)
 		
