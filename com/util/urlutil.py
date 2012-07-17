@@ -11,12 +11,13 @@ def getUrlParams(linkurl):
 		if linkurl is '/law/content.php?content_type=T&origin_id=1339854&provider_id=1&isEnglish=Y'
 		{'content_type':'T','origin_id':'1339854','provider_id':'1','isEnglish':'Y'} will be returned
 	"""
+	paramsMap={}
 	if linkurl:
+		linkurl=linkurl.replace('&amp;','&')
 		start=linkurl.find('?')+1
 		end=linkurl.find('#')
 		if start !=-1:
 			#paramstr=linkurl[start:] if end==-1 else linkurl[start:end] #since python 2.5
-			paramsMap={}
 			if end==-1:	
 				paramstr=linkurl[start:]
 			else:
@@ -26,7 +27,7 @@ def getUrlParams(linkurl):
 				for tmpparam in params:
 					tpp=tmpparam.split('=')
 					paramsMap[tpp[0]]=tpp[1]	
-			return paramsMap
+	return paramsMap
 
 def getUrlAnchor(linkurl):
 	"""
@@ -50,7 +51,7 @@ def getUrlProvisionNum(linkurl):
 
 
 if __name__=='__main__':
-	print getUrlParams('law/content.php?content_type=&origin_id=2222&provider_id=1&isEnglish=Y#i32')
+	print getUrlParams('law/content.php?content_type=&amp;origin_id=2222&provider_id=1&isEnglish=Y#i32')
 	print getUrlParams('law/content.php?content_type=T&origin_id=2222&provider_id=1&isEnglish=Y')
 	print getUrlAnchor('law/content.php?content_type=T&origin_id=2222&provider_id=1&isEnglish=Y#i32')
 	print getUrlProvisionNum('law/content.php?content_type=T&origin_id=2222&provider_id=1&isEnglish=Y#i32')

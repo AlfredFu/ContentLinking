@@ -1,5 +1,6 @@
 # coding=utf-8
 from com.process import *
+from com.util.urlutil import *
 import re
 
 class ProvisionHyperlinkProcess(HyperlinkProcess):
@@ -101,12 +102,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		Get origin id,provider id and isEnglish by hreflink
 		return param map of hreflink href
 		"""	
-		hrefArgs=href[href.find("?")+1:].split("&")
-		hrefArgsMap={}
-		for hrefArg in hrefArgs:
-			tmpL=hrefArg.split("=")
-			hrefArgsMap[tmpL[0]]=tmpL[1]				
-		return hrefArgsMap
+		return getUrlParams(href)
 
 	def search(self,content,start=0,posTupleList=[]):
 		tmpContent=content[start:]
@@ -140,15 +136,23 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 
 				href= matches.group('href')
 				hrefArgsMap=self.getOriginByHref(href)
-				for provisionNumTuple in provisionNumList:
-					if self.checkProvisionExist(provisionNumTuple[2],hrefArgsMap['origin_id'],hrefArgsMap['provider_id'],hrefArgsMap['isEnglish'],hrefArgsMap['content_type']):# check provision exist in target article
-						hreflinkTag='<a href="%s" class="link_2" re="T" cate="en_href" >' % (href+"#i"+provisionNumTuple[2]) 
-						keyword=self.keywordDao.findByContent(matches.group('keyword'))#get keyword id by keyword str
-						keywordId=''
-						if keyword:
-							keywordId=keyword.id	
-						posTuple=(provisionNumTuple[0],provisionNumTuple[1],keywordId,hreflinkTag)	
-						posTupleList.append(posTuple)
+				try:
+					originId=hrefArgsMap['origin_id']
+					providerId=hrefArgsMap['provider_id']
+					isEnglish=hrefArgsMap['isEnglish']
+					contentType=hrefArgsMap['content_type']
+				except Exception,e:
+					self.log.error("Illegal url format!")
+				else:
+					for provisionNumTuple in provisionNumList:
+						if self.checkProvisionExist(provisionNumTuple[2],originId,providerId,isEnglish,contentType):# check provision exist in target article
+							hreflinkTag='<a href="%s" class="link_2" re="T" cate="en_href" >' % (href+"#i"+provisionNumTuple[2]) 
+							keyword=self.keywordDao.findByContent(matches.group('keyword'))#get keyword id by keyword str
+							keywordId=''
+							if keyword:
+								keywordId=keyword.id	
+							posTuple=(provisionNumTuple[0],provisionNumTuple[1],keywordId,hreflinkTag)	
+							posTupleList.append(posTuple)
 				self.search(content,endPos,posTupleList)
 		posTupleList.sort(lambda posTuple1,posTuple2:-cmp(posTuple1[0],posTuple2[0]))
 		return posTupleList 
