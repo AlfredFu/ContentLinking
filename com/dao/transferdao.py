@@ -18,13 +18,13 @@ class TransferDAO(DAO):
 				version.srcIsEnglish=row[2]
 				version.desOriginId=row[3]
 				version.desProviderId=row[4]
-				version.desisEnglish=row[5]
+				version.desIsEnglish=row[5]
 				yield version
 		except Exception,e:
 			self.log.error(e)
 
 	def cleanVersions(self):
-		sql="DELETE FROM versions WHERE src_isenglish='Y' AND des_isenglish='Y';"
+		sql="DELETE FROM versions WHERE src_isenglish='Y';"
 		try:
 			self.cursor.execute(sql)
 			self.conn.commit()
