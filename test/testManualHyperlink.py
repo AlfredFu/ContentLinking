@@ -27,6 +27,8 @@ def testProcess():
 	mhp.process(article)
 
 if __name__=="__main__":
+	content= testConvertHtmlTag(content)
+	print content
 	testSearch(content)
 	
-	testProcess()
+	#testProcess()

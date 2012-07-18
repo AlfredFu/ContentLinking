@@ -15,7 +15,7 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 	
 	def checkMultipleVersion(self,article):
 		"""
-		判断文章标题是否符合多版本文章标题命名规范（标题中以'(Revised in ****)'结尾）
+		判断文章标题是否符合多版本文章标题命名规范（标题中以'(****)'结尾）
 		是返回True
 		否返回False
 		"""
@@ -44,7 +44,6 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 			refVersionArticleList=self.articleDao.findByKeywordId(keyword.id)
 			versionList=[]
 			for reVersionArticle in refVersionArticleList:
-				#if (article.originId,article.providerId,article.isEnglish) != (reVersionArticle.originId,reVersionArticle.providerId,reVersionArticle.isEnglish):
 				if not article==reVersionArticle:
 					versionSrc=Version()
 					versionDes=Version()
@@ -64,23 +63,9 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 		"""
 		self.versionDao.deleteByOrigin(article.originId,article.providerId,article.isEnglish)
 		
-	"""
-	def process(self):
-		for queueItem in self.queueDao.getByContentType(Article.CONTENT_TYPE_LAW):
-			article=self.getArticle(queueItem)
-			#if not self.checkMultipleVersion(article):continue
-			if queueItem.actionType==QueueItem.ACTION_TYPE_NEW:
-				self.addVersionRelation(article)
-			elif queueItem.actionType==QueueItem.ACTION_TYPE_UPDATE:
-				self.deleteVersionRelation(article)
-			else:
-				self.deleteVersionRelation(article)
-				self.addVersionRelation(article)
-	"""
 
 	def process(self,article):
 		if article.contentType==Article.CONTENT_TYPE_LAW:
-			#self.queueDao.updateActionType(queueItem.targetId,queueItem.contentType,Article.ACTION_TYPE_UPDATE)
 			if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:
 				self.deleteVersionRelation(article)
 			if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_NEW]: 
@@ -90,4 +75,3 @@ class VersionHyperlinkProcess(HyperlinkProcess):
 if __name__=='__main__':
 	process=VersionHyperlinkProcess()
 	process.process()
-	#print process.tripVersionInfo("Company Law of the People's Republic of China (Revised in 1999)")

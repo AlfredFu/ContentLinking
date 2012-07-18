@@ -28,23 +28,37 @@ class HyperlinkProcess(object):
 		self.moduleQADao=ModuleQADAO.ModuleQADAO()
 		self.exNewsDao=ExNewsDAO()
 		self.log=getLog()    
-		self.hyperlinkPatternStr=r'<a href="[^"]*" class="link_2" re="T" cate="en_href" >'
-		#self.multiVerPat=re.compile(r'\(revised in [0-9]{4}\)\s*$',re.I)
+		self.linkUrlFormat='/law/content.php?content_type=%s&origin_id=%s&provider_id=%s&isEnglish=%s'
+		self.startLinkTagFormat='<a href="%s" class="link_2" re="T" cate="en_href" target="_blank" >'
+		self.startLinkTagPattern=re.compile(r'<a href="(?P<hreflink>[^"^#]*?)#i(?P<proNum>[\d\.]*)"\s+class="link_2"\s+re="T"\s+cate="en_href"\s+target="_blank"\s*>',re.I)
+		self.linkTagFormat=self.startLinkTagFormat+'%s</a>'
+
+		#Following regex object (in which 'en_href' is an hyperlink mark) match English hyperlink tag 
+		self.linkTagPattern=re.compile(r'<a\s+?[^>]*?cate=["\']en_href["\'][^>]*?>([^<]*?)</a>',re.I)
+		
+		#Following regex object match the text end with '([any text])'
 		self.multiVerPat=re.compile(r'\([^)]*\)\s*$')
+
+		#Following regex object match text end with string "of the people's republic of china"(ignore letter case and space)
+		#In general,law title strip string "of the ...." is regarded as an abbreviation of law title
 		self.abbrPat=re.compile(r'of the People\'s Republic of China\s*$',re.I)
+
+		#Following regex object match pargraph which begin with Article * and end with 2 linefeed
+		#Pargraph in article content matched is regarded as a provision
+		self.provisionStartPattern=re.compile(r'(Article ([\d\.]+).?(.\n?)+?.?)(<br\s*/>[\r\s]*<br\s*/>)',re.I)
+
+		#Following regex object match hidden provision position tag(both begin tag and end tag)
+		self.provisionPosTagPattern=re.compile(r'<a name="(end_)?i[\d\.]+" re="T"></a>')
 
 	def eraseHyperlink(self,article):
 		"""
 		清除hyperlink所加的超链接
-		hyperlink sample:<a href='' class='link_2' re='T' cate='en_href'>Criminal Law</a>
-		@param content 文章内容
-		return 清除hyperlink链接后的文章内容
+		hyperlink sample:<a href="" class="link_2" re="T" cate="en_href" target="_blank">Criminal Law</a>
+		@param article 
+		return 清除hyperlink链接后的文章
 		"""	
 		if article and article.content:
-			article.content=re.sub(r'<a\s+?[^>]*?cate=["\']en_href["\']\s*>([^<]*?)</a>',r'\1',article.content)
-			#content=re.sub(r'<a\s+href=[\'"][/\w\d\-\.]*?[\'"]\s+class=[\'"]link_2[\'"]\s+re=[\'"]T[\'"]\s+cate=[\'"]en_href[\'"]\s*>(.*?)</a>',r'\1',content)
-			#content=re.sub(r'<a[^>]+?>([^<]*?)</a>','\\1',content)
-			#contentcontent=re.sub(r'<?/?a>','',content)
+			article.content=self.linkTagPattern.sub(r'\1',article.content)
 
 	def addProvisionPosTag(self,article):
 		"""
@@ -54,13 +68,7 @@ class HyperlinkProcess(object):
 		@param article 
 		"""	
 		if article and article.content:
-			#provisionStartPattern=re.compile(r'(article ([\d\.]+)(.+\n?.+)+)(\n{1,})',re.I)
-			#provisionStartPattern=re.compile(r'^(Article ([\d\.]+)(.+\n?.+)+)(\n{2})',re.MULTILINE)
-			#provisionStartPattern=re.compile(r'(\n{2,})(article ([\d\.]+)(.+\n?.+)+)(\n{2,})',re.I)
-			provisionStartPattern=re.compile(r'(Article ([\d\.]+).?(.\n?)+?.?)(<br\s*/>[\r\s]*<br\s*/>)',re.I)#match pargraph which begin with Article * and end with 2 linefeed
-			article.content=provisionStartPattern.sub(r'<a name="i\2" re="T"></a>\1<a name="end_i\2" re="T"></a>\4',article.content)
-			#content=provisionStartPattern.sub(r'<a name="i\2" re="T"></a>\1<a name="end_i\2" re="T"></a>\4',content)	
-			#content=provisionStartPattern.sub(r'\1<a name="i\3" re="T"></a>\2<a name="end_i\3" re="T"></a>\5',content)	
+			article.content=self.provisionStartPattern.sub(r'<a name="i\2" re="T"></a>\1<a name="end_i\2" re="T"></a>\4',article.content)
 
 	def removeProvisionPosTag(self,article):
 		"""
@@ -69,8 +77,7 @@ class HyperlinkProcess(object):
 		return 
 		"""
 		if article and article.content:
-			article.content=re.sub(r'<a name="(end_)?i[\d\.]+" re="T"></a>','',article.content)
-
+			article.content=self.provisionPosTagPattern.sub('',article.content)
 
 	def getArticle(self,queueItem):
 		"""
@@ -154,9 +161,6 @@ class HyperlinkProcess(object):
 		@param endPos 关键词结尾位置
 		"""
 		if content:
-			#startMatch=re.search(r'<a.+?>\s*$',content[:startPos])#在关键字出现位置前找锚标记a开始标签
-			#startMatch=re.search(r'<a[^>]+?>\s*$',content[:startPos])#在关键字出现位置前找锚标记a开始标签
-			#endMatch=re.search(r'^</a\s*>',content[endPos:])#在关键字出现位置后找锚标记结束符
 			startMatch=re.search(r'<a[^>]+?>[^<]*$',content[:startPos])#在关键字出现位置前找锚标记a开始标签
 			endMatch=re.search(r'[^<]*</a\s*>',content[endPos:])#在关键字出现位置后找锚标记结束符
 			if startMatch and endMatch:
@@ -197,10 +201,6 @@ class HyperlinkProcess(object):
 		Delete corresponding hyperlink record by article id
 		@param id article id
 		"""
-		#self.crossRefLinkDao.deleteBySrcId(id,contentType)
-		#self.crossRefLinkDao.deleteByDesId(id,contentType)
-		#self.crossRefLinkDao.deleteByArticleIdContentType(id,contentType)
-		#self.crossRefLinkDao.deleteByDesIdContentType(id,contentType)
 		if id and contentType:
 			self.crossRefLinkDao.deleteByArticleIdContentType(id,contentType)
 
@@ -217,17 +217,6 @@ class HyperlinkProcess(object):
 		@param queueItem 
 		"""
 		if queueItem:
-			"""
-			if queueItem.actionType in [Article.ACTION_TYPE_DELETE,Article.ACTION_TYPE_UPDATE]:
-				self.deleteCrossRefLinkByArticleId(queueItem.targetId,queueItem.contentType)#删除cross_ref_link表中的记录
-			for item in self.crossRefLinkDao.getBySrcArticleIdContentType(queueItem.targetId,queueItem.contentType):#找出被当前文章引用的文章	
-				self.queueDao.rollbackToStatus(item[0],item[1])#将status为STATUS_FINISHED改为STATUS_WAIT_UPLOAD
-			for item in self.crossRefLinkDao.getByDesArticleIdContentType(queueItem.targetId,queueItem.contentType):#找出引用当前文章的文章
-				self.queueDao.updateStatus(item[0],item[1],Article.STATUS_AWAIT)#将队列中的状态改为待处理
-			if queueItem.contentType ==Article.CONTENT_TYPE_LAW and queueItem.actionType==Article.ACTION_TYPE_NEW:
-				self.queueDao.updateActionType(queueItem.targetId,queueItem.contentType,Article.ACTION_TYPE_UPDATE)
-				self.queueDao.addAllToQueue()
-			"""	
 			self.queueDao.updateStatus(queueItem.targetId,queueItem.contentType,QueueItem.STATUS_PROCESSING)
 	
 	

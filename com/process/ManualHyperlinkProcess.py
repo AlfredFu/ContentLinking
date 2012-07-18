@@ -6,7 +6,7 @@ class ManualHyperlinkProcess(HyperlinkProcess):
 	"""
 	Process manual English hyperlink
 	Manual link format:<a href="" class="link_2_manual">
-	Manual English hyperlink format:<a href="" class="link_2" re="T" cate="manual_en_href">
+	Manual English hyperlink format:<a href="" class="link_2" re="T" cate="manual_en_href" target="_blank">
 	Sample:
 	<a href="/law/content.php?content_type=T&origin_id=225627&provider_id=1&isEnglish=Y#i106" class="link_2_manual" >article 106</a>
 	Step 1:convert manual link format to manual English hyperlink format
@@ -14,22 +14,22 @@ class ManualHyperlinkProcess(HyperlinkProcess):
 	"""
 	def __init__(self):
 		super(ManualHyperlinkProcess,self).__init__()	
-		self.manualPattern=re.compile(r'<a\s+href="(?P<linkurl>[^"]*)"\s+class="link_2"\s+re="T"\s+cate="manual_en_href"\s*>',re.I)
-		self.originManualPattern=re.compile(r'(<a\s+href="[^"]*"\s+)class="link_2_manual"([^>]*>)',re.I)
+		self.manualLinkPattern=re.compile(r'<a\s+href="(?P<linkurl>[^"]*)"[^>]*?cate="manual_en_href"[^>]*?>',re.I)
+		self.originManualLinkPattern=re.compile(r'(<a[^>]*?)class="link_2_manual"([^>]*>)',re.I)
 
 	def convertHTMLHyperlinkTag(self,content):
 		"""
 		将cms或ChinaOnlineAdmin后台手动添加的hyperlink格式,转成英文hyperlink的标记格式
 		"""
 		if content:
-			content=self.originManualPattern.sub(r'\1class="link_2" re="T" cate="manual_en_href"\2',content)
+			content=self.originManualLinkPattern.sub(r'\1class="link_2" re="T" cate="manual_en_href" target="_blank"\2',content)
 		return content
 
 	def search(self,content,start=0,posTupleList=[]):
 		if content:
 			tmpContent=content[start:]
 			if tmpContent:
-				matches=self.manualPattern.search(tmpContent)
+				matches=self.manualLinkPattern.search(tmpContent)
 				if matches and matches.group('linkurl'):
 					posTuple=(start+matches.start(0),start+matches.end(0),matches.group('linkurl'))
 					start+=matches.end(0)

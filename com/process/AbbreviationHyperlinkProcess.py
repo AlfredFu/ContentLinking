@@ -47,7 +47,7 @@ class AbbreviationHyperlinkProcess(HyperlinkProcess):
 	def getAbbrHyperlinkTag(self,content,start=0,end=None):
 		"""
 		获取简称对应的hyperLink标签
-		例如:<a href='/law/content.php?id=32300' class='link_3'>
+		例如:<a href="/law/content.php?id=32300" class="link_2" re="T" cate="en_href" target="_blank" >
 		"""
 		if end:
 			matches=self.abbrHyperlinkPattern.search(content,start,end)
@@ -83,14 +83,6 @@ class AbbreviationHyperlinkProcess(HyperlinkProcess):
 			article.content=self.patternContent(article.content,posTuple)	
 		return article
 
-	"""
-	def process(self,article):
-		posTupleList=self.search(content)
-		for abbrPosTuple in posTupleList:
-			article.content=self.patternContent(self,content,abbrPosTuple)	
-		#self.updateArticle(article)
-		return article
-	"""	
+
 if __name__=="__main__":
-	#testFindAbbrTagPatternStr()		
 	testPatternContent()

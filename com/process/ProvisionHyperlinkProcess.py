@@ -9,9 +9,6 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 	"""
 	def __init__(self):
 		super(ProvisionHyperlinkProcess,self).__init__()
-		#self.provisionPatternStr=r"(?P<astr>article\s+(?P<articleNum>\d+\.?\d+))\s+of\s+the\s+(<a href=\"(?P<href>[^\"^>]*?)\" class=\"link_2\" re=\"T\" cate=\"en_href\"\s*>).+?</a>"
-		#self.provisionPatternStr=r'(?P<astr>article\s+(?P<articleNum>[\d+\.]+?))\s+of\s+the [\s"]*?(<a href="(?P<href>[^\"^>]*?)" class="link_2" re="T" cate="en_href"\s*>)(?P<keyword>.+?)</a>'
-		#self.provisionPattern=re.compile(self.provisionPatternStr,re.I)
 		self.mulProviPatn=re.compile(r'(?P<p1>articles?\s+(?P<p11>[\d\.]+))\s*(?P<p2>(,\s*[\d\.]+\s*)*)(\s+(and|or)\s+(?P<p3>[\d\.]+))?\s+of\s+(the)?[\s"]*?(<a href="(?P<href>[^\"^>]*?)" class="link_2" re="T" cate="en_href"\s*>)(?P<keyword>.+?)</a>',re.I)
 		#content type 
         	self.contentTypeMap={'T':'law',\
@@ -53,6 +50,11 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 					'PEA':'Q & A'}
         	self.reArticleStart='<br/><font color="red">(Relevant articles:</font><font color="blue">'
         	self.reArticleEnd='</font><font color="red">)</font>'
+		self.provisionStartTagFormat='<a name="i%s" re="T"></a>'
+		self.provisionEndTagFormat='<a name="end_i%s" re="T"></a>'
+
+		self.linkageTagFormat=' <a href="#" onclick="linkage(this,\'%s\',%s,2);return false;" style="text-decoration:underline;color:#00f;">%s</a>'
+		self.linkageTagPattern=re.compile(r' <a href="#" onclick="linkage\(this,\'[\w\+]+?\',\d+,2\);return false;"[^>]*?>[^<]*?</a>',re.I)	
 
 	def checkProvisionExist(self,provisionNum,originId,providerId,isEnglish='Y',contentType='T'):
 		"""
@@ -64,7 +66,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		"""
 		article=self.getArticleByOrigin(originId,providerId,isEnglish,contentType)
 		if article and provisionNum:
-			if article.content.count('<a name="i%s" re="T"></a>' % provisionNum)==1:
+			if article.content.count(self.provisionStartTagFormat % provisionNum)==1:
 				return True
 		return False 
                      
@@ -80,10 +82,11 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 					relativeArticleLinkTagMap[provisionNum]=''
 				contentType=row[1]
 				if contentType:
-					relativeArticleLinkTagMap[provisionNum]+=' <a href="#" onclick="linkage(this,\'%s\',%s,2);return false;" style="text-decoration:underline;color:#00f;">%s</a>' % (self.contentTypeMap[contentType],provisionNum,(self.contentTypeNameMap[contentType]+" %s") % row[2]) 
+					relativeArticleLinkTagMap[provisionNum]+=self.linkageTagFormat % (self.contentTypeMap[contentType],provisionNum,(self.contentTypeNameMap[contentType]+" %s") % row[2]) 
 				
 			for key in relativeArticleLinkTagMap:
-				provisionEndPos=article.content.find('<a name="end_i%s" re="T"></a>' % key)#TODO think about multiple same provision end tag in one article 
+				#TODO think about multiple same provision end tag in one article 
+				provisionEndPos=article.content.find(self.provisionEndTagFormat % key)
 				if provisionEndPos!=-1:
 					article.content=article.content[:provisionEndPos]+self.reArticleStart+relativeArticleLinkTagMap[key]+self.reArticleEnd+article.content[provisionEndPos:]
 		self.updateArticle(article)
@@ -92,9 +95,10 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		"""
 		Remove relative article link for provision
 		"""
-		content=content.replace(self.reArticleStart,'')	
-		content=content.replace(self.reArticleEnd,'')	
-		content=re.sub(r' <a href="#" onclick="linkage\(this,\'[\w\+]+?\',\d+,2\);return false;"[^>]*?>[^<]*?</a>','',content)
+		if content:
+			content=content.replace(self.reArticleStart,'')	
+			content=content.replace(self.reArticleEnd,'')	
+			content=self.linkageTagPattern.sub('',content)
 		return content
  
 	def getOriginByHref(self,href):
@@ -146,7 +150,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 				else:
 					for provisionNumTuple in provisionNumList:
 						if self.checkProvisionExist(provisionNumTuple[2],originId,providerId,isEnglish,contentType):# check provision exist in target article
-							hreflinkTag='<a href="%s" class="link_2" re="T" cate="en_href" >' % (href+"#i"+provisionNumTuple[2]) 
+							hreflinkTag=self.startLinkTagFormat % (href+"#i"+provisionNumTuple[2]) 
 							keyword=self.keywordDao.findByContent(matches.group('keyword'))#get keyword id by keyword str
 							keywordId=''
 							if keyword:
@@ -164,7 +168,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 			hreflinkTag=posTuple[3]
 			article.content=article.content[:startPos]+hreflinkTag+article.content[startPos:endPos]+"</a>"+article.content[endPos:]
 			# add cross ref link
-			matches=re.search(r'<a href="(?P<hreflink>[^"^#]*?)#i(?P<proNum>[\d\.]*)" class="link_2" re="T" cate="en_href" >',hreflinkTag)
+			matches=self.startLinkTagPattern.search(hreflinkTag)
 			if matches: 
 				hreflink=matches.group('hreflink')#target linked url
 				provisionNum=matches.group('proNum')#provision number in article
@@ -175,7 +179,6 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 					isEnglish=hrefArgsMap['isEnglish']
 					contentType=hrefArgsMap['content_type']
 					targetArticle=self.getArticleByOrigin(originId,providerId,isEnglish,contentType)
-					#print "provisionNum:",provisionNum
 					self.addCrossRefLink(article,targetArticle,posTuple[2],provisionNum)
 				except Exception,e:
 					self.log.error(e)
@@ -188,7 +191,6 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		"""	
 		posTupleList=self.search(article.content)
 		article=self.pattern(article,posTupleList)	
-		#print posTupleList
 		del posTupleList[:]#清空list,否则会出现记录位置被重复使用的错误
 		return article
 

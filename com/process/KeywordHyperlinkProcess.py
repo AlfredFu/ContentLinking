@@ -54,8 +54,8 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 				continue
 			targetArticle=self.selectTargetArticle(article,lawCandidate)
 			if targetArticle and  not article==targetArticle:#if current article and target article are not the same article
-				targetArticleUrl="/law/content.php?content_type=%s&origin_id=%s&provider_id=%s&isEnglish=%s" % (targetArticle.contentType,targetArticle.originId,targetArticle.providerId,targetArticle.isEnglish)
-				rep='<a href="%s" class="link_2" re="T" cate="en_href" >%s</a>' % (targetArticleUrl,article.content[posTuple[0]:posTuple[1]])
+				targetArticleUrl=self.linkUrlFormat % (targetArticle.contentType,targetArticle.originId,targetArticle.providerId,targetArticle.isEnglish)
+				rep=self.linkTagFormat % (targetArticleUrl,article.content[posTuple[0]:posTuple[1]])
 				article.content=article.content[:posTuple[0]]+rep+article.content[posTuple[1]:]
 				self.addCrossRefLink(article,targetArticle,posTuple[2])#添加hyperlink记录
 		return article 
