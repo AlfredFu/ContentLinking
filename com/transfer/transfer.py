@@ -1,3 +1,4 @@
+#/usr/bin/env python
 #coding=utf-8
 from com.dao.LawDAO import *
 from com.dao.ArticleDAO import *
