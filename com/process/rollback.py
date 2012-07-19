@@ -1,5 +1,5 @@
 #coding=utf-8
-from com.dao.backupdao import *
+import com.dao.backupdao
 from com.transfer.transfer import *
 
 backupContentDao=backupdao.ContentDAO()
