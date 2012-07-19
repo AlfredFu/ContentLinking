@@ -2,9 +2,9 @@
 import com.dao.backupdao
 from com.transfer.transfer import *
 
-backupContentDao=backupdao.ContentDAO()
-backupVersionDao=backupdao.VersionDAO()
-backupCrossRefLinkDao=backupdao.CrossRefLinkDAO()
+backupContentDao=ContentDAO()
+backupVersionDao=VersionDAO()
+backupCrossRefLinkDao=CrossRefLinkDAO()
 
 def cleanBackup():
 	backupContentDao.deleteAll()
