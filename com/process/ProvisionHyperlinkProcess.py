@@ -9,7 +9,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 	"""
 	def __init__(self):
 		super(ProvisionHyperlinkProcess,self).__init__()
-		self.mulProviPatn=re.compile(r'(?P<p1>articles?\s+(?P<p11>[\d\.]+))\s*(?P<p2>(,\s*[\d\.]+\s*)*)(\s+(and|or)\s+(?P<p3>[\d\.]+))?\s+of\s+(the)?[\s"]*?(<a href="(?P<href>[^\"^>]*?)" class="link_2" re="T" cate="en_href"\s*>)(?P<keyword>.+?)</a>',re.I)
+		self.mulProviPatn=re.compile(r'(?P<p1>articles?\s+(?P<p11>[\d\.]+))\s*(?P<p2>(,\s*[\d\.]+\s*)*)(\s+(and|or)\s+(?P<p3>[\d\.]+))?\s+of\s+(the)?[\s"]*?(<a href="(?P<href>[^\"^>]*?)"[^>]*?cate="en_href"[^>]*?>)(?P<keyword>.+?)</a>',re.I)
 		#content type 
         	self.contentTypeMap={'T':'law',\
 					'C':'case',\
