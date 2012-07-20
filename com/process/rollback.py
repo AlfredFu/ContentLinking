@@ -52,7 +52,7 @@ def rollbackData():
 	cleanBackup()
 	transferData()#将回滚后的数据传到PRD环境
 	#文章在队列中的状态从9回滚到1
-	queueDao.updateStatus(article.id,article.contentType,Article.STATUS_AWAIT)
+	queueDao.updateQueueStatus(Article.STATUS_WAIT_UPLOAD,Article.STATUS_AWAIT)
 	
 
 if __name__=='__main__':
