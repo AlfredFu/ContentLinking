@@ -20,7 +20,12 @@ if __name__=='__main__':
 	ahp=AbbreviationHyperlinkProcess()
 	
 	#backup data
-	backupData()
+	try:
+		backupData()
+	except Exception,e:
+		khp.log.error(e)
+		sendNotification(LexisMsg.MSG_BACKUP_FAILED)	
+		sys.exit()
 
 	#initial phase	 
 	try:
@@ -38,7 +43,6 @@ if __name__=='__main__':
 			article=khp.getArticle(queueItem)
 			backupArticle(article)
 			if article and article.content:
-				khp.log.info("Hyperlink processing article type:%s id:%s" % (queueItem.contentType,queueItem.targetId))
 				article=khp.process(article)
 				article=vhp.process(article)
 				article=ahp.process(article)

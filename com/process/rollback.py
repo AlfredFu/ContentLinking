@@ -41,6 +41,7 @@ def rollbackCrossRefLink():
 	backupCrossRefLinkDao.rollback()
 
 def backupData():
+	cleanBackup()
 	backupVersions()
 	backupCrossRefLinkEn()	
 	
