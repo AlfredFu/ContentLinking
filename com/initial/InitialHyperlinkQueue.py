@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #coding=utf-8
 from com.dao.HyperlinkQueueDAO import *
 from com.dao.CaseDAO import * 
@@ -28,6 +29,20 @@ def initialQueue():
 	articleDao=ArticleDAO.ArticleDAO()
 	exNewsDao=ExNewsDAO()
 
+	def notInQueue(itemTuple):
+		"""
+		Check queueItem in table cross_ref_link_en
+		If queueItem in table cross_ref_link_en return False,otherwise return True
+		"""
+		try:
+			inqueueItem=hyperlinkQueueDao.getByTargetIdContentType(itemTuple[4],itemTuple[0],itemTuple[3])
+			if inqueueItem:
+				return False
+			else:
+				return True
+		except Exception,e:
+			return False
+
 	actionType='N'
 	status=1
 
@@ -53,6 +68,7 @@ def initialQueue():
 	for news in moduleQADao.getAll():
 		queueItemList.append((news.contentType,news.originId,news.providerId,news.isEnglish,news.id,actionType,status))
 
+	queueItemList=filter(notInQueue,queueItemList)
 	hyperlinkQueueDao.addMany(queueItemList)
 
 if __name__=="__main__":

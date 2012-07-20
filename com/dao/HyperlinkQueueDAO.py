@@ -94,7 +94,31 @@ class HyperlinkQueueDAO(DAO):
 				yield queueItem
 		except Exception,e:
 			self.log.error(e)
-			self.log.error("Error occured in getByContentTypeStatus() of HyperlinkQueueDAO.py")
+
+	def getByTargetIdContentType(self,targetId,contentType,isEnglish='Y'):
+		try:
+			if targetId and contentType and isEnglish:
+				sql="SELECT opr_id,content_type,origin_id,provider_id,is_english,target_id,action_type,status,\
+					dc_status_code,dc_error_desc,upd_time,infiledate FROM %s \
+					where  target_id=%s and content_type='%s' and is_english='%s';" \
+					% (HyperlinkQueueDAO.table,targetId,contentType,isEnglish)
+				self.cursor_stg.execute(sql)
+				row=self.cursor_stg.fetchone()
+				if row:
+					queueItem=QueueItem()
+					queueItem.id=row[0]
+					queueItem.contentType=row[1]
+					queueItem.originId=row[2]
+					queueItem.providerId=row[3]
+					queueItem.isEnglish=row[4]
+					queueItem.targetId=row[5]
+					queueItem.actionType=row[6]
+					queueItem.status=row[7]
+					queueItem.updTime=row[10]
+					queueItem.infiledate=row[11]
+					return queueItem
+		except Exception,e:
+			self.log.error(e)
 		
 	def add(self,queueItem):
 		try:
