@@ -50,6 +50,12 @@ class HyperlinkProcess(object):
 		#Following regex object match hidden provision position tag(both begin tag and end tag)
 		self.provisionPosTagPattern=re.compile(r'<a name="(end_)?i[\d\.]+" re="T"></a>')
 
+		self.delManulLinkPattern=re.compile(r'<a[^>]*?class="link_2_del"[^>]*?>([^<]*?)</a\s*>',re.I)
+	
+		self.delTagPattern=re.compile(r'<span\s+class=["\']link_2_del["\']\s+>[^<]*?</span>',re.I)
+		self.delTagPatternStart=re.compile(r'<span\s+class=["\']link_2_del["\']\s+>[^<]*?',re.I)
+		self.delTagPatternEnd=re.compile(r'[^<]*?</span>',re.I)
+
 	def eraseHyperlink(self,article):
 		"""
 		清除hyperlink所加的超链接
@@ -59,6 +65,7 @@ class HyperlinkProcess(object):
 		"""	
 		if article and article.content:
 			article.content=self.linkTagPattern.sub(r'\1',article.content)
+			article.content=self.delManulLinkPattern.sub(r'<span class="link_2_del">\1</span>',article.content)
 
 	def addProvisionPosTag(self,article):
 		"""
@@ -166,6 +173,27 @@ class HyperlinkProcess(object):
 			if startMatch and endMatch:
 				return True
 		return False
+
+	def checkWrappedWithDelTag(self,content,startPos,endPos):
+		"""
+		检查startPos和endPos指定位置的关键词是否是手动删除的
+		要求手动删除的连接是由<span class="link_2_del">***</span>
+		"""
+		if content:
+			startMatch=self.delTagPatternStart.search(content[:startPos])
+			endMatch=self.delTagPatternEnd.search(content[endPos:])
+			if startMatch and endMatch:
+				return True
+		return False	
+
+	def checkTextShouldBeCited(self,content,startPos,endPos):
+		"""
+		判断内容content中startPos到endPos位置的文本是否应该加上超链接
+		return True为加，False不加	
+		"""
+		if self.checkHyperlinkedKeyword(content,startPos,endPos) or self.checkWrappedWithDelTag(content,startPos,endPos):
+			return False
+		return True	
 
 	def selectTargetArticle(self,article,articleCandidate):
 		"""

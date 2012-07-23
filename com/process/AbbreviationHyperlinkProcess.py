@@ -73,7 +73,7 @@ class AbbreviationHyperlinkProcess(HyperlinkProcess):
 			abbrPos=content.rfind(abbrPosTuple[2],start)
 		
 		if abbrPos!=-1:
-			if  not self.checkHyperlinkedKeyword(content,abbrPos,abbrPos+len(abbrPosTuple[2])):#if text is not warpped with hyperlink html tag
+			if  self.checkTextShouldBeCited(content,abbrPos,abbrPos+len(abbrPosTuple[2])):#if text should be cited
 				content=content[:abbrPos]+abbrPosTuple[3]+abbrPosTuple[2]+"</a>"+content[abbrPos+len(abbrPosTuple[2]):]
 			content=self.patternContent(content,abbrPosTuple,start,abbrPos)
 		return content
