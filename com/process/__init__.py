@@ -52,8 +52,8 @@ class HyperlinkProcess(object):
 
 		self.delManulLinkPattern=re.compile(r'<a[^>]*?class="link_2_del"[^>]*?>([^<]*?)</a\s*>',re.I)
 	
-		self.delTagPattern=re.compile(r'<span\s+class=["\']link_2_del["\']\s+>[^<]*?</span>',re.I)
-		self.delTagPatternStart=re.compile(r'<span\s+class=["\']link_2_del["\']\s+>[^<]*?',re.I)
+		self.delTagPattern=re.compile(r'<span\s+class=["\']link_2_del["\']\s*>[^<]*?</span>',re.I)
+		self.delTagPatternStart=re.compile(r'<span\s+class=["\']link_2_del["\']\s*>[^<]*$',re.I)
 		self.delTagPatternEnd=re.compile(r'[^<]*?</span>',re.I)
 
 	def eraseHyperlink(self,article):
@@ -64,8 +64,8 @@ class HyperlinkProcess(object):
 		return 清除hyperlink链接后的文章
 		"""	
 		if article and article.content:
-			article.content=self.linkTagPattern.sub(r'\1',article.content)
 			article.content=self.delManulLinkPattern.sub(r'<span class="link_2_del">\1</span>',article.content)
+			article.content=self.linkTagPattern.sub(r'\1',article.content)
 
 	def addProvisionPosTag(self,article):
 		"""
