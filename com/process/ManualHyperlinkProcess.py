@@ -15,15 +15,6 @@ class ManualHyperlinkProcess(HyperlinkProcess):
 	def __init__(self):
 		super(ManualHyperlinkProcess,self).__init__()	
 		self.manualLinkPattern=re.compile(r'<a\s+href="(?P<linkurl>[^"]*)"[^>]*?cate="manual_en_href"[^>]*?>',re.I)
-		self.originManualLinkPattern=re.compile(r'(<a[^>]*?)class="link_2_manual"([^>]*>)',re.I)
-
-	def convertHTMLHyperlinkTag(self,content):
-		"""
-		将cms或ChinaOnlineAdmin后台手动添加的hyperlink格式,转成英文hyperlink的标记格式
-		"""
-		if content:
-			content=self.originManualLinkPattern.sub(r'\1class="link_2" re="T" cate="manual_en_href" target="_blank"\2',content)
-		return content
 
 	def search(self,content,start=0,posTupleList=[]):
 		if content:
@@ -51,15 +42,10 @@ class ManualHyperlinkProcess(HyperlinkProcess):
 						if not provisionNum:
 							provisionNum=0
 						keywordId=''
-						targetArticle=self.getByOrigin(originId,providerId,isEnglish,contentType)
+						targetArticle=self.getArticleByOrigin(originId,providerId,isEnglish,contentType)
 						if targetArticle:
 							self.addCrossRefLink(article,targetArticle,keywordId,provisionNum)	
 					except Exception,e:
 						self.log.error(e)
 		return article
 
-	def process(self,article):
-		if article:
-			article.content=self.convertHTMLHyperlinkTag(article.content)
-			super(ManualHyperlinkProcess,self).process(article)
-		return article

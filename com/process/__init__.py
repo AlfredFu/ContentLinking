@@ -49,6 +49,8 @@ class HyperlinkProcess(object):
 
 		#Following regex object match hidden provision position tag(both begin tag and end tag)
 		self.provisionPosTagPattern=re.compile(r'<a name="(end_)?i[\d\.]+" re="T"></a>')
+		
+		self.originManualLinkPattern=re.compile(r'(<a\s+href="[^"]*")[^>]*?class="link_2_manual"[^>]*(>)',re.I)	
 
 		self.delManulLinkPattern=re.compile(r'<a[^>]*?class="link_2_del"[^>]*?>([^<]*?)</a\s*>',re.I)
 	
@@ -65,6 +67,7 @@ class HyperlinkProcess(object):
 		"""	
 		if article and article.content:
 			article.content=self.delManulLinkPattern.sub(r'<span cate="link_2_del">\1</span>',article.content)
+			article.content=self.originManualLinkPattern.sub(r'\1class="link_2" re="T" cate="manual_en_href" target="_blank"\2',article.content)
 			article.content=self.linkTagPattern.sub(r'\1',article.content)
 
 	def addProvisionPosTag(self,article):
