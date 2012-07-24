@@ -52,8 +52,8 @@ class HyperlinkProcess(object):
 
 		self.delManulLinkPattern=re.compile(r'<a[^>]*?class="link_2_del"[^>]*?>([^<]*?)</a\s*>',re.I)
 	
-		self.delTagPattern=re.compile(r'<span\s+class=["\']link_2_del["\']\s*>[^<]*?</span>',re.I)
-		self.delTagPatternStart=re.compile(r'<span\s+class=["\']link_2_del["\']\s*>[^<]*$',re.I)
+		self.delTagPattern=re.compile(r'<span\s+cate=["\']link_2_del["\']\s*>[^<]*?</span>',re.I)
+		self.delTagPatternStart=re.compile(r'<span\s+cate=["\']link_2_del["\']\s*>[^<]*$',re.I)
 		self.delTagPatternEnd=re.compile(r'[^<]*?</span>',re.I)
 
 	def eraseHyperlink(self,article):
@@ -64,7 +64,7 @@ class HyperlinkProcess(object):
 		return 清除hyperlink链接后的文章
 		"""	
 		if article and article.content:
-			article.content=self.delManulLinkPattern.sub(r'<span class="link_2_del">\1</span>',article.content)
+			article.content=self.delManulLinkPattern.sub(r'<span cate="link_2_del">\1</span>',article.content)
 			article.content=self.linkTagPattern.sub(r'\1',article.content)
 
 	def addProvisionPosTag(self,article):
@@ -177,7 +177,7 @@ class HyperlinkProcess(object):
 	def checkWrappedWithDelTag(self,content,startPos,endPos):
 		"""
 		检查startPos和endPos指定位置的关键词是否是手动删除的
-		要求手动删除的连接是由<span class="link_2_del">***</span>
+		要求手动删除的连接是由<span cate="link_2_del">***</span>
 		"""
 		if content:
 			startMatch=self.delTagPatternStart.search(content[:startPos])
