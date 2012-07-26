@@ -30,10 +30,15 @@ def backupCrossRefLinkEn():
 def rollbackArticle():
 	for article in backupContentDao.getAll():
 		if article.id and article.contentType:
-			updateArticle(article)	
-		#文章在队列中的状态回滚
-		queueDao.updateStatus(article.id,article.contentType,Article.STATUS_WAIT_UPLOAD)
+			updateArticle(article,isTransfer=False)	
+			#文章在队列中的状态回滚
+			queueDao.updateStatus(article.id,article.contentType,Article.STATUS_WAIT_UPLOAD)
 
+def rollbackQueueStatus():
+	for article in backupContentDao.getAll():
+		if article.id and article.contentType:
+			queueDao.updateStatus(article.id,article.contentType,Article.STATUS_AWAIT)
+	
 def rollbackVersions():
 	backupVersionDao.rollback()
 
@@ -49,10 +54,9 @@ def rollbackData():
 	rollbackVersions()
 	rollbackCrossRefLink()
 	rollbackArticle()
-	cleanBackup()
 	transferData()#将回滚后的数据传到PRD环境
-	#文章在队列中的状态从9回滚到1
-	queueDao.updateQueueStatus(Article.STATUS_WAIT_UPLOAD,Article.STATUS_AWAIT)
+	rollbackQueueStatus()#文章在队列中的状态回滚到1
+	#cleanBackup()
 	
 
 if __name__=='__main__':

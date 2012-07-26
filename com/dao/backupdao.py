@@ -104,9 +104,9 @@ class ContentDAO(DAO):
 				article.content=row[0]
 				article.id=row[1]
 				article.contentType=row[2]
-				article.originId=row[3]
-				article.providerId=row[4]
-				article.isEnglish=row[5]
+				article.originId=row[4]
+				article.providerId=row[5]
+				article.isEnglish=row[6]
 				yield article 
 		except Exception,e:
 			self.log.error(e)
