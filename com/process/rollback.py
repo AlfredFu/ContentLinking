@@ -13,7 +13,7 @@ def cleanBackup():
 
 def backupArticle(article):	
 	if article.id and article.contentType and article.content:
-		backupContentDao.add(article.content,article.id,article.contentType)
+		backupContentDao.add(article.content,article.id,article.contentType,article.originId,article.providerId,article.isEnglish)
 
 def backupVersions():
 	"""
@@ -27,7 +27,7 @@ def backupCrossRefLinkEn():
 	"""
 	backupCrossRefLinkDao.backup()
 
-def rollbackArticle(article):
+def rollbackArticle():
 	for article in backupContentDao.getAll():
 		if article.id and article.contentType:
 			updateArticle(article)	
@@ -48,7 +48,7 @@ def backupData():
 def rollbackData():
 	rollbackVersions()
 	rollbackCrossRefLink()
-	rollbackArticle(article)
+	rollbackArticle()
 	cleanBackup()
 	transferData()#将回滚后的数据传到PRD环境
 	#文章在队列中的状态从9回滚到1

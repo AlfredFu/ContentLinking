@@ -96,7 +96,7 @@ class ContentDAO(DAO):
 		self.tableName='backup_content'
 
 	def getAll(self):
-		sql="select content,target_id,content_type,backup_time from %s" % self.tableName
+		sql="select content,target_id,content_type,backup_time,origin_id,provider_id,isEnglish from %s" % self.tableName
 		try:
 			self.cursor_stg.execute(sql)
 			for row in self.cursor_stg.fetchall():
@@ -104,14 +104,17 @@ class ContentDAO(DAO):
 				article.content=row[0]
 				article.id=row[1]
 				article.contentType=row[2]
+				article.originId=row[3]
+				article.providerId=row[4]
+				article.isEnglish=row[5]
 				yield article 
 		except Exception,e:
 			self.log.error(e)
 
-	def add(self,content,targetId,contentType):
+	def add(self,content,targetId,contentType,originId,providerId,isEnglish):
 		if content and targetId and contentType:
 			content=self.escape_string(content)
-			sql="Replace into %s(target_id,content_type,content,backup_time)values('%s','%s','%s',NOW());" %(self.tableName,targetId,contentType,content)
+			sql="Replace into %s(target_id,content_type,origin_id,provider_id,isEnglish,content,backup_time)values('%s','%s','%s','%s','%s','%s',NOW());" %(self.tableName,targetId,contentType,originId,providerId,isEnglish,content)
 			try:
 				self.cursor_stg.execute(sql)
 				self.conn_stg.commit()
