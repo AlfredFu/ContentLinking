@@ -13,6 +13,7 @@ from com.entity.HyperlinkQueue import *
 from com.entity.CrossRefLink import *
 from com.entity.QueueItem import *
 from com.process.filter import *
+from com.process.rollback import backupArticle
 import re
 
 class HyperlinkProcess(object):
@@ -324,6 +325,7 @@ class HyperlinkProcess(object):
 			if not article:
 				self.log.warning("no article with id:%s,type:%s found" %(queueItem.targetId,queueItem.contentType))
 				continue
+			backupArticle(article)#backup article before it is processed
 			if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:#
 				if article.contentType==Article.CONTENT_TYPE_LAW:
 					self.keywordDao.deleteByTarget(article.id,article.contentType)

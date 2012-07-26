@@ -42,7 +42,6 @@ if __name__=='__main__':
 		for queueItem in khp.queueDao.getAll():
 			khp.begin(queueItem)
 			article=khp.getArticle(queueItem)
-			backupArticle(article)
 			if article and article.content:
 				article=khp.process(article)
 				article=vhp.process(article)
