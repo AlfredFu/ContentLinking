@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+sys.path.append("/home/fred/workspace/EnglishHyperlink")
 from com.process.KeywordHyperlinkProcess import *
 from com.process.VersionHyperlinkProcess import *
 from com.process.ProvisionHyperlinkProcess import *
@@ -68,7 +69,7 @@ if __name__=='__main__':
 		
 	#transfer phase 
 	try:
-		#transferData()
+		transferData()
 		#sendNotification(LexisMsg.MSG_TRANSFER_FINISHED)	
 		pass
 	except Exception,e:
