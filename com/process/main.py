@@ -9,6 +9,7 @@ from com.process.filter import *
 from com.util.lexismail import *
 from com.util.lexismsg import *
 from com.transfer.transfer import *
+from com.process.rollback import *
 
 
 if __name__=='__main__':
@@ -17,6 +18,14 @@ if __name__=='__main__':
 	phprocess=ProvisionHyperlinkProcess.ProvisionHyperlinkProcess()
 	mhp=ManualHyperlinkProcess.ManualHyperlinkProcess()
 	ahp=AbbreviationHyperlinkProcess()
+	
+	#backup data
+	try:
+		backupData()
+	except Exception,e:
+		khp.log.error(e)
+		sendNotification(LexisMsg.MSG_BACKUP_FAILED)	
+		sys.exit()
 
 	#initial phase	 
 	try:
@@ -32,8 +41,8 @@ if __name__=='__main__':
 		for queueItem in khp.queueDao.getAll():
 			khp.begin(queueItem)
 			article=khp.getArticle(queueItem)
+			backupArticle(article)
 			if article and article.content:
-				khp.log.info("Hyperlink processing article type:%s id:%s" % (queueItem.contentType,queueItem.targetId))
 				article=khp.process(article)
 				article=vhp.process(article)
 				article=ahp.process(article)

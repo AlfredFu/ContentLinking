@@ -186,6 +186,15 @@ class HyperlinkQueueDAO(DAO):
 				self.conn_stg.commit()
 			except Exception,e:
 				self.log.error(e)
+
+	def updateQueueStatus(self,fromStatus,toStatus):
+		if fromStatus and toStatus:
+			sql="update opr_load_status_en set status=%s where status=%s" %(toStatus,fromStatus) 		
+			try:
+				self.cursor_stg.execute(sql)
+				self.conn_stg.commit()
+			except Exception,e:
+				self.log.error(e)
 			
 if __name__ =="__main__":
 	dao=HyperlinkQueueDAO()
