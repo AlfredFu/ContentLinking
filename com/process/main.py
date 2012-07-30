@@ -43,6 +43,7 @@ if __name__=='__main__':
 			khp.begin(queueItem)
 			article=khp.getArticle(queueItem)
 			if article and article.content:
+				khp.preProcess(article)
 				article=khp.process(article)
 				article=vhp.process(article)
 				article=ahp.process(article)
