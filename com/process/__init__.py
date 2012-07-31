@@ -330,6 +330,8 @@ class HyperlinkProcess(object):
 				if article.contentType==Article.CONTENT_TYPE_LAW:
 					self.keywordDao.deleteByTarget(article.id,article.contentType)
 				self.articleDao.deleteByTarget(article.id,article.contentType)
+				if article.actionType==Article.ACTION_TYPE_UPDATE:
+					self.removeProvisionPosTag(article)
 				for item in self.crossRefLinkDao.getRelatedArticleId(queueItem.targetId,queueItem.contentType):#更新相关文章的状态	
 					#self.queueDao.updateStatus(item[0],item[1],Article.STATUS_AWAIT)
 					self.queueDao.updateStatusActionType(item[0],item[1],Article.STATUS_AWAIT,Article.ACTION_TYPE_UPDATE)
@@ -361,9 +363,7 @@ class HyperlinkProcess(object):
 	def preProcess(self,article):
 		if article.actionType==Article.ACTION_TYPE_UPDATE:
 			self.eraseHyperlink(article)
-			self.removeProvisionPosTag(article)
 	
-		
 	def process(self,article):
 		if article:
 			posTupleList=self.search(article.content)
