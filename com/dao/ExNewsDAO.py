@@ -89,7 +89,7 @@ class ExNewsDAO(DAO):
 			if article.subType == 1:
 				article.contentType=Article.CONTENT_TYPE_NEWLAW#每日快讯(新法快报)
 				yield article
-			elif article.subType==3 and article.ipnewsCategory==1:
+			elif article.subType==3:
 				article.contentType=Article.CONTENT_TYPE_HOTNEWS#评论文章
 				yield article
 			elif article.subType==4:
