@@ -297,7 +297,7 @@ class HyperlinkProcess(object):
 		pass
 
 	def addKeyword(self,title):
-		if title:
+		if title and title.strip().find(' ')!=-1:
 			title=self.multiVerPat.sub('',title)
 			title=title.strip()#strip whitespace
 			title=title.lower()#convert letters to lower case
@@ -317,7 +317,9 @@ class HyperlinkProcess(object):
 						self.keywordDao.add(abbrKeyword)
 			else:
 				keywordId=keyword.id
-			return keywordId 
+		else:
+			keywordId=''
+		return keywordId 
 	
 	def initial(self):
 		"""
