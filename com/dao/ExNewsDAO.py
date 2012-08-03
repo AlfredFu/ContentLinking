@@ -1,6 +1,6 @@
 #coding=utf-8
-from com.entity.Article import *
-from com.dao import *
+from com.entity.Article import Article 
+from com.dao.DAO import DAO 
 
 class ExNewsDAO(DAO):
 	"""
@@ -99,7 +99,13 @@ class ExNewsDAO(DAO):
 				article.contentType=Article.CONTENT_TYPE_ELEARNING#在线培训
 				yield article
 			elif article.subType==7:
-				overviewType={'2':Article.CONTENT_TYPE_IPOVERVIEW,'3':Article.CONTENT_TYPE_EPOVERVIEW,'4':Article.CONTENT_TYPE_CPOVERVIEW,'5':Article.CONTENT_TYPE_TPOVERVIEW,'6':Article.CONTENT_TYPE_FDIOVERVIEW,'7':Article.CONTENT_TYPE_EEOVERVIEW,'8':Article.CONTENT_TYPE_CSOVERVIEW}
+				overviewType={'2':Article.CONTENT_TYPE_IPOVERVIEW,\
+					'3':Article.CONTENT_TYPE_EPOVERVIEW,\
+					'4':Article.CONTENT_TYPE_CPOVERVIEW,\
+					'5':Article.CONTENT_TYPE_TPOVERVIEW,\
+					'6':Article.CONTENT_TYPE_FDIOVERVIEW,\
+					'7':Article.CONTENT_TYPE_EEOVERVIEW,\
+					'8':Article.CONTENT_TYPE_CSOVERVIEW}
 				for topicId in article.allType.split(','):
 					article.contentType=overviewType[topicId]
 					yield article

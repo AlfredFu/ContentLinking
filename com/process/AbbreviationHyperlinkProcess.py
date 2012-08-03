@@ -1,6 +1,6 @@
 #coding=utf-8
-from com.process import *
-from com.entity.Article import *
+from com.process.HyperlinkProcess import HyperlinkProcess
+from com.entity.Article import Article 
 import re
 
 class AbbreviationHyperlinkProcess(HyperlinkProcess):
@@ -85,4 +85,4 @@ class AbbreviationHyperlinkProcess(HyperlinkProcess):
 
 
 if __name__=="__main__":
-	testPatternContent()
+	aa=AbbreviationHyperlinkProcess()

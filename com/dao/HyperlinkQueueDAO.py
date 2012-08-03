@@ -1,7 +1,7 @@
 #coding=utf-8
-from com.entity.QueueItem import *
-from com.entity.Article import *
-from com.dao import *
+from com.entity.QueueItem import QueueItem 
+from com.entity.Article import Article 
+from com.dao.DAO import DAO 
 
 class HyperlinkQueueDAO(DAO):
 	table='opr_load_status_en'
@@ -198,5 +198,3 @@ class HyperlinkQueueDAO(DAO):
 			
 if __name__ =="__main__":
 	dao=HyperlinkQueueDAO()
-	for queueItem in dao.getAll():
-		print queueItem

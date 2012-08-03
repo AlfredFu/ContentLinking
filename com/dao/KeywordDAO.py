@@ -1,6 +1,6 @@
 #coding=utf-8
-from com.entity.Keyword import *
-from com.dao import *
+from com.entity.Keyword import Keyword 
+from com.dao.DAO import DAO 
 
 class KeywordDAO(DAO):
 	table='keyword_en'
@@ -13,8 +13,6 @@ class KeywordDAO(DAO):
 	def add(self,keyword):
 		if keyword:
 			try:
-				#keyword.content=keyword.content.replace("'","\\'")
-				#keyword.content=keyword.content.replace('"','\\"')
 				keyword.content=self.escape_string(keyword.content)
 				if not keyword.fullTitleKeywordId:
 					self.cursor_hyperlink.execute("replace into keyword_en(keyword,status,type) values('%s','NOR','%s')" % (keyword.content,keyword.type))
@@ -94,5 +92,3 @@ class KeywordDAO(DAO):
 		
 if __name__=='__main__':
     keywordDAO=KeywordDAO()
-    for keyword in keywordDAO.getAll():
-        print keyword.content

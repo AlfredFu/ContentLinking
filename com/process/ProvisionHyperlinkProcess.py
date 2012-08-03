@@ -1,5 +1,5 @@
 # coding=utf-8
-from com.process import *
+from com.process.HyperlinkProcess import HyperlinkProcess
 from com.util.urlutil import *
 import re
 

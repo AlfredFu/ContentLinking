@@ -1,6 +1,7 @@
 # coding=utf-8
-from com.process import *
+from com.process.HyperlinkProcess import HyperlinkProcess
 from com.util.urlutil import *
+import re
 
 class ManualHyperlinkProcess(HyperlinkProcess):
 	"""
@@ -49,3 +50,5 @@ class ManualHyperlinkProcess(HyperlinkProcess):
 						self.log.error(e)
 		return article
 
+if __name__=='__main__':
+	p=ManualHyperlinkProcess()	

@@ -1,13 +1,12 @@
 #coding=utf-8
-from com.entity.Article import *
-from com.dao import *
+from com.entity.Article import Article 
+from com.dao.DAO import DAO 
 
 class ExNewsSummaryDAO(DAO):
 	def __init__(self):
 		super(ExNewsSummaryDAO,self).__init__()
 
 	def getAll(self):
-		#sql="select ex_new_id,origin_id,provider_id,isEnglish,content from ex_news_summary where isEnglish='Y';"
 		sql="select ex_news_summary.ex_new_id,ex_news_summary.origin_id,ex_news_summary.provider_id,\
 			ex_news_summary.isEnglish,ex_news_summary.content,ex_news.promulgation_date\
 			from ex_news_summary left join ex_news on ex_news_summary.ex_new_id=ex_news.id \
@@ -23,7 +22,6 @@ class ExNewsSummaryDAO(DAO):
 	
 	def getById(self,id):
 		if id:
-			#sql="select ex_new_id,origin_id,provider_id,isEnglish,content from ex_news_summary where ex_new_id=%s;" % id
 			sql="select ex_news_summary.ex_new_id,ex_news_summary.origin_id,ex_news_summary.provider_id,\
 				ex_news_summary.isEnglish,ex_news_summary.content,ex_news.promulgation_date\
 				from ex_news_summary left join ex_news on ex_news_summary.ex_new_id=ex_news.id \
@@ -41,7 +39,6 @@ class ExNewsSummaryDAO(DAO):
 
 	def getByOrigin(self,originId,providerId,isEnglish):
 		if originId and providerId and isEnglish:
-			#sql="select ex_new_id,origin_id,provider_id,isEnglish,content from ex_news_summary where origin_id='%s' and provider_id=%s and isEnglish='%s';"
 			sql="select ex_news_summary.ex_new_id,ex_news_summary.origin_id,ex_news_summary.provider_id,\
 				ex_news_summary.isEnglish,ex_news_summary.content,ex_news.promulgation_date \
 				from ex_news_summary left join ex_news on ex_news_summary.ex_new_id=ex_news.id \

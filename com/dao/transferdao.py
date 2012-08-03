@@ -1,7 +1,7 @@
 #coding=utf-8
-from com.dao import *
-from com.entity.Version import *
-from com.entity.CrossRefLink import *
+from com.dao.DAO import DAO 
+from com.entity.Version import Version 
+from com.entity.CrossRefLink import CrossRefLink 
 
 class TransferDAO(DAO):
 	def __init__(self):

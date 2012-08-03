@@ -1,7 +1,5 @@
 # coding=utf-8
-from com.process import *
-import re
-
+from com.process.HyperlinkProcess import HyperlinkProcess
 
 class KeywordHyperlinkProcess(HyperlinkProcess):
 	def __init__(self):

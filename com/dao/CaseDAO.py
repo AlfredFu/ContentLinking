@@ -1,6 +1,6 @@
 #coding=utf-8
-from com.entity.Case import *
-from com.dao import *
+from com.entity.Case import Case 
+from com.dao.DAO import DAO
 class CaseDAO(DAO):
 	"case create,read,update and delete"
 	

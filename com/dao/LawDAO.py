@@ -1,6 +1,6 @@
 #coding=utf-8
-from com.dao import *
-from com.entity.Law import *
+from com.dao.DAO import DAO
+from com.entity.Law import Law 
 import sys
 
 class LawDAO(DAO):
@@ -118,7 +118,6 @@ class LawDAO(DAO):
 				raise Exception("No law with origin_id:%s,provider_id:%s,isEnglish:%s found!" %(originId,providerId,isEnglish))
 		except Exception,e:
 			self.log.error(e)	
-			self.log.error("getByOrigin in LawDAO.py")
 		return article
 
 if __name__ =="__main__":

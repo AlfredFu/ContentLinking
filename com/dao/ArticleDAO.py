@@ -1,6 +1,6 @@
 # coding=utf-8
 from com.entity.Article import *
-from com.dao import *
+from com.dao.DAO import DAO 
 
 class ArticleDAO(DAO):
 	"""

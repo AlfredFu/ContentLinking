@@ -1,6 +1,6 @@
 #coding=utf-8
-from com.dao import *
-from com.entity.Article import *
+from com.dao.DAO import DAO
+from com.entity.Article import Article 
 
 class LncQADAO(DAO):
 	def __init__(self):
