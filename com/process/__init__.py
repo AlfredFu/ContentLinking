@@ -193,12 +193,30 @@ class HyperlinkProcess(object):
 				return True
 		return False	
 
+	def checkBeginAndEndIsLetter(self,content,startPos,endPos):
+		"""
+		Check the first letters before startPos and the first letters after endPos in the content is English letters(include '_','-') or not
+		return True when the first letter before startPos or the first letter after endPos is English letters
+		otherwise return False	
+		Sample:'Anti-trust Law' and  'Trust Law'
+		"""
+		try:
+			fletter=content[startPos-1:startPos]#The first letter before startPos	
+			lletter=content[endPos:endPos+1]#The first letter after endPos
+			if fletter in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_' or \
+				lletter in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_':
+				return True
+			else:
+				return False
+		except Exception,e:
+			return False
+
 	def checkTextShouldBeCited(self,content,startPos,endPos):
 		"""
 		判断内容content中startPos到endPos位置的文本是否应该加上超链接
 		return True为加，False不加	
 		"""
-		if self.checkHyperlinkedKeyword(content,startPos,endPos) or self.checkWrappedWithDelTag(content,startPos,endPos):
+		if self.checkHyperlinkedKeyword(content,startPos,endPos) or self.checkWrappedWithDelTag(content,startPos,endPos) or self.checkBeginAndEndIsLetter(content,startPos,endPos):
 			return False
 		return True	
 
