@@ -31,7 +31,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 					'PEA':'expert+ex_questions'}
 		#content type name display in user agent
         	self.contentTypeNameMap={'T':'Legislation',\
-					'C':'Case',\
+					'C':'Cases',\
 					'LM':'Legal news',\
 					'FL':'Foreign law',\
 					'PNL':'Newsletters',\
