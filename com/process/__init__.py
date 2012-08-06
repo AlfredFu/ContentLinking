@@ -203,8 +203,8 @@ class HyperlinkProcess(object):
 		try:
 			fletter=content[startPos-1:startPos]#The first letter before startPos	
 			lletter=content[endPos:endPos+1]#The first letter after endPos
-			if fletter in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_' or \
-				lletter in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_':
+			if (fletter and fletter in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_') or \
+				(lletter and lletter in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_'):
 				return True
 			else:
 				return False
