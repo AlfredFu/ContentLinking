@@ -228,7 +228,7 @@ class HyperlinkProcess(object):
 		@param lawCandidate candidate version 
 		return one article in article candidate  
 		"""
-		if len(articleCandidate) ==1:return articleCandidate[0]
+		#if len(articleCandidate) ==1:return articleCandidate[0]
 		latestDate=''
 		latestArticle=None
 		for targetArticle in articleCandidate:
