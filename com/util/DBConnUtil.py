@@ -34,7 +34,7 @@ class DBConnUtil:
         		cursor.execute("set character_set_client = utf8;")	
        			cursor.execute("set character_set_connection = gbk;")	
         		cursor.execute("set character_set_results = utf8;")	
-			cursor.execute("set wait_timeout=3600;")
+			cursor.execute("set wait_timeout=72000;")
             except Exception,e:
                 DBConnUtil.log.error(e) 
         return DBConnUtil.instance[datasource]
