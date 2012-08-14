@@ -343,49 +343,54 @@ class HyperlinkProcess(object):
 		"""
 		Update keyword list and article list accroding to hyperlink queue		
 		"""
+		#Initial article status in hyperlink queue
+		for queueItem in self.queueDao.getAll():
+                        article=self.getArticle(queueItem)
+                        #if new legislation has been add to queue
+                        if article and article.actionType==Article.ACTION_TYPE_NEW and article.contentType==Article.CONTENT_TYPE_LAW:
+                                self.queueDao.addAllToQueue()
+                                break
+                        else if article and article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:#
+                                #update status and action_type of  relevant article
+                                for item in self.crossRefLinkDao.getRelatedArticleId(queueItem.targetId,queueItem.contentType):
+                                        self.queueDao.updateStatusActionType(item[0],item[1],Article.STATUS_AWAIT,Article.ACTION_TYPE_UPDATE)
+		#Initial article content,keyword etc
 		for queueItem in self.queueDao.getAll():
 			article=self.getArticle(queueItem)
-			if not article:
-				self.log.warning("no article with id:%s,type:%s found" %(queueItem.targetId,queueItem.contentType))
-				continue
-			backupArticle(article)#backup article before it is processed
-			if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:#
-				if article.contentType==Article.CONTENT_TYPE_LAW:
-					self.keywordDao.deleteByTarget(article.id,article.contentType)
-				self.articleDao.deleteByTarget(article.id,article.contentType)
-				if article.actionType==Article.ACTION_TYPE_UPDATE:
-					self.removeProvisionPosTag(article)
-				for item in self.crossRefLinkDao.getRelatedArticleId(queueItem.targetId,queueItem.contentType):#更新相关文章的状态	
-					#self.queueDao.updateStatus(item[0],item[1],Article.STATUS_AWAIT)
-					self.queueDao.updateStatusActionType(item[0],item[1],Article.STATUS_AWAIT,Article.ACTION_TYPE_UPDATE)
-				self.deleteCrossRefLinkByArticleId(queueItem.targetId,queueItem.contentType)#删除cross_ref_link表中的记录
-					
-			if article.actionType in [Article.ACTION_TYPE_NEW,Article.ACTION_TYPE_UPDATE]:
-				if article.contentType==Article.CONTENT_TYPE_LAW:			
-					self.addProvisionPosTag(article)	
-					keywordId=self.addKeyword(article.title)
-					if article.actionType==Article.ACTION_TYPE_NEW:
-						#TODO将所有文章加入到队列
-						pass
-					if keywordId:
-						article.keywordId=keywordId
+			if article:
+				backupArticle(article)#backup article before it is processed
+				if article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:#
+					#do not switch the order of #sen1 and #sen2	
+					if article.contentType==Article.CONTENT_TYPE_LAW:
+						self.keywordDao.deleteByTarget(article.id,article.contentType)#sen1
+					self.articleDao.deleteByTarget(article.id,article.contentType)#sen2
+					if article.actionType==Article.ACTION_TYPE_UPDATE:
+						self.removeProvisionPosTag(article)
+						self.eraseHyperlink(article)
+					self.deleteCrossRefLinkByArticleId(queueItem.targetId,queueItem.contentType)#删除cross_ref_link表中的记录
+						
+				if article.actionType in [Article.ACTION_TYPE_NEW,Article.ACTION_TYPE_UPDATE]:
+					if article.contentType==Article.CONTENT_TYPE_LAW:			
+						self.addProvisionPosTag(article)	
+						keywordId=self.addKeyword(article.title)
+						if keywordId:
+							article.keywordId=keywordId
+						else:
+							article.keywordId=''
 					else:
 						article.keywordId=''
-				else:
-					article.keywordId=''
-					
-				self.articleDao.add(article)
-			self.updateArticle(article)
+						
+					self.articleDao.add(article)
+				self.updateArticle(article)
+			else:
+				self.log.warning("no article with id:%s,type:%s found" %(queueItem.targetId,queueItem.contentType))
+				#TODO remove queue item from hyperlink queue
 		
 	def begin(self,queueItem):
 		"""
 		Update queue items status and get article accroding queue item
 		"""
 		self.updateOprLoadStatus(queueItem)
-	
-	def preProcess(self,article):
-		if article.actionType==Article.ACTION_TYPE_UPDATE:
-			self.eraseHyperlink(article)
 	
 	def process(self,article):
 		if article:
