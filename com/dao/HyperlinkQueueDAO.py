@@ -146,9 +146,15 @@ class HyperlinkQueueDAO(DAO):
 				self.log.error(e)
 
 	def addAllToQueue(self):
+		"""
+		Change article's status in queue from 11 to 1 when article's action_type is 'U' or 'N',
+		Article's action_type have to be changed from 'N' to 'U'
+		"""
 		try:
-			sql="UPDATE opr_load_status_en SET status=1 WHERE status<>1;"
-			self.cursor_stg.execute(sql)
+			sql1="UPDATE opr_load_status_en SET status=1 WHERE action_type='U' and status=11;"
+			sql2="UPDATE opr_load_status_en SET status=1,action_type='U' WHERE action_type='N' and status=11;"
+			self.cursor_stg.execute(sql1)
+			self.cursor_stg.execute(sql2)
 			self.conn_stg.commit()
 		except Exception,e:
 			self.log.error(e)
