@@ -350,7 +350,7 @@ class HyperlinkProcess(object):
                         if article and article.actionType==Article.ACTION_TYPE_NEW and article.contentType==Article.CONTENT_TYPE_LAW:
                                 self.queueDao.addAllToQueue()
                                 break
-                        else if article and article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:#
+                        elif article and article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:#
                                 #update status and action_type of  relevant article
                                 for item in self.crossRefLinkDao.getRelatedArticleId(queueItem.targetId,queueItem.contentType):
                                         self.queueDao.updateStatusActionType(item[0],item[1],Article.STATUS_AWAIT,Article.ACTION_TYPE_UPDATE)
