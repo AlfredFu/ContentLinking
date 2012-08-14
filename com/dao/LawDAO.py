@@ -32,7 +32,7 @@ class LawDAO(DAO):
 				else:
 					self.cursor_stg.execute(sql)
 					self.conn_stg.commit()
-				self.updateTime(article)	
+				self.updateTime(article,isTransfer)	
 			except Exception,e:
 				self.log.error(e)
 
