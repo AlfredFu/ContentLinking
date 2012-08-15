@@ -151,13 +151,33 @@ class HyperlinkQueueDAO(DAO):
 		Article's action_type have to be changed from 'N' to 'U'
 		"""
 		try:
-			sql1="UPDATE opr_load_status_en SET status=1 WHERE action_type='U' and status=11;"
-			sql2="UPDATE opr_load_status_en SET status=1,action_type='U' WHERE action_type='N' and status=11;"
-			self.cursor_stg.execute(sql1)
-			self.cursor_stg.execute(sql2)
+			sql="UPDATE opr_load_status_en SET status=1,action_type='U' WHERE action_type in ('N','U') and status=11;"
+			self.cursor_stg.execute(sql)
 			self.conn_stg.commit()
 		except Exception,e:
 			self.log.error(e)
+
+	def addToQueue(self,tupleList):
+		"""
+		Change article's status in queue from 11 to 1 when article's action_type is 'U' or 'N',
+		Article's action_type have to be changed from 'N' to 'U'
+		"""
+		sql=''
+		for originTuple in tupleList:
+			originId=originTuple[0]
+			providerId=originTuple[1]
+			isEnglish=originTuple[2]
+			contentType=originTuple[3]
+			if originId and providerId and isEnglish and contentType:
+				sql="UPDATE opr_load_status_en SET status=1,action_type='U' \
+					WHERE origin_id='%s' and provider_id=%d and is_english='%s' \
+					and content_type='%s' and  action_type in ('N','U') and status=11;" \
+					%(originId,providerId,isEnglish,contentType)
+				try:
+					self.cursor_stg.execute(sql)
+					self.conn_stg.commit()
+				except Exception,e:
+					self.log.error(e)
 
 	def updateStatus(self,targetId,contentType,status):
 		"""

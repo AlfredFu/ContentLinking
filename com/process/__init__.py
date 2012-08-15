@@ -8,6 +8,7 @@ from com.dao.CrossRefLinkDAO import *
 from com.dao.ProfNewsletterDAO import *
 from com.dao.LncQADAO import *
 from com.dao.ModuleQADAO import *
+from com.dao.ExNewsSummaryDAO import *
 from com.dao.ExNewsDAO import *
 from com.entity.HyperlinkQueue import *
 from com.entity.CrossRefLink import *
@@ -27,6 +28,7 @@ class HyperlinkProcess(object):
 		self.newsletterDao=ProfNewsletterDAO.ProfNewsletterDAO()
 		self.lncQADao=LncQADAO.LncQADAO()
 		self.moduleQADao=ModuleQADAO.ModuleQADAO()
+		self.exNewsSummaryDao=ExNewsSummaryDAO.ExNewsSummaryDAO()
 		self.exNewsDao=ExNewsDAO()
 		self.log=getLog()    
 		self.linkUrlFormat='/law/content.php?content_type=%s&origin_id=%s&provider_id=%s&isEnglish=%s'
@@ -109,6 +111,8 @@ class HyperlinkProcess(object):
 			article=self.lncQADao.getById(queueItem.targetId)
 		elif queueItem.contentType == Article.CONTENT_TYPE_MODULEQA:
 			article=self.moduleQADao.getById(queueItem.targetId)
+		elif queueItem.contentType ==Article.CONTENT_TYPE_OVERVIEW_SUMMARY:
+			article=self.exNewsSummaryDao.getById(queueItem.targetId)
 		else:
 			article=self.exNewsDao.getById(queueItem.targetId)
 
@@ -137,6 +141,8 @@ class HyperlinkProcess(object):
 			article=self.lncQADao.getByOrigin(originId,providerId,isEnglish)
 		elif contentType == Article.CONTENT_TYPE_MODULEQA:
 			article=self.moduleQADao.getByOrigin(originId,providerId,isEnglish)
+		elif contentType ==Article.CONTENT_TYPE_OVERVIEW_SUMMARY:
+			article=self.exNewsSummaryDao.getByOrigin(originId,providerId,isEnglish)
 		else:
 			article=self.exNewsDao.getByOrigin(originId,providerId,isEnglish)
 		if article:
@@ -163,6 +169,8 @@ class HyperlinkProcess(object):
 			self.lncQADao.update(article)
 		elif article.contentType == Article.CONTENT_TYPE_MODULEQA:
 			self.moduleQADao.update(article)
+		elif article.contentType ==Article.CONTENT_TYPE_OVERVIEW_SUMMARY:
+			self.exNewsSummaryDao.update(article)
 		else:
 			self.exNewsDao.update(article)
 
@@ -347,8 +355,23 @@ class HyperlinkProcess(object):
 		if article.title:
 			abbrTitle=self.multiVerPat.sub('',article.title)
 			abbrTitle=self.abbrPat.sub('',abbrTitle)
-			abbrTitle=abbrTitle.strip()	
-		pass
+			abbrTitle=abbrTitle.strip()
+			articleOriginTupleList=[]
+			for row in self.lawDao.getArticleContainText(abbrTitle):
+				articleOriginTupleList.append(row)
+			for row in self.caseDao.getArticleContainText(abbrTitle):
+				articleOriginTupleList.append(row)
+			for row in self.exNewsDao.getArticleContainText(abbrTitle):
+				articleOriginTupleList.append(row)
+			for row in self.exNewsSummaryDao.getArticleContainText(abbrTitle):
+				articleOriginTupleList.append(row)
+			for row in self.newsletterDao.getArticleContainText(abbrTitle):
+				articleOriginTupleList.append(row)
+			for row in self.lncQADao.getArticleContainText(abbrTitle):
+				articleOriginTupleList.append(row)
+			for row in self.moduleQADao.getArticleContainText(abbrTitle):
+				articleOriginTupleList.append(row)
+			self.queueDao.addToQueue(articleOriginTupleList)
 	
 	def initial(self):
 		"""
@@ -415,6 +438,3 @@ class HyperlinkProcess(object):
 		"""
 		self.queueDao.updateStatus(queueItem.targetId,queueItem.contentType,Article.STATUS_WAIT_UPLOAD)
 
-if __name__=="__main__":
-	process=HyperlinkProcess()	
-	process.initial()

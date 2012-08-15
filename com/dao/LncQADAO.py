@@ -89,3 +89,13 @@ class LncQADAO(DAO):
 				self.log.error(e)
 				self.log.error(sql)
 		 
+	def getArticleContainText(self,ltext):
+		if ltext:
+			try:
+				sql="select origin_id,provider_id,isEnglish from listboard where isEnglish='Y' and body like '%"+self.escape_string(ltext)+"%'"
+				self.cursor_stg.execute(sql)
+				for row in self.cursor_stg.fetchall():
+					yield (row[0],row[1],row[2],Article.CONTENT_TYPE_LNCQA)
+			except Exception,e:
+				self.log.error(e)
+

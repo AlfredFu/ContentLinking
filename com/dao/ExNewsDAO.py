@@ -9,6 +9,14 @@ class ExNewsDAO(DAO):
 
 	def __init__(self):
 		super(ExNewsDAO,self).__init__()
+		self.contentTable="ex_news_contents"
+		self.overviewType={'2':Article.CONTENT_TYPE_IPOVERVIEW,\
+					'3':Article.CONTENT_TYPE_EPOVERVIEW,\
+					'4':Article.CONTENT_TYPE_CPOVERVIEW,\
+					'5':Article.CONTENT_TYPE_TPOVERVIEW,\
+					'6':Article.CONTENT_TYPE_FDIOVERVIEW,\
+					'7':Article.CONTENT_TYPE_EEOVERVIEW,\
+					'8':Article.CONTENT_TYPE_CSOVERVIEW}
 
 	def getAll(self):
 		"""
@@ -99,9 +107,8 @@ class ExNewsDAO(DAO):
 				article.contentType=Article.CONTENT_TYPE_ELEARNING#在线培训
 				yield article
 			elif article.subType==7:
-				overviewType={'2':Article.CONTENT_TYPE_IPOVERVIEW,'3':Article.CONTENT_TYPE_EPOVERVIEW,'4':Article.CONTENT_TYPE_CPOVERVIEW,'5':Article.CONTENT_TYPE_TPOVERVIEW,'6':Article.CONTENT_TYPE_FDIOVERVIEW,'7':Article.CONTENT_TYPE_EEOVERVIEW,'8':Article.CONTENT_TYPE_CSOVERVIEW}
 				for topicId in article.allType.split(','):
-					article.contentType=overviewType[topicId]
+					article.contentType=self.overviewType[topicId]
 					yield article
 			else:
 				article.contentType=Article.CONTENT_TYPE_OTHERS
@@ -139,7 +146,27 @@ class ExNewsDAO(DAO):
 	def getByContentType(self,contentType):
 		pass
 
-if __name__=='__main__':
-	dao=ExNewsDAO()
-	article=dao.getById(156)
-	print article.title
+	def getArticleContainText(self,ltext):
+		if ltext:
+			sql="select a.origin_id,a.provider_id,a.isEnglish,a.sub_type,a.alltype \
+				from ex_news a left join ex_news_contents b \
+				on a.origin_id=b.origin_id and a.provider_id=b.provider_id and a.isEnglish=b.isEnglish \
+				where a.isEnglish='Y' and a.is_display=1 and b.content like '%"+self.escape_string(ltext)+"%'"
+			try:
+				self.cursor_stg.execute(sql)
+				for row in self.cursor_stg.fetchall():
+					if row[3] == 1:
+						yield(row[0],row[1],row[2],Article.CONTENT_TYPE_NEWLAW)#每日快讯(新法快报)
+					elif row[3]==3:
+						yield(row[0],row[1],row[2],Article.CONTENT_TYPE_HOTNEWS)#评论文章
+					elif row[3]==4:
+						yield(row[0],row[1],row[2],Article.CONTENT_TYPE_PRACTICAL)#实用资料
+					elif row[3]==6:
+						yield(row[0],row[1],row[2],Article.CONTENT_TYPE_ELEARNING)#在线培训
+					elif row[3]==7:
+						for topicId in row[4].split(','):
+							yield(row[0],row[1],row[2],self.overviewType[topicId])
+					else:
+						yield(row[0],row[1],row[2],Article.CONTENT_TYPE_OTHERS)
+			except Exception,e:
+				self.log.error(e)

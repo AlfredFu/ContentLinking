@@ -6,6 +6,7 @@ class CaseDAO(DAO):
 	
 	def __init__(self):
 		DAO.__init__(self)
+		self.contentTable="case_content"
 	
 	def getAll(self):
 		"获取所有有效案例"
@@ -98,7 +99,6 @@ class CaseDAO(DAO):
 		self.updateContent(article,isTransfer)
 		self.updateTime(article,isTransfer)
 		
-if __name__=='__main__':
-	caseDao=CaseDAO()
-	for case in caseDao.getAll():
-		print case.title
+	def getArticleContainText(self,ltext):
+		for row in super(CaseDAO,self).getArticleContainText(ltext):
+			yield(row[0],row[1],row[2],Article.CONTENT_TYPE_CASE)

@@ -6,6 +6,7 @@ import sys
 class LawDAO(DAO):
 	def __init__(self):
 		DAO.__init__(self)
+		self.contentTable="tax_content"
 	
 	def getAll(self):
 		try:
@@ -121,6 +122,6 @@ class LawDAO(DAO):
 			self.log.error("getByOrigin in LawDAO.py")
 		return article
 
-if __name__ =="__main__":
-	lawDAO=LawDAO()
-	print lawDAO.getLawByKeywordId(2505)
+	def getArticleContainText(self,ltext):
+		for row in super(LawDAO,self).getArticleContainText(ltext):
+			yield(row[0],row[1],row[2],Article.CONTENT_TYPE_LAW)

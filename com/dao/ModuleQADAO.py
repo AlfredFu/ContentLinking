@@ -5,6 +5,7 @@ from com.entity.Article import *
 class ModuleQADAO(DAO):
 	def __init__(self):
 		super(ModuleQADAO,self).__init__()
+		self.contentTable="ex_expert_answers"
 
 	def getAll(self):
 		sql="""
@@ -94,3 +95,6 @@ class ModuleQADAO(DAO):
 			except Exception,e:
 				self.log.error(e)
 			
+	def getArticleContainText(self,ltext):
+		for row in super(ModuleQADAO,self).getArticleContainText(ltext):
+			yield(row[0],row[1],row[2],Article.CONTENT_TYPE_MODULEQA)

@@ -17,9 +17,16 @@ class DAO(object):
 
 	def getArticleContainText(self,ltext):
 		"""
+		Get article in whose content contain ltext
 		"""
 		if ltext:
-			sql="select from "+self.table+" where content like '%"+ltext+"%'"
+			try:
+				sql="select origin_id,provider_id,isEnglish from "+self.contentTable+" where isEnglish='Y' and content like '%"+self.escape_string(ltext)+"%'"
+				self.cursor_stg.execute(sql)
+				for row in self.cursor_stg.fetchall():
+					yield (row[0],row[1],row[2])
+			except Exception,e:
+				self.log.error(e)
 			
 
 	def escape_string(self,str):

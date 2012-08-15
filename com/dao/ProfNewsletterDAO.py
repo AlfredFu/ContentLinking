@@ -5,6 +5,7 @@ from com.entity.Article import *
 class ProfNewsletterDAO(DAO):
 	def __init__(self):
 		super(ProfNewsletterDAO,self).__init__()
+		self.contentTable='profNewsletter_Ext'
 
 
 	def getAll(self):
@@ -126,7 +127,6 @@ class ProfNewsletterDAO(DAO):
 			except Exception,e:
 				self.log.error(e)
 
-if __name__=="__main__":
-	dao=ProfNewsletterDAO()
-	for n in dao.getAll():
-		print n.fkProfNewsletterId
+	def getArticleContainText(self,ltext):
+		for row in super(ProfNewsletterDAO,self).getArticleContainText(ltext):
+			yield(row[0],row[1],row[2],Article.CONTENT_TYPE_NEWSLETTER)

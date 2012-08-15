@@ -68,7 +68,7 @@ if __name__=='__main__':
 		
 	#transfer phase 
 	try:
-		transferData()
+		#transferData()
 		#sendNotification(LexisMsg.MSG_TRANSFER_FINISHED)	
 		pass
 	except Exception,e:

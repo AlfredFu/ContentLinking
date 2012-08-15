@@ -5,6 +5,7 @@ from com.dao import *
 class ExNewsSummaryDAO(DAO):
 	def __init__(self):
 		super(ExNewsSummaryDAO,self).__init__()
+		self.contentTable="ex_news_summary"
 
 	def getAll(self):
 		#sql="select ex_new_id,origin_id,provider_id,isEnglish,content from ex_news_summary where isEnglish='Y';"
@@ -86,3 +87,7 @@ class ExNewsSummaryDAO(DAO):
 			article.proDate=row[5]
 			article.contentType=Article.CONTENT_TYPE_OVERVIEW_SUMMARY
 			return article
+
+	def getArticleContainText(self,ltext):
+		for row in super(ExNewsSummaryDAO,self).getArticleContainText(ltext):
+			yield(row[0],row[1],row[2],Article.CONTENT_TYPE_OVERVIEW_SUMMARY)
