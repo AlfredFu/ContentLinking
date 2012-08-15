@@ -349,7 +349,6 @@ class HyperlinkProcess(object):
                         #if new legislation has been add to queue
                         if article and article.actionType==Article.ACTION_TYPE_NEW and article.contentType==Article.CONTENT_TYPE_LAW:
                                 self.queueDao.addAllToQueue()
-                                break
                         elif article and article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:#
                                 #update status and action_type of  relevant article
                                 for item in self.crossRefLinkDao.getRelatedArticleId(queueItem.targetId,queueItem.contentType):
