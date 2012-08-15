@@ -339,6 +339,17 @@ class HyperlinkProcess(object):
 			keywordId=''
 		return keywordId 
 	
+	def addProspectiveRevantArticleToQueue(self,article):
+		"""
+		If new legislation has been add to queue,prospective relevant article should be add to queue
+		"""
+		#self.queueDao.addAllToQueue()
+		if article.title:
+			abbrTitle=self.multiVerPat.sub('',article.title)
+			abbrTitle=self.abbrPat.sub('',abbrTitle)
+			abbrTitle=abbrTitle.strip()	
+		pass
+	
 	def initial(self):
 		"""
 		Update keyword list and article list accroding to hyperlink queue		
@@ -348,7 +359,7 @@ class HyperlinkProcess(object):
                         article=self.getArticle(queueItem)
                         #if new legislation has been add to queue
                         if article and article.actionType==Article.ACTION_TYPE_NEW and article.contentType==Article.CONTENT_TYPE_LAW:
-                                self.queueDao.addAllToQueue()
+                                self.addProspectiveRevantArticleToQueue(article)
                         elif article and article.actionType in [Article.ACTION_TYPE_UPDATE,Article.ACTION_TYPE_DELETE]:#
                                 #update status and action_type of  relevant article
                                 for item in self.crossRefLinkDao.getRelatedArticleId(queueItem.targetId,queueItem.contentType):

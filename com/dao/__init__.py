@@ -15,6 +15,13 @@ class DAO(object):
 		
 		self.log=getLog()    
 
+	def getArticleContainText(self,ltext):
+		"""
+		"""
+		if ltext:
+			sql="select from "+self.table+" where content like '%"+ltext+"%'"
+			
+
 	def escape_string(self,str):
 		return escapeString(str)#function escapeStirng defined in DBConnUtil
 
