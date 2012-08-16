@@ -323,10 +323,12 @@ class HyperlinkProcess(object):
 		pass
 
 	def addKeyword(self,title):
-		if title and title.strip().find(' ')!=-1:
+		if title:
 			title=self.multiVerPat.sub('',title)
 			title=title.strip()#strip whitespace
 			title=title.lower()#convert letters to lower case
+			
+		if title and title.find(' ')!=-1:
 			keyword=self.keywordDao.findByContent(title)
 			if not keyword:
 				keyword=Keyword()
