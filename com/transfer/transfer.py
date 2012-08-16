@@ -10,6 +10,7 @@ from com.dao.ProfNewsletterDAO import *
 from com.dao.LncQADAO import *
 from com.dao.ModuleQADAO import *
 from com.dao.transferdao import *
+from com.dao.ExNewsSummaryDAO import *
 from com.dao.ExNewsDAO import *
 from com.entity.Article import *
 from com.entity.HyperlinkQueue import *
@@ -22,6 +23,7 @@ articleDao=ArticleDAO.ArticleDAO()
 caseDao=CaseDAO.CaseDAO()
 keywordDao=KeywordDAO.KeywordDAO()
 queueDao=HyperlinkQueueDAO.HyperlinkQueueDAO()
+exNewsSummaryDao=ExNewsSummaryDAO.ExNewsSummaryDAO()
 newsletterDao=ProfNewsletterDAO.ProfNewsletterDAO()
 lncQADao=LncQADAO.LncQADAO()
 moduleQADao=ModuleQADAO.ModuleQADAO()
@@ -45,6 +47,8 @@ def getArticle(queueItem):
 		article=lncQADao.getById(queueItem.targetId)
 	elif queueItem.contentType == Article.CONTENT_TYPE_MODULEQA:
 		article=moduleQADao.getById(queueItem.targetId)
+	elif queueItem.contentType ==Article.CONTENT_TYPE_OVERVIEW_SUMMARY:
+		article=exNewsSummaryDao.getById(queueItem.targetId)
 	else:
 		article=exNewsDao.getById(queueItem.targetId)
 
@@ -73,6 +77,8 @@ def updateArticle(article,isTransfer=True):
 		lncQADao.update(article,isTransfer)
 	elif article.contentType == Article.CONTENT_TYPE_MODULEQA:
 		moduleQADao.update(article,isTransfer)
+	elif article.contentType ==Article.CONTENT_TYPE_OVERVIEW_SUMMARY:
+		exNewsSummaryDao.update(article,isTransfer)
 	else:
 		exNewsDao.update(article,isTransfer)
 
