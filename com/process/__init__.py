@@ -389,6 +389,7 @@ class HyperlinkProcess(object):
                                 #update status and action_type of  relevant article
                                 for item in self.crossRefLinkDao.getRelatedArticleId(queueItem.targetId,queueItem.contentType):
                                         self.queueDao.updateStatusActionType(item[0],item[1],Article.STATUS_AWAIT,Article.ACTION_TYPE_UPDATE)
+				self.deleteCrossRefLinkByArticleId(queueItem.targetId,queueItem.contentType)#删除cross_ref_link表中的记录
 		#Initial article content,keyword etc
 		for queueItem in self.queueDao.getAll():
 			article=self.getArticle(queueItem)
@@ -402,7 +403,6 @@ class HyperlinkProcess(object):
 					if article.actionType==Article.ACTION_TYPE_UPDATE:
 						self.removeProvisionPosTag(article)
 						self.eraseHyperlink(article)
-					self.deleteCrossRefLinkByArticleId(queueItem.targetId,queueItem.contentType)#删除cross_ref_link表中的记录
 						
 				if article.actionType in [Article.ACTION_TYPE_NEW,Article.ACTION_TYPE_UPDATE]:
 					if article.contentType==Article.CONTENT_TYPE_LAW:			
