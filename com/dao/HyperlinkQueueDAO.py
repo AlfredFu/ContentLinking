@@ -221,6 +221,18 @@ class HyperlinkQueueDAO(DAO):
 				self.conn_stg.commit()
 			except Exception,e:
 				self.log.error(e)
+	
+	def updateTargetArticleStatus(self,targetId,contentType,toStatus=Article.STATUS_WAIT_UPLOAD,fromStatus=Article.STATUS_FINISHED):
+		"""
+		用于将被引用但未在当前队列被处理的法规加入到，法条被引用信息统计处理列表	
+		"""
+		if targetId and contentType and toStatus and fromStatus:
+			sql="update opr_load_status_en set status=%s where target_id=%s and content_type='%s' and status=%s and action_type<>'D';" %(toStatus,targetId,contentType,fromStatus)
+			try:
+				self.cursor_stg.execute(sql)
+				self.conn_stg.commit()
+			except Exception,e:
+				self.log.error(e)
 			
 if __name__ =="__main__":
 	dao=HyperlinkQueueDAO()

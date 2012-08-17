@@ -307,6 +307,7 @@ class HyperlinkProcess(object):
 		crossRefLink.desItemId=itemId
 		
 		self.crossRefLinkDao.add(crossRefLink)
+		self.queueDao.updateTargetArticleStatus(article.id,article.contentType)
 
 	def search(self,content,start=0,posTupleList=[]):
 		"""
