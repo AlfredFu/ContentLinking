@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 #coding=utf-8
+import sys
+sys.path.append("/home/fred/workspace/EnglishHyperlink")
 from com.dao.LawDAO import *
 from com.dao.ArticleDAO import *
 from com.dao.CaseDAO import *
