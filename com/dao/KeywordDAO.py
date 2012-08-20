@@ -13,8 +13,6 @@ class KeywordDAO(DAO):
 	def add(self,keyword):
 		if keyword:
 			try:
-				#keyword.content=keyword.content.replace("'","\\'")
-				#keyword.content=keyword.content.replace('"','\\"')
 				keyword.content=self.escape_string(keyword.content)
 				if not keyword.fullTitleKeywordId:
 					self.cursor_hyperlink.execute("replace into keyword_en(keyword,status,type) values('%s','NOR','%s')" % (keyword.content,keyword.type))
@@ -53,16 +51,16 @@ class KeywordDAO(DAO):
 
     	def getById(self,id):
         	try:
-             		self.cursor.execute("select keyword_id,keyword,status,type,full_title_keyword_id from %s where keyword_id=%s" % (table,id))
-			row =self.cursor.fetchone()
+             		self.cursor_hyperlink.execute("select keyword_id,keyword,status,type,full_title_keyword_id from %s where keyword_id=%s" % (KeywordDAO.table,id))
+			row =self.cursor_hyperlink.fetchone()
 			return self.assembleKeyword(row)
 		except Exception,e:
 	     		self.log.error(e)
 
 	def getFullTitleKeyword(self,id):
 		try:
-			self.cursor.execute("select keyword_id,keyword,status,type,full_title_keyword_id from %s where keyword_id=(select full_title_keyword_id from %s where keyword_id=%s)" % (KeywordDAO.table,KeywordDAO.table,id))
-			row=self.cursor.fetchone()
+			self.cursor_hyperlink.execute("select keyword_id,keyword,status,type,full_title_keyword_id from %s where keyword_id=(select full_title_keyword_id from %s where keyword_id=%s)" % (KeywordDAO.table,KeywordDAO.table,id))
+			row=self.cursor_hyperlink.fetchone()
 			return keyword
 		except Exception,e:
 			self.log.error(e)
