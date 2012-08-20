@@ -16,7 +16,8 @@ class ExNewsDAO(DAO):
 					'5':Article.CONTENT_TYPE_TPOVERVIEW,\
 					'6':Article.CONTENT_TYPE_FDIOVERVIEW,\
 					'7':Article.CONTENT_TYPE_EEOVERVIEW,\
-					'8':Article.CONTENT_TYPE_CSOVERVIEW}
+					'8':Article.CONTENT_TYPE_CSOVERVIEW,\
+					'9':Article.CONTENT_TYPE_MAOVERVIEW}
 
 	def getAll(self):
 		"""

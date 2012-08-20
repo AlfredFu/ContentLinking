@@ -26,6 +26,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 					'LOCP':'cp_overview',\
 					'LOCS':'cs_overview',\
 					'LOIP':'ip_overview',\
+					'LOMA':'ma_overview',\
 					'EL':'ep_elearning',\
 					'SUMMARY':'summary',\
 					'PEA':'expert+ex_questions'}
@@ -45,6 +46,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 					'LOCP':'Corporate overview',\
 					'LOCS':'Financing overview',\
 					'LOIP':'IP overview',\
+					'LOMA':'MA overview',\
 					'EL':'Elearning',\
 					'SUMMARY':'Overview summary',\
 					'PEA':'Q & A'}
