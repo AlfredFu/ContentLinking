@@ -102,11 +102,11 @@ class LawDAO(DAO):
 		"""
 		根据originId,providerId,isEnglish获取法规
 		"""
-		article=Law()	
 		try:
 			self.cursor_stg.execute("SELECT tax.taxid as id,tax.title,tax_content.content,tax.origin_id,tax.provider_id,tax.isEnglish,tax.date,tax.effect_date FROM tax LEFT JOIN tax_content ON tax.taxid=tax_content.taxid WHERE tax.origin_id='%s' and tax.provider_id=%s and tax.isEnglish='%s' and display=1;" % (originId,providerId,isEnglish))
 			row=self.cursor_stg.fetchone()
 			if row:
+				article=Law()	
 				article.id=row[0]
 				article.title=row[1]
 				article.content=row[2]
@@ -115,12 +115,11 @@ class LawDAO(DAO):
 				article.isEnglish=row[5]
 				article.proDate=row[6]
 				article.effectDate=row[7]
+				return article
 			else:
 				raise Exception("No law with origin_id:%s,provider_id:%s,isEnglish:%s found!" %(originId,providerId,isEnglish))
 		except Exception,e:
 			self.log.error(e)	
-			self.log.error("getByOrigin in LawDAO.py")
-		return article
 
 	def getArticleContainText(self,ltext):
 		for row in super(LawDAO,self).getArticleContainText(ltext):
