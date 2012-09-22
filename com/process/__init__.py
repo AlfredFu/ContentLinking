@@ -422,6 +422,21 @@ class HyperlinkProcess(object):
 				self.log.warning("no article with id:%s,type:%s found" %(queueItem.targetId,queueItem.contentType))
 				#TODO remove queue item from hyperlink queue
 		
+
+	def collectStatistics():
+		"""
+		统计本次hyperlink所处理的数据，如处理了多少条新增的，多少条修改的，多少删除的以及各种内容类型的情况
+		返回html表格字符串
+		(必须在数据处理完但未上传时统计才有效)
+		"""
+		htmlStr='<table><tr><td>Action Type/Content type</td><td>Article num</td></tr>'	
+		
+		for row in self.queueDao.collectStatisticsOfProcessedData():
+			htmlStr+=('<tr><td>%s</td><td>%s</td></tr>' %(row[0],row[1]))
+			
+		htmlStr+='</table>'
+		return htmlStr
+
 	def begin(self,queueItem):
 		"""
 		Update queue items status and get article accroding queue item

@@ -234,6 +234,28 @@ class HyperlinkQueueDAO(DAO):
 			except Exception,e:
 				self.log.error(e)
 			
+
+	def collectStatisticsOfProcessedData(status=Article.STATUS_WAIT_UPLOAD):
+		"""
+		统计本次hyperlink所处理的数据，如处理了多少条新增的，多少条修改的，多少删除的以及各种内容类型的情况
+		(必须在数据处理完但未上传时统计才有效)
+		"""
+		if status:
+			sql1="SELECT action_type,COUNT(*) FROM opr_load_status_en WHERE status=%s GROUP BY action_type" % status#按处理方式统计
+			sql2="SELECT content_type,COUNT(*) FROM opr_load_status_en WHERE status=%s GROUP BY content_type" % status#按内容类型统计
+			try:
+				self.cursor_stg.execute(sql1)
+				for row in self.cursor_stg.fetchall():
+					yield (row[0],row[1],'BY_ACTION')#BY_ACTION标记这条数据是根基action_type统计出来的
+
+				self.cursor_stg.execute(sql2)
+				for row in self.cursor_stg.fetchall():
+					yield (row[0],row[1],'BY_CONTENT')#BY_CONTENT标记这条数据是根据内容类型统计出来的
+			except Exception,e:
+				self.log.error(e)
+
+		
+		
 if __name__ =="__main__":
 	dao=HyperlinkQueueDAO()
 	for queueItem in dao.getAll():
