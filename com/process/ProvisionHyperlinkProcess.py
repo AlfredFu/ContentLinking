@@ -30,26 +30,6 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 					'EL':'ep_elearning',\
 					'SUMMARY':'summary',\
 					'PEA':'expert+ex_questions'}
-		#content type name display in user agent
-        	self.contentTypeNameMap={'T':'Legislation',\
-					'C':'Cases',\
-					'LM':'Legal news',\
-					'FL':'Foreign law',\
-					'PNL':'Newsletters',\
-					'HN':'Articles',\
-					'PC':'Practical materials',\
-					'LB':'Q & A',\
-					'LOTP':'Tax overview',\
-					'LOFDI':'Investment overview',\
-					'LOEP':'Employment overview',\
-					'LOEE':'Energy overview',\
-					'LOCP':'Corporate overview',\
-					'LOCS':'Financing overview',\
-					'LOIP':'IP overview',\
-					'LOMA':'MA overview',\
-					'EL':'Elearning',\
-					'SUMMARY':'Overview summary',\
-					'PEA':'Q & A'}
         	self.reArticleStart='<br/><font color="red">(Relevant articles:</font><font color="blue">'
         	self.reArticleEnd='</font><font color="red">)</font>'
 		self.provisionStartTagFormat='<a name="i%s" re="T"></a>'

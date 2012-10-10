@@ -64,6 +64,30 @@ class HyperlinkProcess(object):
 		self.delTagPatternStart=re.compile(r'<span\s+cate=["\']link_2_del["\']\s*>[^<]*$',re.I)
 		self.delTagPatternEnd=re.compile(r'[^<]*?</span>',re.I)
 
+		#content type name display in user agent
+        	self.contentTypeNameMap={'T':'Legislation',\
+					'C':'Cases',\
+					'LM':'Legal news',\
+					'FL':'Foreign law',\
+					'PNL':'Newsletters',\
+					'HN':'Articles',\
+					'PC':'Practical materials',\
+					'LB':'Q & A',\
+					'LOTP':'Tax overview',\
+					'LOFDI':'Investment overview',\
+					'LOEP':'Employment overview',\
+					'LOEE':'Energy overview',\
+					'LOCP':'Corporate overview',\
+					'LOCS':'Financing overview',\
+					'LOIP':'IP overview',\
+					'LOMA':'MA overview',\
+					'EL':'Elearning',\
+					'SUMMARY':'Overview summary',\
+					'PEA':'Q & A'}
+		
+		#Action type name display to user
+		self.actionTypeNameMap={'N':'New','D':'Delete','U':'Update'}
+
 	def eraseHyperlink(self,article):
 		"""
 		清除hyperlink所加的超链接
@@ -446,13 +470,19 @@ class HyperlinkProcess(object):
 				</style>
 				</head>
 				<body>
-				<table border="1" cellspacing="0" cellpadding="0" width="100%" height="10">
-				<tr><td>Action Type/Content type</td><td>Article num</td></tr>
+				<p>Hi All,<br/>\n
+				Articles proccessed last week listed in the table below FYI!</p>
+				<table border="1" cellspacing="0" cellpadding="0" width="300" height="10">
+				<tr style="background-color:#B40404;font:bold;"><td width="200" style="color:#FFFFFF;">Action Type/Content type</td><td  style="color:#FFFFFF;" width="100">Article num</td></tr>
 				"""
 		for row in self.queueDao.collectStatisticsOfProcessedData():
-			htmlStr+=('<tr><td>%s</td><td>%s</td></tr>\n' %(row[0],row[1]))
+			if row[2]=="BY_ACTION":
+				htmlStr+=('<tr style="background-color:#EFEFEF;><td width="200">%s</td><td width="100">%s</td></tr>\n' %(self.actionTypeNameMap[row[0]],row[1]))
+			else:
+				htmlStr+=('<tr style="background-color:#FAFAFA;><td width="200">%s</td><td width="100">%s</td></tr>\n' %(self.contentTypeNameMap[row[0]],row[1]))
+				
 			
-		htmlStr+='</table></body></html>'
+		htmlStr+='</table><br/><p>Thank you,<br />Regards</p></body></html>'
 		return htmlStr
 
 	def begin(self,queueItem):

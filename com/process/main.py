@@ -76,5 +76,9 @@ if __name__=='__main__':
 		sendNotification(LexisMsg.MSG_TRANSFER_FAILED)	
 		sys.exit()
 
-	sendNotification(LexisMsg.MSG_HYPERLINK_FINISHED)	
-	
+	try:
+		mailcontent= khp.collectStatistics()
+		sendNotification(mailcontent,True)	
+	except Exception,e:
+		khp.log.error(e)
+		sendNotification("统计处理结果失败")	

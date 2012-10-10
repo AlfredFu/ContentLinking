@@ -243,14 +243,26 @@ class HyperlinkQueueDAO(DAO):
 		if status:
 			sql1="SELECT action_type,COUNT(*) FROM opr_load_status_en WHERE status=%s GROUP BY action_type" % status#按处理方式统计
 			sql2="SELECT content_type,COUNT(*) FROM opr_load_status_en WHERE status=%s GROUP BY content_type" % status#按内容类型统计
+			recordStatisticsSql=""#记录本次hyperlink处理的文章分类统计信息,数据存放在stg库的english_hyperlink_history表中
 			try:
 				self.cursor_stg.execute(sql1)
 				for row in self.cursor_stg.fetchall():
+					if not recordStatisticsSql:
+						recordStatisticsSql="INSERT INTO english_hyperlink_history set %s=%d" %(row[0],row[1])	
+					else:
+						recordStatisticsSql+=(",%s=%d" %(row[0],row[1]))
 					yield (row[0],row[1],'BY_ACTION')#BY_ACTION标记这条数据是根基action_type统计出来的
 
 				self.cursor_stg.execute(sql2)
 				for row in self.cursor_stg.fetchall():
+					if not recordStatisticsSql:
+						recordStatisticsSql="INSERT INTO english_hyperlink_history set %s=%d" %(row[0],row[1])	
+					else:
+						recordStatisticsSql+=(",%s=%d" %(row[0],row[1]))
 					yield (row[0],row[1],'BY_CONTENT')#BY_CONTENT标记这条数据是根据内容类型统计出来的
+				if recordStatisticsSql:
+					self.cursor_stg.execute(recordStatisticsSql)
+					self.conn_stg.commit()
 			except Exception,e:
 				self.log.error(e)
 

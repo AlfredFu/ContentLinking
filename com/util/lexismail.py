@@ -2,10 +2,11 @@
 Mail util for hyperlink of LN
 """
 import smtplib,email
-from email.mime.text import MIMEText 
 from email.Message import Message
 from com.util.ConfigOptionUtil import *
 from com.util.LogUtil import *
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText 
 
 SMTP_SERVER=getConfigOption('mail','smtp_server')
 SMTP_FROM=getConfigOption('mail','smtp_from')
@@ -54,9 +55,14 @@ def sendHtmlMessage(server,to,subject,content):
 	send email with html context
 	"""
 	msg = MIMEText(content,'html','utf-8')
+	msg['Mime-Version']='1.0'
+	msg['From']=SMTP_FROM
+	msg['To']=to
 	msg['Subject'] = subject
+	msg['Date']=email.Utils.formatdate()
 	try:
-		failed=server.sendmail(SMTP_USER,to,msg.as_string())
+		failed=server.sendmail(SMTP_USER,to,str(msg))
+			
 	except Exception,e:
 		log.error(e)
 	
