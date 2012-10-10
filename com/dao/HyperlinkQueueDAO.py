@@ -235,7 +235,7 @@ class HyperlinkQueueDAO(DAO):
 				self.log.error(e)
 			
 
-	def collectStatisticsOfProcessedData(status=Article.STATUS_WAIT_UPLOAD):
+	def collectStatisticsOfProcessedData(self,status=Article.STATUS_WAIT_UPLOAD):
 		"""
 		统计本次hyperlink所处理的数据，如处理了多少条新增的，多少条修改的，多少删除的以及各种内容类型的情况
 		(必须在数据处理完但未上传时统计才有效)

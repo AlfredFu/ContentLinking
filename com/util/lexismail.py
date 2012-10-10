@@ -2,6 +2,7 @@
 Mail util for hyperlink of LN
 """
 import smtplib,email
+from email.mime.text import MIMEText 
 from email.Message import Message
 from com.util.ConfigOptionUtil import *
 from com.util.LogUtil import *
@@ -47,18 +48,33 @@ def sendMessage(server,to,subject,content):
 	except Exception,e:
 		#print "send mail to %s failed" % to
 		log.error(e)
+
+def sendHtmlMessage(server,to,subject,content):
+	"""
+	send email with html context
+	"""
+	msg = MIMEText(content,'html','utf-8')
+	msg['Subject'] = subject
+	try:
+		failed=server.sendmail(SMTP_USER,to,msg.as_string())
+	except Exception,e:
+		log.error(e)
 	
-def sendMail(to,subject=default_mail_subject,content=default_mail_content):
+	
+def sendMail(to,subject=default_mail_subject,content=default_mail_content,isHtml=False):
 	if to and subject:
 		server=connectToSMTP()
-		sendMessage(server,to,subject,content)	
+		if isHtml:
+			sendHtmlMessage(server,to,subject,content)	
+		else:
+			sendMessage(server,to,subject,content)	
 	
-def sendNotification(mailContent=''):
-	#mailAddrList=['jessica.wang@lexisnexis.com','13482736200@139.com','15901971560@139.com']
+def sendNotification(mailContent='',isHtml=False):
+	mailAddrList=['fred.fu@lexisnexis.com']
 	#mailAddrList=['13482736200@139.com']
-	mailAddrList=['13482736200@139.com','fred.fu@lexisnexis.com','min.chen@lexisnexis.com','rock.chen@lexisnexis.com','jessica.wang@lexisnexis.com']
+	#mailAddrList=['13482736200@139.com','fred.fu@lexisnexis.com','min.chen@lexisnexis.com','rock.chen@lexisnexis.com','jessica.wang@lexisnexis.com']
 	for mail_addr  in mailAddrList:
-		sendMail(mail_addr,default_mail_subject,mailContent)
+		sendMail(mail_addr,default_mail_subject,mailContent,isHtml)
 
 if __name__=='__main__':
 	sendNotification("Hello Fred")
