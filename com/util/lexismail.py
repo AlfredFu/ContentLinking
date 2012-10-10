@@ -5,8 +5,11 @@ import smtplib,email
 from email.Message import Message
 from com.util.ConfigOptionUtil import *
 from com.util.LogUtil import *
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText 
+#python2.6及以上版本使用如下
+#from email.mime.multipart import MIMEMultipart
+#from email.mime.text import MIMEText 
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText 
 
 SMTP_SERVER=getConfigOption('mail','smtp_server')
 SMTP_FROM=getConfigOption('mail','smtp_from')
