@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#coding=utf-8
 import sys
 sys.path.append("/home/fred/workspace/EnglishHyperlink")
 from com.process.KeywordHyperlinkProcess import *
@@ -66,9 +67,15 @@ if __name__=='__main__':
 		sendNotification(LexisMsg.MSG_PROCESS_FAILED)	
 		sys.exit()
 		
+	try:
+		mailcontent= khp.collectStatistics()
+	except Exception,e:
+		khp.log.error(e)
+		sendNotification("统计处理结果失败")	
+
 	#transfer phase 
 	try:
-		#transferData()
+		transferData()
 		#sendNotification(LexisMsg.MSG_TRANSFER_FINISHED)	
 		pass
 	except Exception,e:
@@ -77,8 +84,6 @@ if __name__=='__main__':
 		sys.exit()
 
 	try:
-		mailcontent= khp.collectStatistics()
-		sendNotification(mailcontent,True)	
+		sendNotification(mailcontent,isHtml=True)	
 	except Exception,e:
 		khp.log.error(e)
-		sendNotification("统计处理结果失败")	
