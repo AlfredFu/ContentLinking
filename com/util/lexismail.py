@@ -5,7 +5,7 @@ import smtplib,email
 from email.Message import Message
 from com.util.ConfigOptionUtil import *
 from com.util.LogUtil import *
-#python2.6及以上版本使用如下
+#python2.6 and newer use import expression below
 #from email.mime.multipart import MIMEMultipart
 #from email.mime.text import MIMEText 
 from email.MIMEMultipart import MIMEMultipart
