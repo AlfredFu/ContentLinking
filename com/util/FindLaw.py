@@ -13,9 +13,10 @@ class FindLaw(HyperlinkProcess):
                         law=self.lawDao.getByOrigin(row.originId,row.providerId,row.isEnglish)  
                         if law and law.content:
                                  if self.oldProvisionPosTagPattern.search(law.content):
-                                        print law.originId,law.providerId,law.isEnglish 
+                                        print law.originId,law.providerId,law.isEnglish
 					self.removeProvisionPosTag(law)
 					self.addProvisionPosTag(law)
+					law.content=law.content.replace("<br>","")
 					self.updateArticle(law)
 					self.queueDao.updateStatus(law.id,Article.CONTENT_TYPE_LAW,Article.STATUS_WAIT_UPLOAD)
 if __name__=="__main__":
