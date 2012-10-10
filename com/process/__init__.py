@@ -64,6 +64,30 @@ class HyperlinkProcess(object):
 		self.delTagPatternStart=re.compile(r'<span\s+cate=["\']link_2_del["\']\s*>[^<]*$',re.I)
 		self.delTagPatternEnd=re.compile(r'[^<]*?</span>',re.I)
 
+		#content type name display in user agent
+        	self.contentTypeNameMap={'T':'Legislation',\
+					'C':'Cases',\
+					'LM':'Legal news',\
+					'FL':'Foreign law',\
+					'PNL':'Newsletters',\
+					'HN':'Articles',\
+					'PC':'Practical materials',\
+					'LB':'Q & A',\
+					'LOTP':'Tax overview',\
+					'LOFDI':'Investment overview',\
+					'LOEP':'Employment overview',\
+					'LOEE':'Energy overview',\
+					'LOCP':'Corporate overview',\
+					'LOCS':'Financing overview',\
+					'LOIP':'IP overview',\
+					'LOMA':'MA overview',\
+					'EL':'Elearning',\
+					'SUMMARY':'Overview summary',\
+					'PEA':'Q & A'}
+		
+		#Action type name display to user
+		self.actionTypeNameMap={'N':'New','D':'Delete','U':'Update'}
+
 	def eraseHyperlink(self,article):
 		"""
 		清除hyperlink所加的超链接
@@ -426,18 +450,39 @@ class HyperlinkProcess(object):
 				#TODO remove queue item from hyperlink queue
 		
 
-	def collectStatistics():
+	def collectStatistics(self):
 		"""
 		统计本次hyperlink所处理的数据，如处理了多少条新增的，多少条修改的，多少删除的以及各种内容类型的情况
 		返回html表格字符串
 		(必须在数据处理完但未上传时统计才有效)
 		"""
-		htmlStr='<table><tr><td>Action Type/Content type</td><td>Article num</td></tr>'	
-		
+		htmlStr="""
+				<html>
+				<head>
+				<style type="text/css"> 
+					td{
+						color:#000000;
+						font-family: Arial, Helvetica, sans-serif; 
+						font-size: 12px; 
+						padding:4px 8px;
+						line-height:16px;
+					} 
+				</style>
+				</head>
+				<body>
+				<p>Hi All,<br/>\n
+				Articles proccessed last week listed in the table below FYI!</p>
+				<table border="1" cellspacing="0" cellpadding="0" width="300" height="10">
+				<tr style="background-color:#B40404;font:bold;"><td width="200" style="color:#FFFFFF;">Action Type/Content type</td><td  style="color:#FFFFFF;" width="100">Article num</td></tr>
+				"""
 		for row in self.queueDao.collectStatisticsOfProcessedData():
-			htmlStr+=('<tr><td>%s</td><td>%s</td></tr>' %(row[0],row[1]))
+			if row[2]=="BY_ACTION":
+				htmlStr+=('<tr style="background-color:#EFEFEF;><td width="200">%s</td><td width="100">%s</td></tr>\n' %(self.actionTypeNameMap[row[0]],row[1]))
+			else:
+				htmlStr+=('<tr style="background-color:#FAFAFA;><td width="200">%s</td><td width="100">%s</td></tr>\n' %(self.contentTypeNameMap[row[0]],row[1]))
+				
 			
-		htmlStr+='</table>'
+		htmlStr+='</table><br/><p>Thank you,<br />Regards</p></body></html>'
 		return htmlStr
 
 	def begin(self,queueItem):
