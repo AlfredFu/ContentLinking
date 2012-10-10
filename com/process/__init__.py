@@ -51,7 +51,8 @@ class HyperlinkProcess(object):
 		self.provisionStartPattern=re.compile(r'(Article ([\d\.]+).?(.\n?)+?.?)(<br\s*/>[\r\s]*<br\s*/>)',re.I)
 
 		#Following regex object match hidden provision position tag(both begin tag and end tag)
-		self.provisionPosTagPattern=re.compile(r'<a name="(end_)?i[\d\.]+" re="T"></a>')
+		self.provisionPosTagPattern=re.compile(r'<a name="(end_)?i[\d\.]+" re="T"\s*></a>')
+		self.oldProvisionPosTagPattern=re.compile(r'<a re="T" name="(end_)?i[\d\.]+"\s*></a>')
 		
 		#self.originManualLinkPattern=re.compile(r'(<a\s+href="[^"]*")[^>]*?class="link_2_manual"[^>]*(>)',re.I)	
 		self.originManualLinkPattern=re.compile(r'(<a\s+)[^>]*?(href="[^"]*")[^>]*?class="link_2_manual"[^>]*(>)',re.I)	
@@ -94,6 +95,8 @@ class HyperlinkProcess(object):
 		"""
 		if article and article.content:
 			article.content=self.provisionPosTagPattern.sub('',article.content)
+			article.content=self.oldProvisionPosTagPattern.sub('',article.content)
+			
 
 	def getArticle(self,queueItem):
 		"""
