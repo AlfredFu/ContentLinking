@@ -48,7 +48,7 @@ class HyperlinkProcess(object):
 
 		#Following regex object match pargraph which begin with Article * and end with 2 linefeed
 		#Pargraph in article content matched is regarded as a provision
-		self.provisionStartPattern=re.compile(r'(Article ([\d\.]+).?(.\n?)+?.?)(<br\s*/>[\r\s]*<br\s*/>)',re.I)
+		self.provisionStartPattern=re.compile(r'(Article ([\d\.]+).?(.\n?)+?.?)(<br\s*/*>[\r\s]*<br\s*/*>)',re.I)
 
 		#Following regex object match hidden provision position tag(both begin tag and end tag)
 		self.provisionPosTagPattern=re.compile(r'<a name="(end_)?i[\d\.]+" re="T"\s*></a>')

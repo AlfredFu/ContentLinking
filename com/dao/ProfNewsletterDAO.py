@@ -72,7 +72,6 @@ class ProfNewsletterDAO(DAO):
 					raise Exception("No  professional newsletter with id %s found!" %id)
 			except Exception,e:
 				self.log.error(e)
-				self.log.error(sql)
 
 	def getByOrigin(self,originId,providerId,isEnglish):
 		if originId and providerId and isEnglish:
