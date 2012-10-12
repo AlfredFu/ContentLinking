@@ -19,6 +19,13 @@ class FindLaw(HyperlinkProcess):
 					law.content=law.content.replace("<br>","")
 					self.updateArticle(law)
 					self.queueDao.updateStatus(law.id,Article.CONTENT_TYPE_LAW,Article.STATUS_WAIT_UPLOAD)
+
+          def findSepcifiedStrInLaw(self,sstr):
+                  for row in self.lawDao.getAll():
+                          law=self.lawDao.getByOrigin(row.originId,row.providerId,row.isEnglish)  
+                          if law and law.content:
+                                   if law.content.find(sstr)!=-1:
+                                          print law.originId,law.providerId,law.isEnglish
 if __name__=="__main__":
         lg=FindLaw()
         lg.findIllegal()
