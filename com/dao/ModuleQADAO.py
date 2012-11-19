@@ -81,7 +81,7 @@ class ModuleQADAO(DAO):
 		if article and article.questionId and article.content:
 			article.content=self.escape_string(article.content)
 			
-			sql1="update ex_expert_questions set update_time=NOW(),fetch_time=NOW() where id=%s" % article.questionId
+			sql1="update ex_expert_questions set fetch_time=NOW() where id=%s" % article.questionId
 			sql2="update ex_expert_answers set content='%s' where id=%s" %(article.content,article.id)		
 			try:
 				if isTransfer: 
