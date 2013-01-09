@@ -31,12 +31,14 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 					'SUMMARY':'summary',\
 					'PEA':'expert+ex_questions'}
         	self.reArticleStart='<br/><font color="red">(Relevant articles:</font><font color="blue">'
+        	self.reArticleStartPattern=re.compile(r'<br\s*/>[\n\r]*<font color="(red|#ff0000)">\(Relevant articles:</font><font color="(blue|#0000ff)">',re.I)#bug 3441
         	self.reArticleEnd='</font><font color="red">)</font>'
+        	self.reArticleEndPattern=re.compile(r'</font><font color="(red|#ff0000)">\)</font>',re.I)#bug 3441
 		self.provisionStartTagFormat='<a name="i%s" re="T"></a>'
 		self.provisionEndTagFormat='<a name="end_i%s" re="T"></a>'
 
 		self.linkageTagFormat=' <a href="#" onclick="linkage(this,\'%s\',%s,2);return false;" style="text-decoration:underline;color:#00f;">%s</a>'
-		self.linkageTagPattern=re.compile(r' <a href="#" onclick="linkage\(this,\'[\w\+]+?\',\d+,2\);return false;"[^>]*?>[^<]*?</a>',re.I)	
+		self.linkageTagPattern=re.compile(r' <a[^>]*?onclick="linkage\(this,\'[\w\+]+?\',\d+,2\);return false;"[^>]*?>[^<]*?</a>',re.I)	
 
 	def checkProvisionExist(self,provisionNum,originId,providerId,isEnglish='Y',contentType='T'):
 		"""
@@ -78,8 +80,8 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 		Remove relative article link for provision
 		"""
 		if content:
-			content=content.replace(self.reArticleStart,'')	
-			content=content.replace(self.reArticleEnd,'')	
+			content=self.reArticleStartPattern.sub('',content)
+			content=self.reArticleEndPattern.sub('',content)
 			content=self.linkageTagPattern.sub('',content)
 		return content
  
