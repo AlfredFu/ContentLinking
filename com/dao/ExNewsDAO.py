@@ -65,7 +65,7 @@ class ExNewsDAO(DAO):
 	def update(self,article,isTransfer=False):
 		if article and article.id and article.content is not None:
 			article.content=self.escape_string(article.content)
-			updateTimeSql="update ex_news set update_time=NOW() where id=%s;" % article.id	
+			updateTimeSql="update ex_news set fetch_time=NOW() where id=%s;" % article.id	
 			updateContentSql="update ex_news_contents set content='%s' where ex_new_id=%s" % (article.content,article.id)
 			try:
 				if isTransfer:
