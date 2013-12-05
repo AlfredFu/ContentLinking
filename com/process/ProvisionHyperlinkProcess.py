@@ -27,6 +27,7 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 					'LOCS':'cs_overview',\
 					'LOIP':'ip_overview',\
 					'LOMA':'ma_overview',\
+					'LOCR':'cr_overview',\
 					'EL':'ep_elearning',\
 					'SUMMARY':'summary',\
 					'PEA':'expert+ex_questions'}

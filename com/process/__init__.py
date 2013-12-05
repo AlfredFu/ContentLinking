@@ -81,6 +81,7 @@ class HyperlinkProcess(object):
 					'LOCS':'Financing overview',\
 					'LOIP':'IP overview',\
 					'LOMA':'MA overview',\
+					'LOCR':'CDR overview',\
 					'EL':'Elearning',\
 					'SUMMARY':'Overview summary',\
 					'PEA':'Q & A'}
