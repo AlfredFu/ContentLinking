@@ -17,7 +17,10 @@ class ExNewsDAO(DAO):
 					'6':Article.CONTENT_TYPE_FDIOVERVIEW,\
 					'7':Article.CONTENT_TYPE_EEOVERVIEW,\
 					'8':Article.CONTENT_TYPE_CSOVERVIEW,\
-					'9':Article.CONTENT_TYPE_MAOVERVIEW}
+					'9':Article.CONTENT_TYPE_MAOVERVIEW,\
+					'10':Article.CONTENT_TYPE_CROVERVIEW,\
+					'13':Article.CONTENT_TYPE_PGEPOVERVIEW,\
+					'14':Article.CONTENT_TYPE_PGCPOVERVIEW}
 
 	def getAll(self):
 		"""
@@ -104,6 +107,19 @@ class ExNewsDAO(DAO):
 			elif article.subType==4:
 				article.contentType=Article.CONTENT_TYPE_PRACTICAL#实用资料
 				yield article
+			elif article.subType==5:
+				if article.ipnewsCategory==1:
+					article.contentType=Article.CONTENT_TYPE_TEMPLATE#PG 合同范本
+					yield article
+				elif article.ipnewsCategory==2:
+					article.contentType=Article.CONTENT_TYPE_CKL#PG checklist
+					yield article
+				elif article.ipnewsCategory==3:
+					article.contentType=Article.CONTENT_TYPE_GOVF#PG goverment form 
+					yield article
+				elif article.ipnewsCategory==4:
+					article.contentType=Article.CONTENT_TYPE_SC#PG smart chart 
+					yield article
 			elif article.subType==6:
 				article.contentType=Article.CONTENT_TYPE_ELEARNING#在线培训
 				yield article
@@ -149,7 +165,7 @@ class ExNewsDAO(DAO):
 
 	def getArticleContainText(self,ltext):
 		if ltext:
-			sql="select a.origin_id,a.provider_id,a.isEnglish,a.sub_type,a.alltype \
+			sql="select a.origin_id,a.provider_id,a.isEnglish,a.sub_type,a.alltype,a.ipnews_category \
 				from ex_news a left join ex_news_contents b \
 				on a.origin_id=b.origin_id and a.provider_id=b.provider_id and a.isEnglish=b.isEnglish \
 				where a.isEnglish='Y' and a.is_display=1 and b.content like '%"+self.escape_string(ltext)+"%'"
@@ -162,6 +178,15 @@ class ExNewsDAO(DAO):
 						yield(row[0],row[1],row[2],Article.CONTENT_TYPE_HOTNEWS)#评论文章
 					elif row[3]==4:
 						yield(row[0],row[1],row[2],Article.CONTENT_TYPE_PRACTICAL)#实用资料
+					elif row[3]==5:
+						if row[4]==1:
+							yield(row[0],row[1],row[2],Article.CONTENT_TYPE_TEMPLATE)#PG 合同范本
+						elif row[4]==2:
+							yield(row[0],row[1],row[2],Article.CONTENT_TYPE_CKL)#PG checklist
+						elif row[4]==3:
+							yield(row[0],row[1],row[2],Article.CONTENT_TYPE_GOVF)#PG goverment form 
+						elif row[4]==4:
+							yield(row[0],row[1],row[2],Article.CONTENT_TYPE_SC)#PG smart chart 
 					elif row[3]==6:
 						yield(row[0],row[1],row[2],Article.CONTENT_TYPE_ELEARNING)#在线培训
 					elif row[3]==7:

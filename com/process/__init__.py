@@ -82,6 +82,12 @@ class HyperlinkProcess(object):
 					'LOIP':'IP overview',\
 					'LOMA':'MA overview',\
 					'LOCR':'CDR overview',\
+					'LOPGEP':'PG Employment overview',\
+					'LOPGCP':'PG Corporate overview',\
+					'CKL':'Checklists',\
+					'GOVF':'Goverment form',\
+					'SC':'Smart chart',\
+					'TEMPLATE':'Template',\
 					'EL':'Elearning',\
 					'SUMMARY':'Overview summary',\
 					'PEA':'Q & A'}
