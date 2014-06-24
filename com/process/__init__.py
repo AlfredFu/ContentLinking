@@ -87,7 +87,7 @@ class HyperlinkProcess(object):
 					'CKL':'Checklists',\
 					'GOVF':'Goverment form',\
 					'SC':'Smart chart',\
-					'TEMPLATE':'Template',\
+					'TEMPLATE':'Precedents',\
 					'EL':'Elearning',\
 					'SUMMARY':'Overview summary',\
 					'PEA':'Q & A'}
