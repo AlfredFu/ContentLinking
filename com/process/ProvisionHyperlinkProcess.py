@@ -28,8 +28,14 @@ class ProvisionHyperlinkProcess(HyperlinkProcess):
 					'LOIP':'ip_overview',\
 					'LOMA':'ma_overview',\
 					'LOCR':'cr_overview',\
+					'LOPGEP':'pg_ep_overview',\
+					'LOPGCP':'pg_cp_overview',\
 					'EL':'ep_elearning',\
 					'SUMMARY':'summary',\
+					'CKL':'pg_checklists',\
+					'GOVF':'pg_gov_form',\
+					'SC':'pg_smart_chart',\
+					'TEMPLATE':'pg_template',\
 					'PEA':'expert+ex_questions'}
         	self.reArticleStart='<br/><font color="red">(Relevant articles:</font><font color="blue">'
         	self.reArticleStartPattern=re.compile(r'<br\s*/>[\n\r]*<font color="(red|#ff0000)">\(Relevant articles:</font><font color="(blue|#0000ff)">',re.I)#bug 3441
