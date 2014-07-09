@@ -84,6 +84,7 @@ class HyperlinkProcess(object):
 					'LOCR':'CDR overview',\
 					'LOPGEP':'PG Employment overview',\
 					'LOPGCP':'PG Corporate overview',\
+					'LOPGLS':'PG Legalstudio overview',\
 					'CKL':'Checklists',\
 					'GOVF':'Goverment form',\
 					'SC':'Smart chart',\
