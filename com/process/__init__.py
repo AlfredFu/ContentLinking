@@ -105,8 +105,8 @@ class HyperlinkProcess(object):
 		"""	
 		if article and article.content:
 			article.content=self.delManulLinkPattern.sub(r'<span cate="link_2_del">\1</span>',article.content)
-			article.content=self.originManualLinkPattern.sub(r'\1\2class="link_2" re="T" cate="manual_en_href" target="_blank"\3',article.content)
-			article.content=self.originManualLinkPatternEx.sub(r'\1\2class="link_2" re="T" cate="manual_en_href" target="_blank"\3',article.content)
+			article.content=self.originManualLinkPattern.sub(r'\1\2 class="link_2" re="T" cate="manual_en_href" target="_blank"\3',article.content)
+			article.content=self.originManualLinkPatternEx.sub(r'\1\2 class="link_2" re="T" cate="manual_en_href" target="_blank"\3',article.content)
 			article.content=self.linkTagPattern.sub(r'\1',article.content)
 
 	def addProvisionPosTag(self,article):

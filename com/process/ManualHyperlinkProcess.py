@@ -14,7 +14,7 @@ class ManualHyperlinkProcess(HyperlinkProcess):
 	"""
 	def __init__(self):
 		super(ManualHyperlinkProcess,self).__init__()	
-		self.manualLinkPattern=re.compile(r'<a\s+href="(?P<linkurl>[^"]*)"[^>]*?cate="manual_en_href"[^>]*?>',re.I)
+		self.manualLinkPattern=re.compile(r'<a\s+href="(?P<linkurl>[^"]*?\?content_type=T&[^"]*)"[^>]*?cate="manual_en_href"[^>]*?>',re.I)
 
 	def search(self,content,start=0,posTupleList=[]):
 		if content:
@@ -34,18 +34,19 @@ class ManualHyperlinkProcess(HyperlinkProcess):
 				if posTuple[2]:
 					urlParamsMap=getUrlParams(posTuple[2])
 					provisionNum=getUrlProvisionNum(posTuple[2])
-					try:
-						contentType=urlParamsMap['content_type']
-						originId=urlParamsMap['origin_id']
-						providerId=urlParamsMap['provider_id']
-						isEnglish=urlParamsMap['isEnglish']
-						if not provisionNum:
-							provisionNum=0
-						keywordId=''
-						targetArticle=self.getArticleByOrigin(originId,providerId,isEnglish,contentType)
-						if targetArticle:
-							self.addCrossRefLink(article,targetArticle,keywordId,provisionNum)	
-					except Exception,e:
-						self.log.error(e)
+					if 'content_type' in urlParamsMap and 'origin_id' in urlParamsMap and 'provider_id' in urlParamsMap and 'isEnglish' in urlParamsMap:
+						try:
+							contentType=urlParamsMap['content_type']
+							originId=urlParamsMap['origin_id']
+							providerId=urlParamsMap['provider_id']
+							isEnglish=urlParamsMap['isEnglish']
+							if not provisionNum:
+								provisionNum=0
+							keywordId=''
+							targetArticle=self.getArticleByOrigin(originId,providerId,isEnglish,contentType)
+							if targetArticle:
+								self.addCrossRefLink(article,targetArticle,keywordId,provisionNum)	
+						except Exception,e:
+							self.log.error(e)
 		return article
 

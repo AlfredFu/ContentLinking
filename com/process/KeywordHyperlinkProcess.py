@@ -17,7 +17,7 @@ class KeywordHyperlinkProcess(HyperlinkProcess):
 		"""
 		def checkNested():
 			for item in posTupleList:
-				if item[0]<=posTuple[0] and item[1]>=posTuple[1]:
+				if (item[0]<=posTuple[0] and item[1]>=posTuple[0]) or (item[0]<=posTuple[1] and item[1]>=posTuple[1]):
 					return True 
 			return False
 		lowerCaseContent=content.lower()#case inseneistive
